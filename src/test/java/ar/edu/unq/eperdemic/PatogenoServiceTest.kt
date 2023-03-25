@@ -1,14 +1,18 @@
 package ar.edu.unq.eperdemic
 
 import ar.edu.unq.eperdemic.modelo.Patogeno
+import ar.edu.unq.eperdemic.persistencia.dao.DataDAO
 import ar.edu.unq.eperdemic.persistencia.dao.PatogenoDAO
+import ar.edu.unq.eperdemic.persistencia.dao.jdbc.JDBCDataDAO
 import ar.edu.unq.eperdemic.persistencia.dao.jdbc.JDBCPatogenoDAO
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 class PatogenoServiceTest {
     private val dao: PatogenoDAO = JDBCPatogenoDAO()
+    private val dataDAO: DataDAO = JDBCDataDAO()
     lateinit var patogeno: Patogeno
     lateinit var patogenoBacteria: Patogeno
 
@@ -66,5 +70,8 @@ class PatogenoServiceTest {
 
         Assertions.assertEquals(listaDePatogenos, dao.recuperarATodos())
     }
-
+    @AfterEach
+    fun emilinarModelo() {
+        dataDAO.clear()
+    }
 }
