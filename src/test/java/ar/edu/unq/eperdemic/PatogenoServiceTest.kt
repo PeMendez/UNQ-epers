@@ -15,7 +15,7 @@ class PatogenoServiceTest {
         patogeno = Patogeno("Virus")
     }
     @Test
-    fun alGuardarYLuegoRecuperarSeObtieneObjetosSimilares() {
+    fun seCreaUnPatogenoEnLaBaseDeDatos() {
         dao.crear(patogeno)
     }
 }

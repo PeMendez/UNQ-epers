@@ -11,7 +11,6 @@ class JDBCPatogenoDAO : PatogenoDAO {
 
 
     override fun crear(patogeno: Patogeno) : Patogeno{
-
         execute { conn: Connection ->
             var id: Long = 0
             conn.prepareStatement("INSERT INTO patogeno (tipo, cantidadDeEspecies) VALUES (?,?)", Statement.RETURN_GENERATED_KEYS)
@@ -27,9 +26,7 @@ class JDBCPatogenoDAO : PatogenoDAO {
                     patogeno.id=id
                 }
         }
-
         return patogeno
-
     }
 
     override fun actualizar(patogeno: Patogeno) {
@@ -46,15 +43,13 @@ class JDBCPatogenoDAO : PatogenoDAO {
 
     init {
         val initializeScript = javaClass.classLoader.getResource("createAll.sql").readText()
-        execute {connection ->
-            val scripts = initializeScript.split(";")
-            scripts.forEach{ script ->
-                connection.prepareStatement(script)
-                    .use {
-                        it.execute()
-                    }
-            }
+        execute {
+            val ps = it.prepareStatement(initializeScript)
+            ps.execute()
+            ps.close()
             null
         }
     }
+
+
 }
