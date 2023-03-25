@@ -12,7 +12,7 @@ class PatogenoServiceTest {
     lateinit var patogeno: Patogeno
     @BeforeEach
     fun crearModelo() {
-        patogeno = Patogeno("Virus")
+        patogeno = Patogeno("Virus3")
     }
     @Test
     fun seCreaUnPatogenoEnLaBaseDeDatos() {
