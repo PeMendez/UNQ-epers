@@ -58,4 +58,13 @@ class PatogenoServiceTest {
         Assertions.assertEquals(patogeno.cantidadDeEspecies, patogenoRecuperado.cantidadDeEspecies)
     }
 
+    @Test
+    fun seRecuperanTodosLosPatogenosExistentes() {
+        val listaDePatogenos : List<Patogeno> = listOf(patogenoBacteria, patogeno)
+        dao.crear(patogeno)
+        dao.crear(patogenoBacteria)
+
+        Assertions.assertEquals(listaDePatogenos, dao.recuperarATodos())
+    }
+
 }
