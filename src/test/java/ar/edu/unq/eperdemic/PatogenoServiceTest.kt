@@ -12,10 +12,10 @@ class PatogenoServiceTest {
     lateinit var patogeno: Patogeno
     @BeforeEach
     fun crearModelo() {
-        patogeno = Patogeno("Virus")
+        patogeno = Patogeno("Virus3")
     }
     @Test
-    fun alGuardarYLuegoRecuperarSeObtieneObjetosSimilares() {
+    fun seCreaUnPatogenoEnLaBaseDeDatos() {
         dao.crear(patogeno)
         var patogenoRecuperado :Patogeno = dao.recuperar(patogeno.id!!.toLong())
 
