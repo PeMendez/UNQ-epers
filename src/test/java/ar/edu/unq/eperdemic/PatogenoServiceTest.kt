@@ -17,5 +17,14 @@ class PatogenoServiceTest {
     @Test
     fun alGuardarYLuegoRecuperarSeObtieneObjetosSimilares() {
         dao.crear(patogeno)
+        var patogenoRecuperado :Patogeno = dao.recuperar(patogeno.id!!.toLong())
+
+        //un vez recueprado se crea un objeto de caracteristicas iguales
+        Assertions.assertEquals(patogeno.id, patogenoRecuperado.id)
+        Assertions.assertEquals(patogeno.tipo, patogenoRecuperado.tipo)
+        Assertions.assertEquals(patogeno.cantidadDeEspecies, patogenoRecuperado.cantidadDeEspecies)
+
+        //pero no es el mismo objeto
+        Assertions.assertFalse(patogeno===patogenoRecuperado)
     }
 }

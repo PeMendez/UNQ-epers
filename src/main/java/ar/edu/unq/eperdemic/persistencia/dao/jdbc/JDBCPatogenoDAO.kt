@@ -19,9 +19,9 @@ class JDBCPatogenoDAO : PatogenoDAO {
                     ps.setString(1,patogeno.tipo)
                     ps.setInt(2, patogeno.cantidadDeEspecies)
                     ps.execute()
-                    val ids = ps.generatedKeys
-                    if (ids.next()) {
-                        id = ids.getLong(1)
+                    val resultSet = ps.generatedKeys
+                    while (resultSet.next()) {
+                        id = resultSet.getLong(1)
                     }
                     ps.close()
                     patogeno.id=id
@@ -37,7 +37,23 @@ class JDBCPatogenoDAO : PatogenoDAO {
     }
 
     override fun recuperar(patogenoId: Long): Patogeno {
-        TODO("not implemented")
+        return execute { conn: Connection ->
+            conn.prepareStatement("SELECT id, tipo, cantidadDeEspecies FROM patogeno WHERE id = ?")
+                .use { ps ->
+                    ps.setLong(1, patogenoId)
+                    val resultSet = ps.executeQuery()
+                    var patogeno: Patogeno? = null
+                    while (resultSet.next()) {
+                        if (patogeno != null) {
+                            throw RuntimeException("Existe más de un patogeno con el id $patogenoId")
+                        }
+                        patogeno = Patogeno(resultSet.getString("tipo") )
+                        patogeno.id = resultSet.getLong("id")
+                        patogeno.cantidadDeEspecies = resultSet.getInt("cantidadDeEspecies")
+                    }
+                    patogeno!!
+                }
+        }
     }
 
     override fun recuperarATodos(): List<Patogeno> {
