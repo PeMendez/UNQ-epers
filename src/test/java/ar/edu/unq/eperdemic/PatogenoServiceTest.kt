@@ -10,16 +10,28 @@ import org.junit.jupiter.api.Test
 class PatogenoServiceTest {
     private val dao: PatogenoDAO = JDBCPatogenoDAO()
     lateinit var patogeno: Patogeno
+    lateinit var patogenoBacteria: Patogeno
+
     @BeforeEach
     fun crearModelo() {
-        patogeno = Patogeno("Virus3")
+        patogeno = Patogeno("Virus")
+        patogenoBacteria = Patogeno("Bacteria")
+
     }
+
+    @Test
+    fun elPatogenoCreadoAhoraTieneUnIdAsignado(){
+        dao.crear(patogenoBacteria)
+        Assertions.assertNotNull(patogenoBacteria.id)
+    }
+
+
     @Test
     fun seCreaUnPatogenoEnLaBaseDeDatos() {
         dao.crear(patogeno)
         var patogenoRecuperado :Patogeno = dao.recuperar(patogeno.id!!.toLong())
 
-        //un vez recueprado se crea un objeto de caracteristicas iguales
+        //un vez recuperado se crea un objeto de caracteristicas iguales
         Assertions.assertEquals(patogeno.id, patogenoRecuperado.id)
         Assertions.assertEquals(patogeno.tipo, patogenoRecuperado.tipo)
         Assertions.assertEquals(patogeno.cantidadDeEspecies, patogenoRecuperado.cantidadDeEspecies)
@@ -27,4 +39,23 @@ class PatogenoServiceTest {
         //pero no es el mismo objeto
         Assertions.assertFalse(patogeno===patogenoRecuperado)
     }
+
+    @Test
+    fun actualizarPatogenoExistente() {
+        // Modificamos los datos del patógeno
+        patogeno.tipo = "Bacteria"
+        patogeno.cantidadDeEspecies = 5000
+        patogeno.id = 5
+
+        // Actualizamos el patógeno en la base de datos
+        dao.actualizar(patogeno)
+
+        // Recuperamos el patógeno de la base de datos
+        val patogenoRecuperado = dao.recuperar(patogeno.id!!)
+
+        // Verificamos que los datos hayan sido actualizados correctamente
+        Assertions.assertEquals(patogeno.tipo, patogenoRecuperado.tipo)
+        Assertions.assertEquals(patogeno.cantidadDeEspecies, patogenoRecuperado.cantidadDeEspecies)
+    }
+
 }

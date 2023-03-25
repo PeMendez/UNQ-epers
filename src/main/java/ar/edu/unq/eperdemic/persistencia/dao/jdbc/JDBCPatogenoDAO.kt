@@ -10,27 +10,36 @@ class JDBCPatogenoDAO : PatogenoDAO {
 
 
 
-    override fun crear(patogeno: Patogeno) : Patogeno{
+    override fun crear(patogeno: Patogeno): Patogeno {
+        val insertQuery = "INSERT INTO patogeno (tipo, cantidadDeEspecies) VALUES (?, ?)"
+        var id: Long = 0
         execute { conn: Connection ->
-            var id: Long = 0
-            conn.prepareStatement("INSERT INTO patogeno (tipo, cantidadDeEspecies) VALUES (?,?)", Statement.RETURN_GENERATED_KEYS)
-                .use  { ps ->
-                    ps.setString(1,patogeno.tipo)
-                    ps.setInt(2, patogeno.cantidadDeEspecies)
-                    ps.execute()
-                    val resultSet = ps.generatedKeys
-                    while (resultSet.next()) {
-                        id = resultSet.getLong(1)
-                    }
-                    ps.close()
-                    patogeno.id=id
+            conn.prepareStatement(insertQuery, Statement.RETURN_GENERATED_KEYS).use { ps ->
+                ps.setString(1, patogeno.tipo)
+                ps.setInt(2, patogeno.cantidadDeEspecies)
+                ps.executeUpdate()
+                val resultSet = ps.generatedKeys
+                while (resultSet.next()) {
+                    id = resultSet.getLong(1)
                 }
+            }
+            patogeno.id = id
         }
         return patogeno
     }
 
     override fun actualizar(patogeno: Patogeno) {
-        TODO("not implemented")
+        execute { conn ->
+            val updateQuery = "UPDATE patogeno SET tipo = ?, cantidadDeEspecies = ? WHERE id = ?"
+            val ps = conn.prepareStatement(updateQuery)
+            ps.setString(1, patogeno.tipo)
+            ps.setInt(2, patogeno.cantidadDeEspecies)
+            patogeno.id?.let { ps.setLong(3, it) }
+            if (ps.executeUpdate() != 1) {
+                throw RuntimeException("El id del patogeno $patogeno no existe")
+            }
+            ps.close()
+        }
     }
 
     override fun recuperar(patogenoId: Long): Patogeno {
