@@ -9,7 +9,6 @@ import java.sql.Statement
 class JDBCPatogenoDAO : PatogenoDAO {
 
 
-
     override fun crear(patogeno: Patogeno): Patogeno {
         val insertQuery = "INSERT INTO patogeno (tipo, cantidadDeEspecies) VALUES (?, ?)"
         var id: Long = 0
@@ -71,6 +70,8 @@ class JDBCPatogenoDAO : PatogenoDAO {
                     val resultSet = ps.executeQuery()
                     while (resultSet.next()){
                         val patogeno = Patogeno(resultSet.getString("tipo"))
+                        patogeno.id = resultSet.getLong("id")
+                        patogeno.cantidadDeEspecies = resultSet.getInt("cantidadDeEspecies")
                         patogenos.add(patogeno)
                     }
                 }
