@@ -25,11 +25,10 @@ class PatogenoServiceTest {
     }
 
     @Test
-    fun elPatogenoCreadoAhoraTieneUnIdAsignado(){
+    fun elPatogenoCreadoAhoraTieneUnIdAsignado() {
         dao.crear(patogenoBacteria)
         Assertions.assertNotNull(patogenoBacteria.id)
     }
-
 
     @Test
     fun seCreaUnPatogenoEnLaBaseDeDatos() {
@@ -49,6 +48,7 @@ class PatogenoServiceTest {
     fun actualizarPatogenoExistente() {
         // Armamos el patogeno virus
         virus = Patogeno("Virus")
+
         // Modificamos los datos del patógeno una vez creado, teniendo el ID que se le asigno
         var patogenoConId :Patogeno = dao.crear(virus)
         patogenoConId.tipo = "Bacteria"
@@ -68,11 +68,24 @@ class PatogenoServiceTest {
 
     @Test
     fun seRecuperanTodosLosPatogenosExistentes() {
+        // Se crea una lista con dos patogenos en el orden que se espera esten cuando se recuperen
         val listaDePatogenos : List<Patogeno> = listOf(patogenoBacteria, patogeno)
+
+        // Se crean patogenos y se persisten
         dao.crear(patogeno)
         dao.crear(patogenoBacteria)
 
-        Assertions.assertEquals(listaDePatogenos, dao.recuperarATodos())
+        // Se recuperan todos los patogenos
+        val listaPatogenosRecuperados : List<Patogeno> = dao.recuperarATodos()
+
+        // Se controla que el orden y los patogenos sean los mismos
+        Assertions.assertEquals(listaDePatogenos[0].id, listaPatogenosRecuperados[0].id)
+        Assertions.assertEquals(listaDePatogenos[0].tipo, listaPatogenosRecuperados[0].tipo)
+        Assertions.assertEquals(listaDePatogenos[0].cantidadDeEspecies, listaPatogenosRecuperados[0].cantidadDeEspecies)
+
+        Assertions.assertEquals(listaDePatogenos[1].id, listaPatogenosRecuperados[1].id)
+        Assertions.assertEquals(listaDePatogenos[1].tipo, listaPatogenosRecuperados[1].tipo)
+        Assertions.assertEquals(listaDePatogenos[1].cantidadDeEspecies, listaPatogenosRecuperados[1].cantidadDeEspecies)
     }
 
     @AfterEach

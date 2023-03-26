@@ -3,6 +3,7 @@ package ar.edu.unq.eperdemic.persistencia.dao.jdbc
 import ar.edu.unq.eperdemic.modelo.Patogeno
 import ar.edu.unq.eperdemic.persistencia.dao.DataDAO
 import ar.edu.unq.eperdemic.persistencia.dao.PatogenoDAO
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
@@ -22,16 +23,19 @@ class JDBCDataDAOTest {
 
     @Test
     fun clear() {
-        //guardo el patógeno
+        // se crea y persiste el patogeno
         patogenoDAO.crear(patogeno)
 
-        //me guardo el id del patógeno
-        idDelPatogeno=patogeno.id!!.toLong()
+        // se obtiene la lista de todos los patogenos
+        var patogenosRecuperados : List<Patogeno> = patogenoDAO.recuperarATodos()
 
-        //borro la tabla de patógenos
+        // se borran los datos persistidos
         dataDAO.clear()
 
-        //reviso si se borró
-        assertSame("El id del patogeno $patogeno no existe",patogenoDAO.actualizar(patogeno))
+        // se obtiene una lista de todos los patogenos luego de borrar los datos persistidos
+        var patogenosRecuperadosPostClear : List<Patogeno> = patogenoDAO.recuperarATodos()
+
+        Assertions.assertTrue(patogenosRecuperados.isNotEmpty())
+        Assertions.assertTrue(patogenosRecuperadosPostClear.isEmpty())
     }
 }
