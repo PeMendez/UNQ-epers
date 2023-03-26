@@ -7,7 +7,7 @@ import java.sql.Connection
 class JDBCDataDAO : DataDAO {
     override fun clear(){
         execute { conn: Connection ->
-            conn.prepareStatement("DROP TABLE patogeno")
+            conn.prepareStatement("DELETE FROM patogeno")
                 .use { ps ->
                     ps.execute()
                 }
