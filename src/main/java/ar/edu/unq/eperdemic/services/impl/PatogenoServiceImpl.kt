@@ -22,8 +22,13 @@ class PatogenoServiceImpl(var patogenoDAO: PatogenoDAO) : PatogenoService {
     override fun agregarEspecie(id: Long, nombre: String, paisDeOrigen: String): Especie {
         var patogeno = patogenoDAO.recuperar(id)
         var especie = patogeno.crearEspecie(nombre, paisDeOrigen)
+
         patogenoDAO.actualizar(patogeno)
         return especie
+    }
+
+    override fun actualizarPatogeno(patogeno: Patogeno) {
+        patogenoDAO.actualizar(patogeno)
     }
 
 }

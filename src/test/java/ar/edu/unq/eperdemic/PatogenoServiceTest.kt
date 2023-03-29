@@ -3,8 +3,10 @@ package ar.edu.unq.eperdemic
 import ar.edu.unq.eperdemic.modelo.Patogeno
 import ar.edu.unq.eperdemic.persistencia.dao.DataDAO
 import ar.edu.unq.eperdemic.persistencia.dao.PatogenoDAO
-import ar.edu.unq.eperdemic.persistencia.dao.jdbc.JDBCDataDAO
 import ar.edu.unq.eperdemic.persistencia.dao.jdbc.JDBCPatogenoDAO
+import ar.edu.unq.eperdemic.services.PatogenoService
+import ar.edu.unq.eperdemic.services.impl.PatogenoServiceImpl
+import ar.edu.unq.eperdemic.utils.jdbc.DataServiceJDBC
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
@@ -12,28 +14,28 @@ import org.junit.jupiter.api.Test
 
 class PatogenoServiceTest {
     private val dao: PatogenoDAO = JDBCPatogenoDAO()
-    private val dataDAO: DataDAO = JDBCDataDAO()
+    private val dataDAO: DataServiceJDBC = DataServiceJDBC()
     lateinit var patogeno: Patogeno
     lateinit var patogenoBacteria: Patogeno
     lateinit var virus: Patogeno
+    private val patogenoService : PatogenoService = PatogenoServiceImpl(dao)
 
     @BeforeEach
     fun crearModelo() {
         patogeno = Patogeno("Virus")
         patogenoBacteria = Patogeno("Bacteria")
-
     }
 
     @Test
     fun elPatogenoCreadoAhoraTieneUnIdAsignado() {
-        dao.crear(patogenoBacteria)
+        patogenoService.crearPatogeno(patogenoBacteria)
         Assertions.assertNotNull(patogenoBacteria.id)
     }
 
     @Test
     fun seCreaUnPatogenoEnLaBaseDeDatos() {
-        dao.crear(patogeno)
-        var patogenoRecuperado :Patogeno = dao.recuperar(patogeno.id!!.toLong())
+        patogenoService.crearPatogeno(patogeno)
+        var patogenoRecuperado :Patogeno = patogenoService.recuperarPatogeno(patogeno.id!!.toLong())
 
         //un vez recuperado se crea un objeto de caracteristicas iguales
         Assertions.assertEquals(patogeno.id, patogenoRecuperado.id)
@@ -50,15 +52,15 @@ class PatogenoServiceTest {
         virus = Patogeno("Virus")
 
         // Modificamos los datos del patógeno una vez creado, teniendo el ID que se le asigno
-        var patogenoConId :Patogeno = dao.crear(virus)
+        var patogenoConId :Patogeno = patogenoService.crearPatogeno(virus)
         patogenoConId.tipo = "Bacteria"
         patogenoConId.cantidadDeEspecies = 524
 
         // Actualizamos el patógeno en la base de datos
-        dao.actualizar(patogenoConId)
+        patogenoService.actualizarPatogeno(patogenoConId)
 
         // Recuperamos el patógeno de la base de datos
-        val patogenoRecuperado = dao.recuperar(patogenoConId.id!!)
+        val patogenoRecuperado = patogenoService.recuperarPatogeno(patogenoConId.id!!)
 
         // Verificamos que los datos hayan sido actualizados correctamente
         Assertions.assertEquals(patogenoConId.tipo, patogenoRecuperado.tipo)
@@ -72,11 +74,11 @@ class PatogenoServiceTest {
         val listaDePatogenos : List<Patogeno> = listOf(patogenoBacteria, patogeno)
 
         // Se crean patogenos y se persisten
-        dao.crear(patogeno)
-        dao.crear(patogenoBacteria)
+        patogenoService.crearPatogeno(patogeno)
+        patogenoService.crearPatogeno(patogenoBacteria)
 
         // Se recuperan todos los patogenos
-        val listaPatogenosRecuperados : List<Patogeno> = dao.recuperarATodos()
+        val listaPatogenosRecuperados : List<Patogeno> = patogenoService.recuperarATodosLosPatogenos()
 
         // Se controla que el orden y los patogenos sean los mismos
         Assertions.assertEquals(listaDePatogenos[0].id, listaPatogenosRecuperados[0].id)
@@ -88,11 +90,17 @@ class PatogenoServiceTest {
         Assertions.assertEquals(listaDePatogenos[1].cantidadDeEspecies, listaPatogenosRecuperados[1].cantidadDeEspecies)
     }
 
-    @AfterEach
-    fun eliminarModelo() {
-        dataDAO.clear()
+    @Test
+    fun agregarEspecie() {
+        val patogenoCreado = patogenoService.crearPatogeno(patogeno)
+        patogenoService.agregarEspecie(patogenoCreado.id!!, "virus", "Argentina")
+        val patogenoRecuperado = patogenoService.recuperarPatogeno(patogenoCreado.id!!)
+
+        Assertions.assertEquals(patogenoRecuperado.cantidadDeEspecies, patogenoCreado.cantidadDeEspecies + 1)
     }
 
-
-
+    @AfterEach
+    fun eliminarModelo() {
+        dataDAO.eliminarTodo()
+    }
 }
