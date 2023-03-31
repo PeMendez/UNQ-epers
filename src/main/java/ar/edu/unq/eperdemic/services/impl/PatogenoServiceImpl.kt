@@ -23,7 +23,7 @@ class PatogenoServiceImpl(var patogenoDAO: PatogenoDAO) : PatogenoService {
         var patogeno = patogenoDAO.recuperar(id)
         var especie = patogeno.crearEspecie(nombre, paisDeOrigen)
 
-        patogenoDAO.actualizar(patogeno)
+        actualizarPatogeno(patogeno)
         return especie
     }
 
