@@ -6,8 +6,8 @@ plugins {
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
     id("org.jetbrains.kotlin.plugin.noarg") version "1.3.71"
     id("org.jetbrains.kotlin.plugin.allopen") version "1.3.71"
-    kotlin("jvm") version "1.4.30"
-    kotlin("plugin.spring") version "1.4.30"
+    kotlin("jvm") version "1.6.21"
+    kotlin("plugin.spring") version "1.6.21"
     id("java")
     war
 
@@ -30,7 +30,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-data-rest")
     implementation("org.springframework.boot:spring-boot-starter-aop")
-
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("mysql:mysql-connector-java")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
@@ -41,6 +41,7 @@ dependencies {
     testImplementation("junit:junit:4.12")
     runtimeOnly("mysql:mysql-connector-java")
     testImplementation("com.h2database:h2")
+
 }
 
 tasks.withType<Test> {

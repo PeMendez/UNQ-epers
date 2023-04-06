@@ -1,10 +1,9 @@
-package ar.edu.unq.eperdemic.services
+package ar.edu.unq.eperdemic.persistencia.dao
 
 import ar.edu.unq.eperdemic.modelo.Especie
-import ar.edu.unq.eperdemic.modelo.Patogeno
-import ar.edu.unq.eperdemic.modelo.ReporteDeContagios
 
-interface EspecieService {
+interface EspecieDAO {
+
     fun recuperarEspecie(id: Long): Especie
     fun cantidadDeInfectados(especieId: Long ): Int
     fun recuperarTodas(): List<Especie>
