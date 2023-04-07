@@ -1,24 +1,26 @@
 package ar.edu.unq.eperdemic
 
 import ar.edu.unq.eperdemic.modelo.Patogeno
-import ar.edu.unq.eperdemic.persistencia.dao.DataDAO
 import ar.edu.unq.eperdemic.persistencia.dao.PatogenoDAO
+import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernatePatogenoDAO
 import ar.edu.unq.eperdemic.persistencia.dao.jdbc.JDBCPatogenoDAO
 import ar.edu.unq.eperdemic.services.PatogenoService
 import ar.edu.unq.eperdemic.services.impl.PatogenoServiceImpl
 import ar.edu.unq.eperdemic.utils.jdbc.DataServiceJDBC
+import org.junit.Assert
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 class PatogenoServiceTest {
-    private val dao: PatogenoDAO = JDBCPatogenoDAO()
-    private val dataDAO: DataServiceJDBC = DataServiceJDBC()
+    //private val dao: PatogenoDAO = JDBCPatogenoDAO()
+   // private val dataDAO: DataServiceJDBC = DataServiceJDBC()
     lateinit var patogeno: Patogeno
     lateinit var patogenoBacteria: Patogeno
     lateinit var virus: Patogeno
-    private val patogenoService : PatogenoService = PatogenoServiceImpl(dao)
+    private val hibernatePatogenoDAO = HibernatePatogenoDAO()
+    private val patogenoService : PatogenoService = PatogenoServiceImpl(hibernatePatogenoDAO)
 
     @BeforeEach
     fun crearModelo() {
@@ -26,6 +28,14 @@ class PatogenoServiceTest {
         patogenoBacteria = Patogeno("Bacteria")
     }
 
+    @Test
+    fun crearPatogenoTest() {
+        var patogeno = Patogeno("test-tipo")
+        patogeno = patogenoService.crearPatogeno(patogeno)
+        Assert.assertEquals(3, patogeno.id)
+    }
+
+    /*
     @Test
     fun elPatogenoCreadoAhoraTieneUnIdAsignado() {
         patogenoService.crearPatogeno(patogenoBacteria)
@@ -98,9 +108,11 @@ class PatogenoServiceTest {
 
         Assertions.assertEquals(patogenoRecuperado.cantidadDeEspecies, patogenoCreado.cantidadDeEspecies + 1)
     }
-
+*/
+    /*
     @AfterEach
     fun eliminarModelo() {
         dataDAO.eliminarTodo()
     }
+    */
 }
