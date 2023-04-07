@@ -21,10 +21,25 @@ open class HibernateEspecieDAO : HibernateDAO<Especie>(Especie::class.java), Esp
     }
 
     override fun cantidadDeInfectados(especieId: Long): Int {
-        TODO("Not yet implemented")
+        val session = TransactionRunner.currentSession
+        val hql = """
+                select count(*) from Vector v
+                where v.especie.id = :especieId and v.estaInfectado = true
+            """
+        val query = session.createQuery(hql)
+        query.setParameter("especieId", especieId)
+        return query.uniqueResult() as Int
     }
 
+
     override fun recuperarTodas(): List<Especie> {
-        TODO("Not yet implemented")
+        val session = TransactionRunner.currentSession
+        val hql = """
+                from Especie e
+            """
+        val query = session.createQuery(hql, Especie::class.java)
+        return query.resultList
     }
+
+
 }
