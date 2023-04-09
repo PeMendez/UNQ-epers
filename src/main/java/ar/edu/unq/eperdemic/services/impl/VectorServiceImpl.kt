@@ -3,12 +3,14 @@ package ar.edu.unq.eperdemic.services.impl
 import ar.edu.unq.eperdemic.modelo.Especie
 import ar.edu.unq.eperdemic.modelo.TipoDeVector
 import ar.edu.unq.eperdemic.modelo.Vector
+import ar.edu.unq.eperdemic.persistencia.dao.VectorDAO
 import ar.edu.unq.eperdemic.services.VectorService
+import ar.edu.unq.eperdemic.services.runner.TransactionRunner
 
-class VectorServiceImpl: VectorService {
+class VectorServiceImpl(private val vectorDAO: VectorDAO): VectorService {
 
     override fun contagiar(vectorInfectado: Vector, vectores: List<Vector>) {
-        TODO("Not yet implemented")
+        return TransactionRunner.runTrx {vectorDAO.contagiar(vectorInfectado,vectores) }
     }
 
     override fun infectar(vector: Vector, especie: Especie) {
