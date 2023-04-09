@@ -4,17 +4,21 @@ class Vector( var id: Long?,
               var tipo: TipoDeVector,
               var ubicacion: Ubicacion,
               var especies: MutableList<Especie>) {
-    fun contagiar(vectores: List<Vector>){ //me parece que esta funcion no va a nivel modelo
-        vectores.forEach{v -> especies.forEach{e -> v.infectar(this,e)}}
+
+    fun infectar(especie: Especie) {
+        especies.add(especie)
     }
 
 
-    private fun infectar(vector: Vector, especie: Especie) {
-        if (this.ubicacion == vector.ubicacion && tipo.puedeInfectar(vector.tipo)){
-            this.especies.add(especie)
-        }
+    fun esContagioExitoso(vector: Vector, especie: Especie): Boolean {
+        return ubicacion.nombre == vector.ubicacion.nombre
+                && tipo.puedeInfectar(vector.tipo)
+                && (1..10).random() + especie.patogeno.capacidadDeContagio > vector.capacidadDeDefensa()
     }
-
+    fun capacidadDeDefensa():Int{
+        return especies.map { e -> e.patogeno.capacidadDeDefensa }.average().toInt()
+        //falta ver que hacer si no esta infectado por ninguna especie
+    }
 
 }
 

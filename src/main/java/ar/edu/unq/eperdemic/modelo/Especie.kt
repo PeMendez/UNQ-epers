@@ -11,10 +11,6 @@ class Especie(@ManyToOne var patogeno: Patogeno,
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id : Long? = null
 
-
-
-
-
 }
 
 
