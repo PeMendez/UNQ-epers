@@ -1,9 +1,16 @@
 package ar.edu.unq.eperdemic.modelo
 
-class Vector( var id: Long?,
-              var tipo: TipoDeVector,
-              var ubicacion: Ubicacion,
-              var especies: MutableList<Especie>) {
+import javax.persistence.*
+
+@Entity
+class Vector(@Id
+             @GeneratedValue(strategy = GenerationType.IDENTITY)
+             var id: Long?,
+             var tipo: TipoDeVector,
+             @OneToOne
+             var ubicacion: Ubicacion,
+             @OneToMany
+             var especies: MutableList<Especie>) {
 
     fun infectar(especie: Especie) {
         especies.add(especie)
@@ -23,24 +30,9 @@ class Vector( var id: Long?,
 }
 
 enum class TipoDeVector {
-    Persona {
-        fun puedeInfectar(){
-
-        }
-    },
-    Insecto{
-        fun infectar(){
-
-        }
-    },
-    Animal{
-        fun infectar(){
-
-        }
-    };
+    Persona,Insecto,Animal;
 
     fun puedeInfectar(vector: TipoDeVector): Boolean {
-
-        return TODO("Provide the return value")
+        return true
     }
 }

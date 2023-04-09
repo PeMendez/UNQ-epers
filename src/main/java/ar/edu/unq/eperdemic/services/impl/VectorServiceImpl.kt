@@ -14,22 +14,22 @@ class VectorServiceImpl(private val vectorDAO: VectorDAO): VectorService {
     }
 
     override fun infectar(vector: Vector, especie: Especie) {
-        TODO("Not yet implemented")
+        return TransactionRunner.runTrx { vectorDAO.infectar(vector,especie) }
     }
 
     override fun enfermedades(vectorId: Long): List<Especie> {
-        TODO("Not yet implemented")
+        return TransactionRunner.runTrx { vectorDAO.enfermedades(vectorId) }
     }
 
     override fun crearVector(tipo: TipoDeVector, ubicacionId: Long): Vector {
-        TODO("Not yet implemented")
+        return TransactionRunner.runTrx { vectorDAO.crearVector(tipo,ubicacionId) }
     }
 
     override fun recuperarVector(vectorId: Long): Vector {
-        TODO("Not yet implemented")
+        return TransactionRunner.runTrx { vectorDAO.recuperarVector(vectorId) }
     }
 
     override fun borrarVector(vectorId: Long) {
-        TODO("Not yet implemented")
+        return TransactionRunner.runTrx { vectorDAO.borrarVector(vectorId) }
     }
 }
