@@ -24,7 +24,7 @@ open class HibernateEspecieDAO : HibernateDAO<Especie>(Especie::class.java), Esp
         val session = TransactionRunner.currentSession
         val hql = """
                 select count(*) from Vector v
-                where v.especie.id = :especieId and v.estaInfectado = true
+                where v.especie.id = :especieId and v.estaInfectado
         """
         val query = session.createQuery(hql)
         query.setParameter("especieId", especieId)
