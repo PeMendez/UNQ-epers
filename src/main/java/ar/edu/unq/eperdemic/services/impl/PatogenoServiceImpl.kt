@@ -21,7 +21,10 @@ class PatogenoServiceImpl(val hibernatePatogenoDAO: PatogenoDAO) : PatogenoServi
     }
 
     override fun agregarEspecie(id: Long, nombre: String, ubicacionId: Long): Especie {
-        TODO("not implemented")
+        TODO("Not yet implemented")
+        //val patogeno = hibernatePatogenoDAO.recuperar(id)
+        //val ubicacionNombre = hibernateUbicacionDAO.recuperar(id).nombre
+       // return especie = patogeno.crearEspecie(nombre, ubicacionNombre)
     }
 
     override fun cantidadDeInfectados(especieId: Long): Int {
