@@ -6,7 +6,6 @@ import ar.edu.unq.eperdemic.persistencia.dao.jdbc.JDBCConnector.execute
 
 interface PatogenoDAO {
     fun crear(patogeno: Patogeno): Patogeno
-    fun actualizar(patogeno: Patogeno )
     fun recuperar(idDelPatogeno: Long): Patogeno
     fun recuperarATodos() : List<Patogeno>
 }

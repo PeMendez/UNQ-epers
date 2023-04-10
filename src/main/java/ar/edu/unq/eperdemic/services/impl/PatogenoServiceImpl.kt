@@ -32,8 +32,4 @@ class PatogenoServiceImpl(val hibernatePatogenoDAO: PatogenoDAO) : PatogenoServi
         TODO("Not yet implemented")
     }
 
-    override fun recuperarEspecie(id: Long): Especie {
-        TODO("Not yet implemented")
-    }
-
 }

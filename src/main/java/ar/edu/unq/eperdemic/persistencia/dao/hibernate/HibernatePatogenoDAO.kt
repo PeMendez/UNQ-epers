@@ -23,10 +23,6 @@ open class HibernatePatogenoDAO : HibernateDAO<Patogeno>(Patogeno::class.java), 
         return patogeno
     }
 
-    override fun actualizar(patogeno: Patogeno) {
-        TODO("Not yet implemented")
-    }
-
     override fun recuperar(idDelPatogeno: Long): Patogeno {
         TODO("Not yet implemented")
     }
