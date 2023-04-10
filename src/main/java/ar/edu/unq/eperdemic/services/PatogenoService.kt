@@ -11,4 +11,5 @@ interface PatogenoService {
 
     fun cantidadDeInfectados (especieId: Long) : Int
     fun esPandemia (especieId: Long) : Boolean
+    fun especiesDePatogeno(patogenoId: Long ): List<Especie>
 }

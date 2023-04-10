@@ -35,4 +35,7 @@ class PatogenoServiceImpl(val hibernatePatogenoDAO: PatogenoDAO) : PatogenoServi
         TODO("Not yet implemented")
     }
 
+    override fun especiesDePatogeno(patogenoId: Long ): List<Especie> {
+        return runTrx {  hibernatePatogenoDAO.especiesDePatogeno(patogenoId) }
+    }
 }

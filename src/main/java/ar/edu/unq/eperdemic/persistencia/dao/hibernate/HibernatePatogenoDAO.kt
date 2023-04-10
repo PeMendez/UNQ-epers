@@ -1,5 +1,6 @@
 package ar.edu.unq.eperdemic.persistencia.dao.hibernate
 
+import ar.edu.unq.eperdemic.modelo.Especie
 import ar.edu.unq.eperdemic.modelo.Patogeno
 import ar.edu.unq.eperdemic.persistencia.dao.PatogenoDAO
 import ar.edu.unq.eperdemic.services.runner.TransactionRunner
@@ -36,4 +37,19 @@ open class HibernatePatogenoDAO : HibernateDAO<Patogeno>(Patogeno::class.java), 
         return query.resultList
     }
 
+    override fun especiesDePatogeno(patogenoId: Long ): List<Especie> {
+        val session = TransactionRunner.currentSession
+
+        val hql = """
+                        from Especie e
+                        where e.patogeno = :idBuscado 
+            
+        """
+
+        val query = session.createQuery(hql, Especie::class.java)
+        query.setParameter("idBuscado", patogenoId)
+
+        return query.resultList
+
+    }
 }
