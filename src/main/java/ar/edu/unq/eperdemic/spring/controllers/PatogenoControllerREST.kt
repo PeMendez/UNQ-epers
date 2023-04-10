@@ -20,7 +20,7 @@ class PatogenoControllerREST(private val patogenoService: PatogenoService) {
 
   @PostMapping("/{id}")
   fun agregarEspecie(@PathVariable id: Long, @RequestBody especieDTO: EspecieDTO): EspecieDTO {
-    val especie = patogenoService.agregarEspecie(id, especieDTO.nombre, especieDTO.paisDeOrigen)
+    val especie = patogenoService.agregarEspecie(id, especieDTO.nombre, id)
     return EspecieDTO.from(especie)
   }
 

@@ -8,16 +8,6 @@ open class HibernatePatogenoDAO : HibernateDAO<Patogeno>(Patogeno::class.java), 
 
     override fun crear(patogeno: Patogeno): Patogeno {
         guardar(patogeno)
-        val session = TransactionRunner.currentSession
-
-        val hql = """
-                    select LAST_INSERT_ID()
-                    from Patogeno 
-        """
-
-        val queryId = session.createQuery(hql, Patogeno::class.java)
-
-        patogeno.id = queryId.singleResult as Long
 
         return patogeno
     }

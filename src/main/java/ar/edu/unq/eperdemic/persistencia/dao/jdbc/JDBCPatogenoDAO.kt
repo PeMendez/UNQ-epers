@@ -27,19 +27,19 @@ class JDBCPatogenoDAO : PatogenoDAO {
         return patogeno
     }
 
-    override fun actualizar(patogeno: Patogeno) {
-        execute { conn ->
-            val updateQuery = "UPDATE patogeno SET tipo = ?, cantidadDeEspecies = ? WHERE id = ?"
-            val ps = conn.prepareStatement(updateQuery)
-            ps.setString(1, patogeno.tipo)
-            ps.setInt(2, patogeno.cantidadDeEspecies)
-            patogeno.id?.let { ps.setLong(3, it) }
-            if (ps.executeUpdate() != 1) {
-                throw RuntimeException("El id del patogeno $patogeno no existe")
-            }
-            ps.close()
-        }
-    }
+//   override fun actualizar(patogeno: Patogeno) {
+//        execute { conn ->
+//            val updateQuery = "UPDATE patogeno SET tipo = ?, cantidadDeEspecies = ? WHERE id = ?"
+//            val ps = conn.prepareStatement(updateQuery)
+//            ps.setString(1, patogeno.tipo)
+//            ps.setInt(2, patogeno.cantidadDeEspecies)
+//            patogeno.id?.let { ps.setLong(3, it) }
+//            if (ps.executeUpdate() != 1) {
+//                throw RuntimeException("El id del patogeno $patogeno no existe")
+//            }
+//            ps.close()
+//        }
+//    }
 
     override fun recuperar(patogenoId: Long): Patogeno {
         return execute { conn: Connection ->

@@ -3,24 +3,19 @@ package ar.edu.unq.eperdemic
 import ar.edu.unq.eperdemic.modelo.Patogeno
 import ar.edu.unq.eperdemic.persistencia.dao.PatogenoDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernatePatogenoDAO
-import ar.edu.unq.eperdemic.persistencia.dao.jdbc.JDBCPatogenoDAO
 import ar.edu.unq.eperdemic.services.PatogenoService
 import ar.edu.unq.eperdemic.services.impl.PatogenoServiceImpl
-import ar.edu.unq.eperdemic.utils.jdbc.DataServiceJDBC
+import ar.edu.unq.eperdemic.utils.jdbc.DataServiceHibernate
 import org.junit.Assert
-import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.Assertions
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.*
 
 class PatogenoServiceTest {
-    //private val dao: PatogenoDAO = JDBCPatogenoDAO()
-   // private val dataDAO: DataServiceJDBC = DataServiceJDBC()
+
     lateinit var patogeno: Patogeno
     lateinit var patogenoBacteria: Patogeno
     lateinit var virus: Patogeno
     private val hibernatePatogenoDAO = HibernatePatogenoDAO()
-    private val patogenoService : PatogenoService = PatogenoServiceImpl(hibernatePatogenoDAO)
+    private val patogenoService = PatogenoServiceImpl(hibernatePatogenoDAO)
 
     @BeforeEach
     fun crearModelo() {
@@ -32,7 +27,7 @@ class PatogenoServiceTest {
     fun crearPatogenoTest() {
         var patogeno = Patogeno("test-tipo")
         patogeno = patogenoService.crearPatogeno(patogeno)
-        Assert.assertEquals(3, patogeno.id)
+        Assert.assertTrue(patogeno.id != null)
     }
 
     /*

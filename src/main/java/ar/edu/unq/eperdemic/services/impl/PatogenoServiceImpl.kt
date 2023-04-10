@@ -13,11 +13,11 @@ class PatogenoServiceImpl(val hibernatePatogenoDAO: PatogenoDAO) : PatogenoServi
     }
 
     override fun recuperarPatogeno(id: Long): Patogeno {
-        TODO("not implemented")
+        return runTrx { hibernatePatogenoDAO.recuperar(id) }
     }
 
     override fun recuperarATodosLosPatogenos(): List<Patogeno> {
-        TODO("not implemented")
+        return runTrx { hibernatePatogenoDAO.recuperarATodos() }
     }
 
     override fun agregarEspecie(id: Long, nombre: String, ubicacionId: Long): Especie {

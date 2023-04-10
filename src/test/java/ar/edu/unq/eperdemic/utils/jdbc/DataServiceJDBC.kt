@@ -8,7 +8,7 @@ import ar.edu.unq.eperdemic.services.impl.PatogenoServiceImpl
 import ar.edu.unq.eperdemic.utils.DataService
 import java.sql.Connection
 
-class DataServiceJDBC : DataService {
+class DataServiceHibernate : DataService {
 
     val patogenoDAO = HibernatePatogenoDAO()
     val patogenoService = PatogenoServiceImpl(patogenoDAO)
