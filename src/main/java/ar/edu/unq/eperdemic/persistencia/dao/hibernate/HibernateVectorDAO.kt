@@ -4,6 +4,8 @@ import ar.edu.unq.eperdemic.modelo.Especie
 import ar.edu.unq.eperdemic.modelo.TipoDeVector
 import ar.edu.unq.eperdemic.modelo.Vector
 import ar.edu.unq.eperdemic.persistencia.dao.VectorDAO
+import ar.edu.unq.eperdemic.services.runner.TransactionRunner
+
 
 class HibernateVectorDAO: VectorDAO {
     override fun contagiar(vectorInfectado: Vector, vectores: List<Vector>) {
@@ -23,7 +25,15 @@ class HibernateVectorDAO: VectorDAO {
     }
 
     override fun enfermedades(vectorID: Long): List<Especie> {
-        TODO("Not yet implemented")
+        val session = TransactionRunner.currentSession
+        val hql = """ 
+                    from Vector v
+                    inner join v.especies e
+                    where v.id = :vectorId 
+                """
+        val query = session.createQuery(hql, Especie::class.java)
+        query.setParameter("vectorId", vectorID)
+        return query.resultList
     }
 
     override fun crearVector(tipo: TipoDeVector, ubicacionId: Long): Vector {
