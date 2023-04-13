@@ -1,11 +1,11 @@
 package ar.edu.unq.eperdemic.persistencia.dao.jdbc
 
+import ar.edu.unq.eperdemic.modelo.Especie
 import ar.edu.unq.eperdemic.modelo.Patogeno
 import ar.edu.unq.eperdemic.persistencia.dao.PatogenoDAO
 import ar.edu.unq.eperdemic.persistencia.dao.jdbc.JDBCConnector.execute
 import java.sql.Connection
 import java.sql.Statement
-
 class JDBCPatogenoDAO : PatogenoDAO {
 
 
@@ -77,6 +77,10 @@ class JDBCPatogenoDAO : PatogenoDAO {
                 }
             patogenos
         }
+    }
+
+    override fun especiesDePatogeno(patogenoId: Long): List<Especie> {
+        TODO("Not yet implemented")
     }
 
     init {
