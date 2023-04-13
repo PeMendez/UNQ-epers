@@ -22,7 +22,7 @@ class PatogenoServiceTest {
     }
 
     @Test
-    fun crearPatogenoTest() {
+    fun cuandoSeCreaUnPatogenoSeLeAsignaUnId() {
         var patogeno = Patogeno("Virus")
         patogeno = patogenoService.crearPatogeno(patogeno)
         Assert.assertTrue(patogeno.id != null)
