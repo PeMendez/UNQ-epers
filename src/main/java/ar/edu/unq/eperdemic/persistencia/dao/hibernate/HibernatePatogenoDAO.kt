@@ -54,19 +54,4 @@ open class HibernatePatogenoDAO : HibernateDAO<Patogeno>(Patogeno::class.java), 
 
     }
 
-    /* fun agregarEspecie (id: Long, nombre: String, ubicacionId: Long): Especie{
-       val session = TransactionRunner.currentSession
-
-       val hql = """
-                   from Ubicacion u
-                   where u.id = :idBuscado
-       """
-
-       val query = session.createQuery(hql, Ubicacion::class.java)
-       query.setParameter("idBuscado", ubicacionId)
-
-       val ubicacion = query.singleResult
-       val patogeno = recuperar(id)
-       return patogeno.crearEspecie(nombre, ubicacion.nombre)
-   }*/
 }

@@ -42,7 +42,6 @@ class VectorServiceImplTest {
         val ubicacion = HibernateUbicacionDAO()
         val vectorServ = VectorServiceImpl(hibernate,ubicacion)
         val ubic = Ubicacion("BSAS",3)
-        ubicacion.guardar(ubic)
         val tipo = TipoDeVector.Persona
 
         var vector = vectorServ.crearVector(tipo,3)

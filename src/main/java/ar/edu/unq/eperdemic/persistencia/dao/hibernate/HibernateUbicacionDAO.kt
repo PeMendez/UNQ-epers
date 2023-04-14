@@ -3,6 +3,7 @@ package ar.edu.unq.eperdemic.persistencia.dao.hibernate
 
 import ar.edu.unq.eperdemic.modelo.Patogeno
 import ar.edu.unq.eperdemic.modelo.Ubicacion
+import ar.edu.unq.eperdemic.modelo.Vector
 import ar.edu.unq.eperdemic.persistencia.dao.UbicacionDAO
 import ar.edu.unq.eperdemic.services.runner.TransactionRunner
 
@@ -16,11 +17,24 @@ open class HibernateUbicacionDAO : HibernateDAO<Ubicacion>(Ubicacion::class.java
     }
 
     override fun crearUbicacion(nombreUbicacion: String): Ubicacion {
-        TODO("Not yet implemented")
+        val ubicacionCreada = Ubicacion(nombreUbicacion)
+
+        guardar(ubicacionCreada)
+
+        return ubicacionCreada
     }
 
     override fun recuperarTodos(): List<Ubicacion> {
-        TODO("Not yet implemented")
+        val session = TransactionRunner.currentSession
+
+        val hql = """
+                    from Ubicacion u
+        """
+
+        val query = session.createQuery(hql, Ubicacion::class.java)
+
+        return query.resultList
+
     }
 
     override fun recuperar(ubicacionId: Long): Ubicacion {
@@ -35,5 +49,19 @@ open class HibernateUbicacionDAO : HibernateDAO<Ubicacion>(Ubicacion::class.java
         query.setParameter("idBuscado", ubicacionId)
 
         return query.singleResult
+    }
+
+    fun recuperarVectores(ubicacionId: Long) : List<Vector> {
+        val session = TransactionRunner.currentSession
+
+        val hql = """
+                    from Vector v
+                    join Ubicacion u on v.ubicacion.id = :idBuscado
+        """
+
+        val query = session.createQuery(hql, Vector::class.java)
+        query.setParameter("idBuscado", ubicacionId)
+
+        return query.resultList
     }
 }
