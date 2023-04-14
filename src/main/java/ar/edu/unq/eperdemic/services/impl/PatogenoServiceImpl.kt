@@ -3,10 +3,11 @@ package ar.edu.unq.eperdemic.services.impl
 import ar.edu.unq.eperdemic.modelo.Especie
 import ar.edu.unq.eperdemic.modelo.Patogeno
 import ar.edu.unq.eperdemic.persistencia.dao.PatogenoDAO
+import ar.edu.unq.eperdemic.persistencia.dao.UbicacionDAO
 import ar.edu.unq.eperdemic.services.PatogenoService
 import ar.edu.unq.eperdemic.services.runner.TransactionRunner.runTrx
 
-class PatogenoServiceImpl(val hibernatePatogenoDAO: PatogenoDAO) : PatogenoService {
+class PatogenoServiceImpl(val hibernatePatogenoDAO: PatogenoDAO, val hibernateUbicacionDAO: UbicacionDAO) : PatogenoService {
 
     override fun crearPatogeno(patogeno: Patogeno): Patogeno {
         return runTrx { hibernatePatogenoDAO.crear(patogeno) }
@@ -21,10 +22,10 @@ class PatogenoServiceImpl(val hibernatePatogenoDAO: PatogenoDAO) : PatogenoServi
     }
 
     override fun agregarEspecie(id: Long, nombre: String, ubicacionId: Long): Especie {
-        TODO("Not yet implemented")
-        //val patogeno = hibernatePatogenoDAO.recuperar(id)
-        //val ubicacionNombre = hibernateUbicacionDAO.recuperar(id).nombre
-       // return especie = patogeno.crearEspecie(nombre, ubicacionNombre)
+        val patogeno = hibernatePatogenoDAO.recuperar(id)
+        val ubicacionNombre = hibernateUbicacionDAO.recuperar(ubicacionId).nombre
+        return patogeno.crearEspecie(nombre, ubicacionNombre)
+        //return runTrx { hibernatePatogenoDAO.agregarEspecie(id, nombre, ubicacionId) }
     }
 
     override fun cantidadDeInfectados(especieId: Long): Int {
