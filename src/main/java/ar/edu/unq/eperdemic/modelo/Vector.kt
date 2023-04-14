@@ -23,11 +23,11 @@ class Vector(var tipo: TipoDeVector,
     fun esContagioExitoso(vectorInfectado: Vector, especie: Especie): Boolean {
         return ubicacion.nombre == vectorInfectado.ubicacion.nombre
                 && tipo.puedeSerInfectado(vectorInfectado.tipo)
-                && capacidadDeDefensa() < porcentajeDeContagioExitoso(especie)
+                && Diosito.decidir(100) < porcentajeDeContagioExitoso(especie)
     }
 
     fun porcentajeDeContagioExitoso(especie:Especie): Int{
-        return (1..10).random() + especie.patogeno.capacidadDeContagio
+        return Diosito.decidir(10) + especie.patogeno.capacidadDeContagio
     }
 
     fun capacidadDeDefensa():Int{
