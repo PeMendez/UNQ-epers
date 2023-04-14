@@ -2,7 +2,6 @@ package ar.edu.unq.eperdemic.persistencia.dao.hibernate
 
 import ar.edu.unq.eperdemic.modelo.Especie
 import ar.edu.unq.eperdemic.persistencia.dao.EspecieDAO
-import org.hibernate.cache.spi.support.AbstractReadWriteAccess
 import ar.edu.unq.eperdemic.services.runner.TransactionRunner
 
 open class HibernateEspecieDAO : HibernateDAO<Especie>(Especie::class.java), EspecieDAO {

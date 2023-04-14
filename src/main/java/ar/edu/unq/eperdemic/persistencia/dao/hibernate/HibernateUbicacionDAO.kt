@@ -28,7 +28,7 @@ open class HibernateUbicacionDAO : HibernateDAO<Ubicacion>(Ubicacion::class.java
         val session = TransactionRunner.currentSession
 
         val hql = """
-                    from Ubicacion u
+                    from Ubicacion
         """
 
         val query = session.createQuery(hql, Ubicacion::class.java)

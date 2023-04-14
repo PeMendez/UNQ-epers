@@ -11,10 +11,9 @@ class Patogeno(var tipo: String) : Serializable{
     @GeneratedValue (strategy = GenerationType.IDENTITY)
     var id : Long? = null
     var cantidadDeEspecies: Int = 0
-    var capacidadDeContagio: Int= (1..100).random()
-    var capacidadDeDefensa: Int= (1..100).random()
-    var capacidadDeBiomecanizacion: Int = (1..100).random()
-
+    var capacidadDeContagio: Int= Diosito.decidir(100)
+    var capacidadDeDefensa: Int= Diosito.decidir(100)
+    var capacidadDeBiomecanizacion: Int = Diosito.decidir(100)
 
     override fun toString(): String {
         return tipo
