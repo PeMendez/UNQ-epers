@@ -5,6 +5,7 @@ import ar.edu.unq.eperdemic.modelo.TipoDeVector
 import ar.edu.unq.eperdemic.modelo.Ubicacion
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateUbicacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateVectorDAO
+import ar.edu.unq.eperdemic.services.UbicacionService
 import ar.edu.unq.eperdemic.services.VectorService
 
 import org.junit.Assert
@@ -16,8 +17,15 @@ import org.junit.jupiter.api.Assertions.*
 
 class VectorServiceImplTest {
 
+    val hibernate = HibernateVectorDAO()
+    val ubicacionDAO = HibernateUbicacionDAO()
+    val ubicacionService = UbicacionServiceImpl(ubicacionDAO)
+    val vectorServ = VectorServiceImpl(hibernate)
+
+
     @BeforeEach
     fun setUp() {
+
     }
 
     @AfterEach
@@ -37,14 +45,10 @@ class VectorServiceImplTest {
     }
 
     @Test
-    fun crearVector() {
-        val hibernate = HibernateVectorDAO()
-        val ubicacion = HibernateUbicacionDAO()
-        val vectorServ = VectorServiceImpl(hibernate,ubicacion)
-        val ubic = Ubicacion("BSAS")
+    fun cuandoSeCreaUnVectorSeLeAsignaUnId() {
+        val ubic = ubicacionService.crearUbicacion("BSAS")
         val tipo = TipoDeVector.Persona
-
-        var vector = vectorServ.crearVector(tipo,3)
+        var vector = vectorServ.crearVector(tipo,ubic.id!!)
         Assert.assertTrue(vector.id != null)
     }
 
