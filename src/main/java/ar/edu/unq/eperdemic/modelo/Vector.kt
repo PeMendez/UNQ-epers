@@ -10,27 +10,34 @@ class Vector(@Id
              @OneToOne
              var ubicacion: Ubicacion,
              @OneToMany
-             var especies: MutableList<Especie>) {
+             var especies : MutableList<Especie> = mutableListOf<Especie>()) {
 
     fun infectar(especie: Especie) {
         especies.add(especie)
     }
 
-
     fun esContagioExitoso(vector: Vector, especie: Especie): Boolean {
         return ubicacion.nombre == vector.ubicacion.nombre
                 && tipo.puedeInfectar(vector.tipo)
-                && (1..10).random() + especie.patogeno.capacidadDeContagio > vector.capacidadDeDefensa()
+                && porcentajeDeContagioExitoso(especie) > vector.capacidadDeDefensa()
     }
+
+    fun porcentajeDeContagioExitoso(especie:Especie): Int{
+        return (1..10).random() + especie.patogeno.capacidadDeContagio
+    }
+
     fun capacidadDeDefensa():Int{
-        return especies.map { e -> e.patogeno.capacidadDeDefensa }.average().toInt()
-        //falta ver que hacer si no esta infectado por ninguna especie
+        return if (estaSano()) 0 else especies.map { e -> e.patogeno.capacidadDeDefensa }.average().toInt()
+    }
+
+    private fun estaSano(): Boolean {
+        return especies.isEmpty()
     }
 
 }
 
 enum class TipoDeVector {
-    Persona,Insecto,Animal;
+        Persona,Insecto,Animal;
 
     fun puedeInfectar(vector: TipoDeVector): Boolean {
         return true
