@@ -12,14 +12,17 @@ class Vector(@Id
              @OneToMany
              var especies : MutableList<Especie> = mutableListOf<Especie>()) {
 
-    fun infectar(especie: Especie) {
-        especies.add(especie)
+
+    fun intentarInfectar(vectorInfectado: Vector, especie: Especie) {
+        if (esContagioExitoso(vectorInfectado,especie)) {
+            especies.add(especie)
+        }
     }
 
-    fun esContagioExitoso(vector: Vector, especie: Especie): Boolean {
-        return ubicacion.nombre == vector.ubicacion.nombre
-                && tipo.puedeInfectar(vector.tipo)
-                && porcentajeDeContagioExitoso(especie) > vector.capacidadDeDefensa()
+    fun esContagioExitoso(vectorInfectado: Vector, especie: Especie): Boolean {
+        return vectorInfectado.ubicacion.nombre == ubicacion.nombre
+                && vectorInfectado.tipo.puedeInfectar(tipo)
+                && porcentajeDeContagioExitoso(especie) > capacidadDeDefensa()
     }
 
     fun porcentajeDeContagioExitoso(especie:Especie): Int{

@@ -7,18 +7,16 @@ import ar.edu.unq.eperdemic.services.runner.TransactionRunner
 
 open class HibernateVectorDAO : HibernateDAO<Vector>(Vector::class.java),VectorDAO {
     override fun contagiar(vectorInfectado: Vector, vectores: List<Vector>) {
-
         vectores.forEach{v ->
             vectorInfectado.especies.forEach { e ->
-                if (vectorInfectado.esContagioExitoso(v,e)) {
-                    infectar(v, e)
-                }
+                    v.intentarInfectar(vectorInfectado,e)
             }
+            guardar(v)
         }
     }
 
     override fun infectar(vector: Vector, especie: Especie) {
-        vector.infectar(especie)
+        vector.especies.add(especie)
         guardar(vector)
     }
 
@@ -48,6 +46,12 @@ open class HibernateVectorDAO : HibernateDAO<Vector>(Vector::class.java),VectorD
     }
 
     override fun borrarVector(vectorId: Long) {
-        TODO("Not yet implemented")
+        val session = TransactionRunner.currentSession
+        val hql = """
+                delete from Vector v
+                where v.id = :vectorABorrar
+        """
+        val query = session.createQuery(hql, Vector::class.java)
+        query.setParameter("vectorABorrar", vectorId)
     }
 }
