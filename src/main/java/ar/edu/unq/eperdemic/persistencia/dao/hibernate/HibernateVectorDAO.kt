@@ -21,7 +21,6 @@ open class HibernateVectorDAO : HibernateDAO<Vector>(Vector::class.java),VectorD
     }
 
     override fun enfermedades(vectorID: Long): List<Especie> {
-
         return recuperarVector(vectorID).especies
 
         //val session = TransactionRunner.currentSession
@@ -36,7 +35,7 @@ open class HibernateVectorDAO : HibernateDAO<Vector>(Vector::class.java),VectorD
     }
 
     override fun crearVector(tipo: TipoDeVector, ubicacion: Ubicacion): Vector {
-        val newVector = Vector(null,tipo,ubicacion)
+        val newVector = Vector(tipo,ubicacion)
         guardar(newVector)
         return newVector
     }

@@ -3,14 +3,15 @@ package ar.edu.unq.eperdemic.modelo
 import javax.persistence.*
 
 @Entity
-class Vector(@Id
-             @GeneratedValue(strategy = GenerationType.IDENTITY)
-             var id: Long?,
-             var tipo: TipoDeVector,
+class Vector(var tipo: TipoDeVector,
              @OneToOne
              var ubicacion: Ubicacion,
              @OneToMany
              var especies : MutableList<Especie> = mutableListOf<Especie>()) {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    var id: Long? = null
 
 
     fun intentarInfectar(vectorInfectado: Vector, especie: Especie) {

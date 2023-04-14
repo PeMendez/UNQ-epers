@@ -6,10 +6,13 @@ import ar.edu.unq.eperdemic.modelo.Ubicacion
 import ar.edu.unq.eperdemic.modelo.Vector
 import ar.edu.unq.eperdemic.persistencia.dao.UbicacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.VectorDAO
+import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateUbicacionDAO
 import ar.edu.unq.eperdemic.services.VectorService
 import ar.edu.unq.eperdemic.services.runner.TransactionRunner.runTrx
 
-class VectorServiceImpl(private val vectorDAO: VectorDAO, val ubicacionDAO: UbicacionDAO): VectorService {
+class VectorServiceImpl(private val vectorDAO: VectorDAO): VectorService {
+
+    val ubicacionDAO = HibernateUbicacionDAO()
 
     override fun contagiar(vectorInfectado: Vector, vectores: List<Vector>) {
         return runTrx {vectorDAO.contagiar(vectorInfectado,vectores) }
@@ -24,13 +27,13 @@ class VectorServiceImpl(private val vectorDAO: VectorDAO, val ubicacionDAO: Ubic
     }
 
     override fun crearVector(tipo: TipoDeVector, ubicacionId: Long): Vector {
-        val ubicacion = runTrx {  ubicacionDAO.recuperar(ubicacionId) }
-        return runTrx { vectorDAO.crearVector(tipo,ubicacion) }
+        return runTrx {
+            val ubicacion = ubicacionDAO.recuperar(ubicacionId)
+            vectorDAO.crearVector(tipo,ubicacion)
+        }
     }
 
     override fun recuperarVector(vectorId: Long): Vector {
-
-
         return runTrx { vectorDAO.recuperarVector(vectorId) }
     }
 
