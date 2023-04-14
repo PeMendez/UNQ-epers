@@ -20,9 +20,9 @@ class Vector(@Id
     }
 
     fun esContagioExitoso(vectorInfectado: Vector, especie: Especie): Boolean {
-        return vectorInfectado.ubicacion.nombre == ubicacion.nombre
-                && vectorInfectado.tipo.puedeInfectar(tipo)
-                && porcentajeDeContagioExitoso(especie) > capacidadDeDefensa()
+        return ubicacion.nombre == vectorInfectado.ubicacion.nombre
+                && tipo.puedeSerInfectado(vectorInfectado.tipo)
+                && capacidadDeDefensa() < porcentajeDeContagioExitoso(especie)
     }
 
     fun porcentajeDeContagioExitoso(especie:Especie): Int{
@@ -40,9 +40,20 @@ class Vector(@Id
 }
 
 enum class TipoDeVector {
-        Persona,Insecto,Animal;
-
-    fun puedeInfectar(vector: TipoDeVector): Boolean {
-        return true
-    }
+    Persona {
+        override fun puedeSerInfectado(vector: TipoDeVector): Boolean {
+            return true
+        }
+    },
+    Insecto{
+        override fun puedeSerInfectado(vector: TipoDeVector): Boolean {
+            return this != vector
+        }
+    },
+    Animal{
+        override fun puedeSerInfectado(vector: TipoDeVector): Boolean {
+            return this.ordinal == vector.ordinal +1
+        }
+    };
+    abstract fun puedeSerInfectado(vector: TipoDeVector): Boolean
 }
