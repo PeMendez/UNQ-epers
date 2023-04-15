@@ -57,6 +57,11 @@ class VectorServiceImplTest {
 
     @Test
     fun borrarVector() {
+        val ubic = ubicacionService.crearUbicacion("BSAS")
+        val tipo = TipoDeVector.Persona
+        var vector = vectorServ.crearVector(tipo,ubic.id!!)
+        vectorServ.borrarVector(vector.id!!)
+        Assert.assertNull(vectorServ.recuperarVector(vector.id!!))
     }
 
     @Test

@@ -43,7 +43,8 @@ open class HibernateVectorDAO : HibernateDAO<Vector>(Vector::class.java),VectorD
                 delete from Vector v
                 where v.id = :vectorABorrar
         """
-        val query = session.createQuery(hql, Vector::class.java)
+        val query = session.createQuery(hql)
         query.setParameter("vectorABorrar", vectorId)
+        query.executeUpdate()
     }
 }
