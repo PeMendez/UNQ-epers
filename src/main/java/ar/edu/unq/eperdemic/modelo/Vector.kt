@@ -4,7 +4,7 @@ import javax.persistence.*
 
 @Entity
 class Vector(var tipo: TipoDeVector,
-             @OneToOne
+             @ManyToOne
              var ubicacion: Ubicacion,
              @OneToMany
              var especies : MutableList<Especie> = mutableListOf<Especie>()) {

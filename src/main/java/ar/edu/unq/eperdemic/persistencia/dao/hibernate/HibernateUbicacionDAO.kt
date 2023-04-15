@@ -6,6 +6,7 @@ import ar.edu.unq.eperdemic.modelo.Ubicacion
 import ar.edu.unq.eperdemic.modelo.Vector
 import ar.edu.unq.eperdemic.persistencia.dao.UbicacionDAO
 import ar.edu.unq.eperdemic.services.runner.TransactionRunner
+import javax.persistence.NoResultException
 
 open class HibernateUbicacionDAO : HibernateDAO<Ubicacion>(Ubicacion::class.java), UbicacionDAO {
     override fun mover(vectorId: Long, ubicacionid: Long) {
@@ -17,11 +18,24 @@ open class HibernateUbicacionDAO : HibernateDAO<Ubicacion>(Ubicacion::class.java
     }
 
     override fun crearUbicacion(nombreUbicacion: String): Ubicacion {
-        val ubicacionCreada = Ubicacion(nombreUbicacion)
+        val session = TransactionRunner.currentSession
 
-        guardar(ubicacionCreada)
+        val hql = """
+                    from Ubicacion u
+                    where u.nombre = :nombreBuscado
+        """
 
-        return ubicacionCreada
+        val query = session.createQuery(hql, Ubicacion::class.java)
+        query.setParameter("nombreBuscado", nombreUbicacion)
+
+        try {
+            query.singleResult
+        } catch (e: NoResultException) {
+            val ubicacionCreada = Ubicacion(nombreUbicacion)
+            guardar(ubicacionCreada)
+            return ubicacionCreada
+        }
+        throw Exception("Ya existe una ubicacion con ese nombre.")
     }
 
     override fun recuperarTodos(): List<Ubicacion> {
