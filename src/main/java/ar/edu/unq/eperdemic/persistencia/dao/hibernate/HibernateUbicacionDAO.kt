@@ -51,16 +51,15 @@ open class HibernateUbicacionDAO : HibernateDAO<Ubicacion>(Ubicacion::class.java
         return query.singleResult
     }
 
-    fun recuperarVectores(ubicacionId: Long) : List<Vector> {
+    override fun recuperarVectores(ubicacionId: Long) : List<Vector> {
         val session = TransactionRunner.currentSession
 
         val hql = """
-                    from Vector v
-                    join Ubicacion u on v.ubicacion.id = :idBuscado
+                    from Vector 
         """
 
         val query = session.createQuery(hql, Vector::class.java)
-        query.setParameter("idBuscado", ubicacionId)
+        //query.setParameter("idBuscado", ubicacionId)
 
         return query.resultList
     }
