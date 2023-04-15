@@ -48,13 +48,10 @@ class VectorServiceImplTest {
 
     @Test
     fun recuperarVector() {
-        val ubic = ubicacionService.crearUbicacion("Berazategui")
-        val tipo = TipoDeVector.Persona
-        var vector = vectorServ.crearVector(tipo,ubic.id!!)
-        val vectorRecuperado = vectorServ.recuperarVector(vector.id!!)
-        Assert.assertEquals(vectorRecuperado.ubicacion.nombre, "Berazategui")
-        Assert.assertEquals(vectorRecuperado.id, vector.id)
-        Assert.assertEquals(vectorRecuperado.tipo, vector.tipo)
+        val vectorRecuperado = vectorServ.recuperarVector(1)
+        Assert.assertEquals(vectorRecuperado.ubicacion.nombre, "ubicacion1")
+        Assert.assertEquals(vectorRecuperado.id!!, 1)
+        Assert.assertEquals(vectorRecuperado.tipo, TipoDeVector.Animal)
     }
 
 
