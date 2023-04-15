@@ -1,19 +1,13 @@
 package ar.edu.unq.eperdemic.services.impl
 
-import ar.edu.unq.eperdemic.*
 import ar.edu.unq.eperdemic.modelo.TipoDeVector
-import ar.edu.unq.eperdemic.modelo.Ubicacion
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateUbicacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateVectorDAO
-import ar.edu.unq.eperdemic.services.UbicacionService
-import ar.edu.unq.eperdemic.services.VectorService
-
+import ar.edu.unq.eperdemic.utils.DataServiceHibernate
 import org.junit.Assert
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-
-import org.junit.jupiter.api.Assertions.*
 
 class VectorServiceImplTest {
 
@@ -21,11 +15,11 @@ class VectorServiceImplTest {
     val ubicacionDAO = HibernateUbicacionDAO()
     val ubicacionService = UbicacionServiceImpl(ubicacionDAO)
     val vectorServ = VectorServiceImpl(hibernate)
-
+    var dataService = DataServiceHibernate()
 
     @BeforeEach
     fun setUp() {
-
+        dataService.crearSetDeDatosIniciales()
     }
 
     @AfterEach
@@ -54,7 +48,15 @@ class VectorServiceImplTest {
 
     @Test
     fun recuperarVector() {
+        val ubic = ubicacionService.crearUbicacion("Berazategui")
+        val tipo = TipoDeVector.Persona
+        var vector = vectorServ.crearVector(tipo,ubic.id!!)
+        val vectorRecuperado = vectorServ.recuperarVector(vector.id!!)
+        Assert.assertEquals(vectorRecuperado.ubicacion.nombre, "Berazategui")
+        Assert.assertEquals(vectorRecuperado.id, vector.id)
+        Assert.assertEquals(vectorRecuperado.tipo, vector.tipo)
     }
+
 
     @Test
     fun borrarVector() {
