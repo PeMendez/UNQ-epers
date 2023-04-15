@@ -3,12 +3,12 @@ package ar.edu.unq.eperdemic.modelo
 object Diosito {
 
     var esRandom : Boolean = true
-    fun decidir(limite: Int = 1) : Int {
+    fun decidir(limiteFinal: Int) : Int {
 
         return if (esRandom){
-                    (1..limite).random()
+                    (0..limiteFinal).random()
                 } else {
-                    limite
+                    limiteFinal
                 }
     }
 

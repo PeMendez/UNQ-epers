@@ -1,6 +1,7 @@
 package ar.edu.unq.eperdemic.persistencia.dao
 
 import ar.edu.unq.eperdemic.modelo.Ubicacion
+import ar.edu.unq.eperdemic.modelo.Vector
 
 interface UbicacionDAO {
 
@@ -11,4 +12,6 @@ interface UbicacionDAO {
     fun recuperarTodos(): List<Ubicacion>
 
     fun recuperar(ubicacionId: Long) : Ubicacion
+
+    fun recuperarVectores(ubicacionId: Long) : List<Vector>
 }

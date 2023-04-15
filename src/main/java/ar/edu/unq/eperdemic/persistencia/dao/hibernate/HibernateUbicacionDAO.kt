@@ -55,11 +55,13 @@ open class HibernateUbicacionDAO : HibernateDAO<Ubicacion>(Ubicacion::class.java
         val session = TransactionRunner.currentSession
 
         val hql = """
-                    from Vector 
+                    select v 
+                    from Vector v 
+                    where v.ubicacion.id = :idBuscado
         """
 
         val query = session.createQuery(hql, Vector::class.java)
-        //query.setParameter("idBuscado", ubicacionId)
+        query.setParameter("idBuscado", ubicacionId)
 
         return query.resultList
     }

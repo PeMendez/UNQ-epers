@@ -7,6 +7,8 @@ import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateUbicacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateVectorDAO
 import ar.edu.unq.eperdemic.services.PatogenoService
 import ar.edu.unq.eperdemic.services.runner.TransactionRunner.runTrx
+import java.lang.RuntimeException
+import java.sql.SQLClientInfoException
 
 
 class PatogenoServiceImpl(val patogenoDAO: PatogenoDAO) : PatogenoService {
@@ -34,7 +36,7 @@ class PatogenoServiceImpl(val patogenoDAO: PatogenoDAO) : PatogenoService {
             val especie = patogeno.crearEspecie(nombre, ubicacion.nombre)
             try {
                 val vectores = ubicacionDAO.recuperarVectores(ubicacionId)
-                val vectorAInfectar = vectores[diosito.decidir(vectores.size)]
+                val vectorAInfectar = vectores[diosito.decidir(vectores.size-1)]
                 vectorDAO.infectar(vectorAInfectar, especie)
             } catch (e: Exception){
                 throw Exception("no hay ningún vector en la ubicación dada")
