@@ -21,10 +21,12 @@ open class HibernateEspecieDAO : HibernateDAO<Especie>(Especie::class.java), Esp
 
     override fun cantidadDeInfectados(especieId: Long): Int {
         val session = TransactionRunner.currentSession
-        val hql = """
-                select count(*) from Vector v
-                where v.especie.id = :especieId and v.estaInfectado
-        """
+        val hql =  """
+                    select count(e.id)
+                    from Vector v
+                    join v.especies e
+                    where e.id = :especieId
+                """
         val query = session.createQuery(hql)
         query.setParameter("especieId", especieId)
         return query.uniqueResult() as Int
