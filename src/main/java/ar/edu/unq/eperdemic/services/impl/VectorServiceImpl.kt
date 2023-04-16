@@ -5,15 +5,24 @@ import ar.edu.unq.eperdemic.modelo.TipoDeVector
 import ar.edu.unq.eperdemic.modelo.Vector
 import ar.edu.unq.eperdemic.persistencia.dao.VectorDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateUbicacionDAO
+import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateVectorDAO
 import ar.edu.unq.eperdemic.services.VectorService
 import ar.edu.unq.eperdemic.services.runner.TransactionRunner.runTrx
 
 class VectorServiceImpl(private val vectorDAO: VectorDAO): VectorService {
 
-    val ubicacionDAO = HibernateUbicacionDAO()
+    val hibernateUbicacionDAO = HibernateUbicacionDAO()
+    val hibernateVectorDAO = HibernateVectorDAO()
 
     override fun contagiar(vectorInfectado: Vector, vectores: List<Vector>) {
-        return runTrx {vectorDAO.contagiar(vectorInfectado,vectores) }
+        return runTrx {
+            vectores.forEach{v ->
+                vectorInfectado.especies.forEach { e ->
+                    v.intentarInfectar(vectorInfectado,e)
+                }
+                hibernateVectorDAO.guardar(v)
+            }
+        }
     }
 
     override fun infectar(vector: Vector, especie: Especie) {
@@ -26,7 +35,7 @@ class VectorServiceImpl(private val vectorDAO: VectorDAO): VectorService {
 
     override fun crearVector(tipo: TipoDeVector, ubicacionId: Long): Vector {
         return runTrx {
-            val ubicacion = ubicacionDAO.recuperar(ubicacionId)
+            val ubicacion = hibernateUbicacionDAO.recuperar(ubicacionId)
             vectorDAO.crearVector(tipo,ubicacion)
         }
     }

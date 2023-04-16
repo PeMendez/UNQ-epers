@@ -51,7 +51,6 @@ class VectorServiceImplTest {
         val otraEspecieMas = especieServiceImpl.recuperarEspecie(3)
         val unVectorId = unVector.id!!
 
-
         vectorServiceImpl.infectar(unVector,unaEspecie)
         vectorServiceImpl.infectar(unVector,otraEspecie)
 
