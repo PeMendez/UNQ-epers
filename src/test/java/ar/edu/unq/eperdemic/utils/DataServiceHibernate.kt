@@ -11,7 +11,7 @@ import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateVectorDAO
 import ar.edu.unq.eperdemic.services.impl.PatogenoServiceImpl
 import ar.edu.unq.eperdemic.services.impl.UbicacionServiceImpl
 import ar.edu.unq.eperdemic.services.impl.VectorServiceImpl
-import ar.edu.unq.eperdemic.services.runner.TransactionRunner
+import ar.edu.unq.eperdemic.services.runner.TransactionRunner.runTrx
 
 class DataServiceHibernate : DataService {
 
@@ -36,7 +36,7 @@ class DataServiceHibernate : DataService {
 
 
     override fun crearSetDeDatosIniciales() {
-        TransactionRunner.runTrx {
+        runTrx {
             val listaPatogenosCreados = crearPatogenos()
             val listaDeUbicacionesCreadas = crearUbicaciones()
             crearVectores(listaDeUbicacionesCreadas)
@@ -71,7 +71,7 @@ class DataServiceHibernate : DataService {
     }
 
     override fun eliminarTodo() {
-        TransactionRunner.runTrx {
+        runTrx {
             hibernateDao.clear()
         }
     }
