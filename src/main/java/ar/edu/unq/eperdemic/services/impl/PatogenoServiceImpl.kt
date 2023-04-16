@@ -30,6 +30,7 @@ class PatogenoServiceImpl(val patogenoDAO: PatogenoDAO) : PatogenoService {
     }
 
     override fun agregarEspecie(id: Long, nombre: String, ubicacionId: Long): Especie {
+        diosito.switchModo(true)
         return runTrx {
             val patogeno = patogenoDAO.recuperar(id)
             val ubicacion = ubicacionDAO.recuperar(ubicacionId)
@@ -52,7 +53,11 @@ class PatogenoServiceImpl(val patogenoDAO: PatogenoDAO) : PatogenoService {
     }
 
     override fun esPandemia(especieId: Long): Boolean {
-        TODO("Not yet implemented")
+        return runTrx {
+            val cantUbicaciones = ubicacionDAO.recuperarTodos().size
+            val cantUbicacionesDeLaEspecie = especieDAO.cantidadDeAparicionesPorUbicacion(especieId)
+            cantUbicaciones/2 < cantUbicacionesDeLaEspecie
+        }
     }
 
     override fun especiesDePatogeno(patogenoId: Long ): List<Especie> {
