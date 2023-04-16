@@ -55,7 +55,8 @@ class PatogenoServiceImpl(val patogenoDAO: PatogenoDAO) : PatogenoService {
         return runTrx {
             val cantUbicaciones = ubicacionDAO.recuperarTodos().size
             val vectoresConEspecieId = vectorDAO.recuperarTodos().filter { v -> v.tieneEfermedad(especieId) }
-            val ubicacionesDeVectoresEnfermosConEspecie = vectoresConEspecieId.map { v -> v.ubicacion}
+            var ubicacionesDeVectoresEnfermosConEspecie = vectoresConEspecieId.map { v -> v.ubicacion}
+            ubicacionesDeVectoresEnfermosConEspecie.distinctBy { it.nombre }
             val cantUbicacionesDeLaEspecie = ubicacionesDeVectoresEnfermosConEspecie.size
 
             cantUbicaciones/2 < cantUbicacionesDeLaEspecie

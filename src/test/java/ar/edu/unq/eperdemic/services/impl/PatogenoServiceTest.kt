@@ -1,8 +1,11 @@
 package ar.edu.unq.eperdemic.services.impl
 
 import ar.edu.unq.eperdemic.modelo.Patogeno
+import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateEspecieDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernatePatogenoDAO
+import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateVectorDAO
 import ar.edu.unq.eperdemic.utils.DataServiceHibernate
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -14,6 +17,10 @@ class PatogenoServiceTest {
     private val hibernatePatogenoDAO = HibernatePatogenoDAO()
     private val patogenoService = PatogenoServiceImpl(hibernatePatogenoDAO)
     var dataService = DataServiceHibernate()
+    private val hibernateVectorDAO = HibernateVectorDAO()
+    private val vectorServiceImpl = VectorServiceImpl(hibernateVectorDAO)
+    private val hibernateEspecieDAO = HibernateEspecieDAO()
+    private val especieServiceImpl = EspecieServiceImpl(hibernateEspecieDAO)
 
     @BeforeEach
     fun setUp() {
@@ -55,8 +62,17 @@ class PatogenoServiceTest {
         Assertions.assertEquals(patogenoRecuperado.cantidadDeEspecies, patogenoCreado.cantidadDeEspecies + 1)
     }
 
-    @Test
+    @Test // no anda, mañana lo miro.
     fun esPandemiaAfirmativo(){
+        val unVector = vectorServiceImpl.recuperarVector(1)
+        val vector = vectorServiceImpl.recuperarVector(2)
+        val unaEspecie = especieServiceImpl.recuperarEspecie(1)
+        val otraEspecie = especieServiceImpl.recuperarEspecie(2)
+        vectorServiceImpl.infectar(unVector, unaEspecie)
+        vectorServiceImpl.infectar(unVector, otraEspecie)
+        vectorServiceImpl.infectar(vector, unaEspecie)
+
+        Assertions.assertTrue(patogenoService.esPandemia(unaEspecie.id!!))
 
     }
 
@@ -86,10 +102,10 @@ class PatogenoServiceTest {
         Assertions.assertEquals(listaDePatogenos[1].cantidadDeEspecies, listaPatogenosRecuperados[1].cantidadDeEspecies)
     }
 */
-    /*
+
     @AfterEach
     fun eliminarModelo() {
-        dataDAO.eliminarTodo()
+        dataService.eliminarTodo()
     }
-    */
+
 }
