@@ -14,5 +14,6 @@ interface VectorService {
     fun crearVector(tipo: TipoDeVector, ubicacionId: Long): Vector
     fun recuperarVector(vectorId: Long): Vector
     fun borrarVector(vectorId: Long)
+    fun recuperarTodos() : List<Vector>
 
 }

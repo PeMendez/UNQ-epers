@@ -7,16 +7,15 @@ import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateUbicacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateVectorDAO
 import ar.edu.unq.eperdemic.services.PatogenoService
 import ar.edu.unq.eperdemic.services.runner.TransactionRunner.runTrx
-import java.lang.RuntimeException
-import java.sql.SQLClientInfoException
 
 
 class PatogenoServiceImpl(val patogenoDAO: PatogenoDAO) : PatogenoService {
 
-    val ubicacionDAO = HibernateUbicacionDAO()
-    val vectorDAO = HibernateVectorDAO()
-    val especieDAO = HibernateEspecieDAO()
-    val diosito = Diosito
+    private val ubicacionDAO = HibernateUbicacionDAO()
+    private val vectorDAO = HibernateVectorDAO()
+    private val especieDAO = HibernateEspecieDAO()
+    private val diosito = Diosito
+
     override fun crearPatogeno(patogeno: Patogeno): Patogeno {
         return runTrx { patogenoDAO.crear(patogeno) }
     }
@@ -55,7 +54,10 @@ class PatogenoServiceImpl(val patogenoDAO: PatogenoDAO) : PatogenoService {
     override fun esPandemia(especieId: Long): Boolean {
         return runTrx {
             val cantUbicaciones = ubicacionDAO.recuperarTodos().size
-            val cantUbicacionesDeLaEspecie = especieDAO.cantidadDeAparicionesPorUbicacion(especieId)
+            val vectoresConEspecieId = vectorDAO.recuperarTodos().filter { v -> v.tieneEfermedad(especieId) }
+            val ubicacionesDeVectoresEnfermosConEspecie = vectoresConEspecieId.map { v -> v.ubicacion}
+            val cantUbicacionesDeLaEspecie = ubicacionesDeVectoresEnfermosConEspecie.size
+
             cantUbicaciones/2 < cantUbicacionesDeLaEspecie
         }
     }

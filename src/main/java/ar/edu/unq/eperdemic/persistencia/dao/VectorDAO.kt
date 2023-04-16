@@ -12,4 +12,5 @@ interface VectorDAO {
     fun crearVector(tipo: TipoDeVector, ubicacion: Ubicacion): Vector
     fun recuperarVector(vectorId: Long): Vector
     fun borrarVector(vectorId: Long)
+    fun recuperarTodos() : List<Vector>
 }

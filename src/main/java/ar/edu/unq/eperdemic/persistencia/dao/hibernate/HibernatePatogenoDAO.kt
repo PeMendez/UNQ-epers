@@ -42,7 +42,7 @@ open class HibernatePatogenoDAO : HibernateDAO<Patogeno>(Patogeno::class.java), 
 
         val hql = """
                         from Especie e
-                        where e.patogeno = :idBuscado 
+                        where e.patogeno.id = :idBuscado 
             
         """
 
@@ -52,5 +52,6 @@ open class HibernatePatogenoDAO : HibernateDAO<Patogeno>(Patogeno::class.java), 
         return query.resultList
 
     }
+
 
 }

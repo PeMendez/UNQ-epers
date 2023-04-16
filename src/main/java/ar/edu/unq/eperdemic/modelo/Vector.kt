@@ -1,5 +1,6 @@
 package ar.edu.unq.eperdemic.modelo
 
+import java.util.Objects.isNull
 import javax.persistence.*
 
 @Entity
@@ -7,7 +8,7 @@ class Vector(var tipo: TipoDeVector,
              @ManyToOne
              var ubicacion: Ubicacion,
              @OneToMany
-             var especies : MutableList<Especie> = mutableListOf<Especie>()) {
+             var especies : MutableList<Especie> = mutableListOf()) {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,6 +37,11 @@ class Vector(var tipo: TipoDeVector,
 
     private fun estaSano(): Boolean {
         return especies.isEmpty()
+    }
+
+    fun tieneEfermedad(especieId : Long) : Boolean {
+
+        return !isNull(especies.find { e -> e.id == especieId })
     }
 
 }

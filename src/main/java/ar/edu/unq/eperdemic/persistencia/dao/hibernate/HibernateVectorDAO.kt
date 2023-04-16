@@ -39,4 +39,14 @@ open class HibernateVectorDAO : HibernateDAO<Vector>(Vector::class.java),VectorD
         query.setParameter("vectorABorrar", vectorId)
         query.executeUpdate()
     }
+
+    override fun recuperarTodos(): List<Vector> {
+        val session = TransactionRunner.currentSession
+
+        val hql = "from Vector "
+
+        val query = session.createQuery(hql, Vector ::class.java)
+
+        return query.resultList
+    }
 }

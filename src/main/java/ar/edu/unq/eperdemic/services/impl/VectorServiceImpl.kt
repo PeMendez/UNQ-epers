@@ -47,4 +47,8 @@ class VectorServiceImpl(private val vectorDAO: VectorDAO): VectorService {
     override fun borrarVector(vectorId: Long) {
         return runTrx { vectorDAO.borrarVector(vectorId) }
     }
+
+    override fun recuperarTodos(): List<Vector> {
+        return runTrx { vectorDAO.recuperarTodos() }
+    }
 }

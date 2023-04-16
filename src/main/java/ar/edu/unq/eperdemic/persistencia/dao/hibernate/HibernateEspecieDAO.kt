@@ -42,16 +42,4 @@ open class HibernateEspecieDAO : HibernateDAO<Especie>(Especie::class.java), Esp
         return query.resultList
     }
 
-    fun cantidadDeAparicionesPorUbicacion(especieId: Long): Int {
-        val session = TransactionRunner.currentSession
-        val hql = """
-                select count(e.id)
-                    from Especie e
-                    where e.id = :especieId
-                    group by e.paisDeOrigen
-            """
-        val query = session.createQuery(hql, Especie::class.java)
-        query.setParameter("especieId", especieId)
-        return query.fetchSize
-    }
 }
