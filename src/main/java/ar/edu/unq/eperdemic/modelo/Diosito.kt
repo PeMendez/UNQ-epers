@@ -12,7 +12,7 @@ object Diosito {
                 }
     }
 
-    fun switchModo() {
-         esRandom = !esRandom
+    fun switchModo(esRandom: Boolean) {
+         this.esRandom = esRandom
     }
 }

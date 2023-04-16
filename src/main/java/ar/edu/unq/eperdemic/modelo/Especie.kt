@@ -1,7 +1,7 @@
 package ar.edu.unq.eperdemic.modelo
 
 import javax.persistence.*
-import java.util.Objects
+
 @Entity
 class Especie(@ManyToOne var patogeno: Patogeno,
               var nombre: String,
