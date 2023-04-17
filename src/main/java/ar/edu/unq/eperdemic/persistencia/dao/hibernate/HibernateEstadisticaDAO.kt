@@ -20,7 +20,7 @@ class HibernateEstadisticaDAO : EstadisticaDAO {
                     order by count(v) desc        
         """
         val query = session.createQuery(hql, Especie::class.java)
-        return query.singleResult
+        return query.resultList.first()
 
     }
 

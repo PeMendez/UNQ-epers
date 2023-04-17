@@ -15,7 +15,15 @@ open class HibernateVectorDAO : HibernateDAO<Vector>(Vector::class.java),VectorD
     }
 
     override fun enfermedades(vectorID: Long): List<Especie> {
-        return recuperarVector(vectorID).especies
+        val session = TransactionRunner.currentSession
+        val hql = ("select e from Vector v"
+                + " inner join v.especies e "
+                + "where v.id = :vectorId ")
+
+        val query = session.createQuery(hql, Especie::class.java)
+        query.setParameter("vectorId", vectorID)
+
+        return query.resultList
     }
 
     override fun crearVector(tipo: TipoDeVector, ubicacion: Ubicacion): Vector {
