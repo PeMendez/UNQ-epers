@@ -1,14 +1,10 @@
 package ar.edu.unq.eperdemic.services.impl
 
+import ar.edu.unq.eperdemic.modelo.Diosito
 import ar.edu.unq.eperdemic.modelo.Patogeno
-import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateEspecieDAO
-import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernatePatogenoDAO
-import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateVectorDAO
+import ar.edu.unq.eperdemic.persistencia.dao.hibernate.*
 import ar.edu.unq.eperdemic.utils.DataServiceHibernate
-import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.Assertions
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.*
 
 class PatogenoServiceTest {
 
@@ -21,12 +17,14 @@ class PatogenoServiceTest {
     private val vectorServiceImpl = VectorServiceImpl(hibernateVectorDAO)
     private val hibernateEspecieDAO = HibernateEspecieDAO()
     private val especieServiceImpl = EspecieServiceImpl(hibernateEspecieDAO)
+    private val diosito = Diosito
 
     @BeforeEach
     fun setUp() {
         dataService.crearSetDeDatosIniciales()
         patogenoVirus = Patogeno("Virus")
         patogenoBacteria = Patogeno("Bacteria")
+        diosito.switchModo(false)
     }
 
     @Test
@@ -45,7 +43,7 @@ class PatogenoServiceTest {
         Assertions.assertEquals(patogenoVirus.capacidadDeBiomecanizacion, patogenoRecuperado.capacidadDeBiomecanizacion)
     }
 
-    @Test //ver como hacer para no comparar por hash, lo dejé así para que no rompa nada más.
+    @Test
     fun seLeAgregaUnaEspecieAUnPatogenoTest(){
         patogenoService.crearPatogeno(patogenoBacteria)
         val especieGenerada = patogenoService.agregarEspecie(patogenoBacteria.id!!,"EspecieViolenta", 2)
@@ -62,7 +60,7 @@ class PatogenoServiceTest {
         Assertions.assertEquals(patogenoRecuperado.cantidadDeEspecies, patogenoCreado.cantidadDeEspecies + 1)
     }
 
-    @Test // no anda, mañana lo miro.
+    @Test
     fun esPandemiaAfirmativo(){
         val unVector = vectorServiceImpl.recuperarVector(1)
         val vector = vectorServiceImpl.recuperarVector(2)

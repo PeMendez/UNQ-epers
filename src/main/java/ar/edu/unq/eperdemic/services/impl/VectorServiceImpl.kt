@@ -26,7 +26,10 @@ class VectorServiceImpl(private val vectorDAO: VectorDAO): VectorService {
     }
 
     override fun infectar(vector: Vector, especie: Especie) {
-        return runTrx { vectorDAO.infectar(vector,especie) }
+        return runTrx {
+            vector.especies.add(especie)
+            hibernateVectorDAO.guardar(vector)
+        }
     }
 
     override fun enfermedades(vectorId: Long): List<Especie> {

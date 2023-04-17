@@ -7,7 +7,7 @@ import javax.persistence.*
 class Vector(var tipo: TipoDeVector,
              @ManyToOne
              var ubicacion: Ubicacion,
-             @OneToMany
+             @ManyToMany(fetch = FetchType.EAGER)
              var especies : MutableList<Especie> = mutableListOf()) {
 
     @Id

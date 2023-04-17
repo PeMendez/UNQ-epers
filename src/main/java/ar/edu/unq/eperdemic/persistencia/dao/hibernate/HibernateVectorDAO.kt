@@ -11,8 +11,7 @@ import ar.edu.unq.eperdemic.services.runner.TransactionRunner
 open class HibernateVectorDAO : HibernateDAO<Vector>(Vector::class.java),VectorDAO {
 
     override fun infectar(vector: Vector, especie: Especie) {
-        vector.especies.add(especie)
-        guardar(vector)
+
     }
 
     override fun enfermedades(vectorID: Long): List<Especie> {
