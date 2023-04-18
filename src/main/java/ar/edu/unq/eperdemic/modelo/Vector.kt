@@ -44,6 +44,11 @@ class Vector(var tipo: TipoDeVector,
         return !isNull(especies.find { e -> e.id == especieId })
     }
 
+    fun mover(ubicacion: Ubicacion)  {
+        this.ubicacion = ubicacion
+
+    }
+
 }
 
 enum class TipoDeVector {

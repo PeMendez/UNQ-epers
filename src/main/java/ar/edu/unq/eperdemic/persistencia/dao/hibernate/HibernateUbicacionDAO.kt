@@ -15,10 +15,10 @@ open class HibernateUbicacionDAO : HibernateDAO<Ubicacion>(Ubicacion::class.java
         val ubicacion = recuperar(ubicacionid)
         val vector = vectorDAO.recuperarVector(vectorId)
 
-        vector.ubicacion = ubicacion
+        vector.mover(ubicacion)
 
         vectorDAO.actualizar(vector)
-        actualizar(ubicacion)
+
     }
 
     override fun expandir(ubicacionId: Long) {
