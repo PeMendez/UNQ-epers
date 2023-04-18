@@ -3,12 +3,22 @@ package ar.edu.unq.eperdemic.persistencia.dao.hibernate
 import ar.edu.unq.eperdemic.modelo.Ubicacion
 import ar.edu.unq.eperdemic.modelo.Vector
 import ar.edu.unq.eperdemic.persistencia.dao.UbicacionDAO
+import ar.edu.unq.eperdemic.services.impl.VectorServiceImpl
 import ar.edu.unq.eperdemic.services.runner.TransactionRunner
 import javax.persistence.NoResultException
 
 open class HibernateUbicacionDAO : HibernateDAO<Ubicacion>(Ubicacion::class.java), UbicacionDAO {
+
+    val vectorDAO = HibernateVectorDAO()
+
     override fun mover(vectorId: Long, ubicacionid: Long) {
-        TODO("Not yet implemented")
+        val ubicacion = recuperar(ubicacionid)
+        val vector = vectorDAO.recuperarVector(vectorId)
+
+        vector.ubicacion = ubicacion
+
+        vectorDAO.actualizar(vector)
+        actualizar(ubicacion)
     }
 
     override fun expandir(ubicacionId: Long) {

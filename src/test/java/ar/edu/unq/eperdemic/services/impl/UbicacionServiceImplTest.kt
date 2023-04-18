@@ -1,6 +1,7 @@
 package ar.edu.unq.eperdemic.services.impl
 
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateUbicacionDAO
+import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateVectorDAO
 import ar.edu.unq.eperdemic.utils.DataServiceHibernate
 import org.junit.jupiter.api.*
 
@@ -9,6 +10,9 @@ class UbicacionServiceImplTest {
     val dataService = DataServiceHibernate()
     val ubicacionDAO = HibernateUbicacionDAO()
     val ubicacionService = UbicacionServiceImpl(ubicacionDAO)
+
+    val vectorDAO = HibernateVectorDAO()
+    val vectorService = VectorServiceImpl(vectorDAO)
 
     @BeforeEach
     fun setUp() {
@@ -49,6 +53,19 @@ class UbicacionServiceImplTest {
         } catch (ex: Exception) {
             fail("No tendria que haber lanzado una excepcion porque son distintos nombres")
         }
+    }
+
+    @Test
+    fun seMueveUnVectorAUnaUbicacionCorrectamente() {
+        val ubicacion = ubicacionService.recuperar(1)
+        val vector = vectorService.recuperarVector(3)
+
+        Assertions.assertTrue(vector.ubicacion.nombre != ubicacion.nombre)
+
+        ubicacionService.mover(vector.id!!, ubicacion.id!!)
+
+        Assertions.assertTrue(vector.ubicacion.nombre == ubicacion.nombre)
+
     }
 
     @AfterEach

@@ -3,13 +3,17 @@ package ar.edu.unq.eperdemic.services.impl
 import ar.edu.unq.eperdemic.modelo.Ubicacion
 import ar.edu.unq.eperdemic.modelo.Vector
 import ar.edu.unq.eperdemic.persistencia.dao.UbicacionDAO
+import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateVectorDAO
 import ar.edu.unq.eperdemic.services.UbicacionService
 import ar.edu.unq.eperdemic.services.runner.TransactionRunner.runTrx
 
 class UbicacionServiceImpl(val hibernateUbicacionDAO: UbicacionDAO): UbicacionService {
 
+    val vectorDAO = HibernateVectorDAO()
+    val vectorService = VectorServiceImpl(vectorDAO)
+
     override fun mover(vectorId: Long, ubicacionid: Long) {
-        TODO("Not yet implemented")
+        runTrx { hibernateUbicacionDAO.mover(vectorId, ubicacionid) }
     }
 
     override fun expandir(ubicacionId: Long) {
