@@ -63,19 +63,27 @@ class PatogenoServiceTest {
     @Test
     fun esPandemiaAfirmativo(){
         val unVector = vectorServiceImpl.recuperarVector(1)
-        val vector = vectorServiceImpl.recuperarVector(2)
+        val otroVector = vectorServiceImpl.recuperarVector(2)
         val unaEspecie = especieServiceImpl.recuperarEspecie(1)
         val otraEspecie = especieServiceImpl.recuperarEspecie(2)
-        vectorServiceImpl.infectar(unVector, unaEspecie)
-        vectorServiceImpl.infectar(unVector, otraEspecie)
-        vectorServiceImpl.infectar(vector, unaEspecie)
 
-        Assertions.assertTrue(patogenoService.esPandemia(unaEspecie.id!!))
+        vectorServiceImpl.infectar(otroVector, unaEspecie)
+        vectorServiceImpl.infectar(otroVector, otraEspecie)
+        vectorServiceImpl.infectar(unVector, unaEspecie)
+
+        Assertions.assertTrue(patogenoService.esPandemia((unaEspecie.id!!)))
 
     }
 
     @Test
     fun esPandemiaNegativo(){
+        val unVector = vectorServiceImpl.recuperarVector(1)
+        val unaEspecie = especieServiceImpl.recuperarEspecie(1)
+        val otraEspecie = especieServiceImpl.recuperarEspecie(2)
+        vectorServiceImpl.infectar(unVector, unaEspecie)
+        vectorServiceImpl.infectar(unVector, otraEspecie)
+
+        Assertions.assertFalse(patogenoService.esPandemia(unaEspecie.id!!))
 
     }
 

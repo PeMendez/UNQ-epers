@@ -89,7 +89,7 @@ class VectorServiceImplTest {
     fun getUbicacionDAO() {
     }
 
-    //@AfterEach
+    @AfterEach
     fun eliminarModelo() {
         dataServiceHibernate.eliminarTodo()
     }
