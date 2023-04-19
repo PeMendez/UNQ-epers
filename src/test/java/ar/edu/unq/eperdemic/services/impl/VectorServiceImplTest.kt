@@ -1,5 +1,6 @@
 package ar.edu.unq.eperdemic.services.impl
 
+import ar.edu.unq.eperdemic.modelo.Diosito
 import ar.edu.unq.eperdemic.modelo.TipoDeVector
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateEspecieDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateUbicacionDAO
@@ -23,6 +24,7 @@ class VectorServiceImplTest {
 
     @BeforeEach
     fun setUp() {
+        Diosito.switchModo(false)
         dataServiceHibernate.crearSetDeDatosIniciales()
     }
 
@@ -32,6 +34,19 @@ class VectorServiceImplTest {
 
     @Test
     fun contagiar() {
+        val unVector = vectorServiceImpl.recuperarVector(3)
+        val otroVector = vectorServiceImpl.recuperarVector(4)
+        val otroVectorMas = vectorServiceImpl.recuperarVector(5)
+        val unaEspecie = especieServiceImpl.recuperarEspecie(1)
+
+        vectorServiceImpl.infectar(unVector,unaEspecie)
+
+        val vectores = listOf(otroVector,otroVectorMas)
+
+        vectorServiceImpl.contagiar(unVector,vectores)
+
+        Assertions.assertTrue(otroVector.tieneEfermedad(unaEspecie.id!!))
+        Assertions.assertTrue(otroVectorMas.tieneEfermedad(unaEspecie.id!!))
     }
 
     @Test

@@ -68,6 +68,8 @@ class DataServiceHibernate : DataService {
         vectorService.crearVector(TipoDeVector.Animal, listaDeUbicaciones[0].id!!)
         vectorService.crearVector(TipoDeVector.Insecto, listaDeUbicaciones[1].id!!)
         vectorService.crearVector(TipoDeVector.Persona, listaDeUbicaciones[2].id!!)
+        vectorService.crearVector(TipoDeVector.Persona, listaDeUbicaciones[2].id!!)
+        vectorService.crearVector(TipoDeVector.Persona, listaDeUbicaciones[2].id!!)
     }
 
     override fun eliminarTodo() {
