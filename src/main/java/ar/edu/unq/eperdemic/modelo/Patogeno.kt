@@ -2,7 +2,6 @@ package ar.edu.unq.eperdemic.modelo
 
 import java.io.Serializable
 import javax.persistence.*
-import kotlin.random.Random
 
 @Entity
 class Patogeno(var tipo: String) : Serializable{
