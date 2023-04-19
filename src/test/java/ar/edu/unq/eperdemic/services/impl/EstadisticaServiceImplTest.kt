@@ -10,11 +10,13 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 class EstadisticaServiceImplTest {
+
     var dataService = DataServiceHibernate()
     private val hibernateEspecieDAO = HibernateEspecieDAO()
     private val especieService = EspecieServiceImpl(hibernateEspecieDAO)
     private val hibernateVectorDAO = HibernateVectorDAO()
     private val vectorServiceImpl = VectorServiceImpl(hibernateVectorDAO)
+    private val estadisticaService = EstadisticaServiceImpl()
 
     @BeforeEach
     fun setUp() {
@@ -28,12 +30,27 @@ class EstadisticaServiceImplTest {
 
         vectorServiceImpl.infectar(unVector,especieQueMasInfecto)
         Assert.assertEquals(unVector.tipo, TipoDeVector.Persona)
-        Assert.assertEquals(especieQueMasInfecto.id, especieService.especieLider().id)
+        Assert.assertEquals(especieQueMasInfecto.id, estadisticaService.especieLider().id)
     }
 
+    /*
     @Test
     fun lideres() {
+        val especieInf = especieService.recuperarEspecie(2)
+        val unVector = vectorServiceImpl.recuperarVector(3)
+        val otroVector = vectorServiceImpl.recuperarVector(1)
+
+
+        vectorServiceImpl.infectar(unVector,especieInf)
+        vectorServiceImpl.infectar(otroVector,especieInf)
+
+        Assert.assertEquals(unVector.tipo, TipoDeVector.Persona)
+        Assert.assertEquals(otroVector.tipo, TipoDeVector.Animal)
+        //Assert.assertEquals(especieInf.id, estadisticaService.especieLider().id)
+
     }
+
+     */
 
     @Test
     fun reporteDeContagios() {
