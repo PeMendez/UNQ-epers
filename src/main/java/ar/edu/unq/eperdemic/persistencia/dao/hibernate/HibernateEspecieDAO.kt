@@ -1,6 +1,7 @@
 package ar.edu.unq.eperdemic.persistencia.dao.hibernate
 
 import ar.edu.unq.eperdemic.modelo.Especie
+import ar.edu.unq.eperdemic.modelo.TipoDeVector
 import ar.edu.unq.eperdemic.persistencia.dao.EspecieDAO
 import ar.edu.unq.eperdemic.services.runner.TransactionRunner
 
@@ -41,5 +42,31 @@ open class HibernateEspecieDAO : HibernateDAO<Especie>(Especie::class.java), Esp
         val query = session.createQuery(hql, Especie::class.java)
         return query.resultList
     }
+
+    override fun especieLider(): Especie {
+        val session = TransactionRunner.currentSession
+        val hql = """select e
+                    from Vector v
+                    join v.especies e
+                    where v.tipo in (${TipoDeVector.Persona.ordinal})
+                    group by e 
+                    order by count(v) desc
+        """
+        val query = session.createQuery(hql, Especie::class.java)
+        return query.resultList.first()
+
+    }
+
+
+    override fun lideres(): List<Especie> {
+        val session = TransactionRunner.currentSession
+        val hql = """ select e 
+                from Vector v
+                join v.especies e
+        """
+        val query = session.createQuery(hql, Especie::class.java)
+        return query.resultList
+    }
+
 
 }

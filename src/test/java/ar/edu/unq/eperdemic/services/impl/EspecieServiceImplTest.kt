@@ -6,6 +6,7 @@ import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernatePatogenoDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateUbicacionDAO
 import ar.edu.unq.eperdemic.utils.DataServiceHibernate
 import org.junit.Assert
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
@@ -63,13 +64,23 @@ class EspecieServiceImplTest {
     }
 
 
-
-
     @Test
     fun recuperarTodas() {
+        val unaEspecie = especieService.recuperarEspecie(1)
+        val otraEspecie = especieService.recuperarEspecie(2)
+        val otraOtraEspecie = especieService.recuperarEspecie(3)
+        val especies = especieService.recuperarTodas()
+
+        Assert.assertEquals(especies[0].id, unaEspecie.id)
+        Assert.assertEquals(especies[1].id, otraEspecie.id)
+        Assert.assertEquals(especies[2].id, otraOtraEspecie.id)
+
     }
 
-    @Test
-    fun getHibernateEspecieDAO() {
+
+    @AfterEach
+    fun eliminarModelo() {
+        dataService.eliminarTodo()
     }
+
 }

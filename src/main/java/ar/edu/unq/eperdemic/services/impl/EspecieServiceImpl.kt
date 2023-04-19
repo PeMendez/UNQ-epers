@@ -1,7 +1,7 @@
 package ar.edu.unq.eperdemic.services.impl
 
 import ar.edu.unq.eperdemic.modelo.Especie
-import ar.edu.unq.eperdemic.persistencia.dao.hibernate.*
+import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateEspecieDAO
 import ar.edu.unq.eperdemic.services.EspecieService
 import ar.edu.unq.eperdemic.services.runner.TransactionRunner.runTrx
 
@@ -17,6 +17,16 @@ class EspecieServiceImpl(val hibernateEspecieDAO: HibernateEspecieDAO) : Especie
 
     override fun recuperarTodas(): List<Especie>{
         return runTrx { hibernateEspecieDAO.recuperarTodas() }
+    }
+
+
+    override fun especieLider(): Especie {
+        return runTrx { hibernateEspecieDAO.especieLider() }
+    }
+
+
+    override fun lideres(): List<Especie> {
+        return runTrx { hibernateEspecieDAO.lideres() }
     }
 
 
