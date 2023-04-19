@@ -9,16 +9,24 @@ import javax.persistence.NoResultException
 
 open class HibernateUbicacionDAO : HibernateDAO<Ubicacion>(Ubicacion::class.java), UbicacionDAO {
 
-    val vectorDAO = HibernateVectorDAO()
-
     override fun mover(vectorId: Long, ubicacionid: Long) {
         val ubicacion = recuperar(ubicacionid)
-        val vector = vectorDAO.recuperarVector(vectorId)
+        val session = TransactionRunner.currentSession
+
+        val hql = """
+                    from Vector v 
+                    where v.id = :vectorIdDado
+        """
+
+        val query = session.createQuery(hql, Vector::class.java)
+        query.setParameter("vectorIdDado", vectorId)
+
+        val vector = query.singleResult
 
         vector.mover(ubicacion)
+        ubicacion.vectores.add(vector)
 
-        vectorDAO.actualizar(vector)
-
+        actualizar(ubicacion)
     }
 
     override fun expandir(ubicacionId: Long) {

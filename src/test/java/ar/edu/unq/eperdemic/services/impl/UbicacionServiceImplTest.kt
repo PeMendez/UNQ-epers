@@ -60,12 +60,14 @@ class UbicacionServiceImplTest {
         val ubicacion = ubicacionService.recuperar(1)
         val vector = vectorService.recuperarVector(3)
 
-        Assertions.assertTrue(vector.ubicacion.nombre != ubicacion.nombre)
+        Assertions.assertTrue(vector.ubicacion.id != ubicacion.id)
 
         ubicacionService.mover(vector.id!!, ubicacion.id!!)
 
-        Assertions.assertTrue(vector.ubicacion.nombre == ubicacion.nombre)
+        val vectorActualizado = vectorService.recuperarVector(3)
 
+        Assertions.assertEquals(vectorActualizado.ubicacion.id, ubicacion.id)
+        Assertions.assertEquals(vectorActualizado.ubicacion.nombre, ubicacion.nombre)
     }
 
     @AfterEach
