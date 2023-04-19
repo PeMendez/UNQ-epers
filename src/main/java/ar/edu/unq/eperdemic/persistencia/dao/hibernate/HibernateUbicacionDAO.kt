@@ -1,9 +1,9 @@
 package ar.edu.unq.eperdemic.persistencia.dao.hibernate
 
+import ar.edu.unq.eperdemic.modelo.ReporteDeContagios
 import ar.edu.unq.eperdemic.modelo.Ubicacion
 import ar.edu.unq.eperdemic.modelo.Vector
 import ar.edu.unq.eperdemic.persistencia.dao.UbicacionDAO
-import ar.edu.unq.eperdemic.services.impl.VectorServiceImpl
 import ar.edu.unq.eperdemic.services.runner.TransactionRunner
 import javax.persistence.NoResultException
 
@@ -94,5 +94,9 @@ open class HibernateUbicacionDAO : HibernateDAO<Ubicacion>(Ubicacion::class.java
         query.setParameter("idBuscado", ubicacionId)
 
         return query.resultList
+    }
+
+    override fun reporteDeContagios(nombreDeLaUbicacion: String): ReporteDeContagios {
+        return ReporteDeContagios(1,1,"a")
     }
 }

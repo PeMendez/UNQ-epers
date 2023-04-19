@@ -63,9 +63,12 @@ open class HibernateEspecieDAO : HibernateDAO<Especie>(Especie::class.java), Esp
         val hql = """ select e 
                 from Vector v
                 join v.especies e
+                where v.tipo in (${TipoDeVector.Persona.ordinal}, ${TipoDeVector.Animal.ordinal})
+                group by e 
+                order by count(v) desc
         """
         val query = session.createQuery(hql, Especie::class.java)
-        return query.resultList
+        return query.setMaxResults(10).resultList
     }
 
 
