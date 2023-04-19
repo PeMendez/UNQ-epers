@@ -29,7 +29,7 @@ class UbicacionServiceImpl(val hibernateUbicacionDAO: UbicacionDAO): UbicacionSe
     }
 
     fun recuperar(ubicacionId: Long) : Ubicacion {
-        return runTrx { hibernateUbicacionDAO.recuperar(ubicacionId)}
+        return runTrx { hibernateUbicacionDAO.recuperarUbicacion(ubicacionId)}
     }
 
     fun recuperarVectores(ubicacionId: Long): List<Vector> {

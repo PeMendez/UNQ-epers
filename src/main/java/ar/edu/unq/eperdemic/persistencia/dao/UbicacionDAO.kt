@@ -12,7 +12,7 @@ interface UbicacionDAO {
     fun crearUbicacion(nombreUbicacion: String): Ubicacion
     fun recuperarTodos(): List<Ubicacion>
 
-    fun recuperar(ubicacionId: Long) : Ubicacion
+    fun recuperarUbicacion(ubicacionId: Long) : Ubicacion
 
     fun recuperarVectores(ubicacionId: Long) : List<Vector>
 
