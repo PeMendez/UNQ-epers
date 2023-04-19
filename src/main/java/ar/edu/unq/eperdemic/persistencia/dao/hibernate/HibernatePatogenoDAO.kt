@@ -13,18 +13,9 @@ open class HibernatePatogenoDAO : HibernateDAO<Patogeno>(Patogeno::class.java), 
         return patogeno
     }
 
-    override fun recuperar(idDelPatogeno: Long): Patogeno {
-        val session = TransactionRunner.currentSession
+    override fun recuperarPatogeno(idDelPatogeno: Long): Patogeno {
 
-        val hql = """
-                    from Patogeno p
-                    where p.id = :idBuscado
-        """
-
-        val query = session.createQuery(hql, Patogeno::class.java)
-        query.setParameter("idBuscado", idDelPatogeno)
-
-        return query.singleResult
+        return recuperar(idDelPatogeno)
     }
 
     override fun recuperarATodos(): List<Patogeno> {

@@ -24,9 +24,9 @@ class DataServiceHibernate : DataService {
     val patogeno1 = Patogeno("tipo1")
     val patogeno2 = Patogeno("tipo2")
     val patogeno3 = Patogeno("tipo3")
-    val especie1 = Especie(patogeno1, "especie1", "pais1")
-    val especie2 = Especie(patogeno2, "especie2", "pais2")
-    val especie3 = Especie(patogeno3, "especie3", "pais3")
+    //val especie1 = Especie(patogeno1, "especie1", "pais1")
+    //val especie2 = Especie(patogeno2, "especie2", "pais2")
+    //val especie3 = Especie(patogeno3, "especie3", "pais3")
     val ubicacion1 = Ubicacion("ubicacion1")
     val ubicacion2 = Ubicacion("ubicacion2")
     val ubicacion3 = Ubicacion("ubicacion3")
@@ -40,11 +40,10 @@ class DataServiceHibernate : DataService {
             val listaDeUbicacionesCreadas = crearUbicaciones()
             crearVectores(listaDeUbicacionesCreadas)
 
-            crearEspecies(listaPatogenosCreados, listaDeUbicacionesCreadas)
+            //crearEspecies(listaPatogenosCreados, listaDeUbicacionesCreadas)
         }
     }
     private fun crearPatogenos(): List<Patogeno> {
-        Diosito.switchModo(false)
         val patogeno1Creado = patogenoService.crearPatogeno(patogeno1)
         val patogeno2Creado = patogenoService.crearPatogeno(patogeno2)
         val patogeno3Creado = patogenoService.crearPatogeno(patogeno3)
@@ -58,12 +57,6 @@ class DataServiceHibernate : DataService {
         return listOf(ubicacion1Creada, ubicacion2Creada, ubicacion3Creada)
     }
 
-    private fun crearEspecies(listaDePatogenos: List<Patogeno>, listaDeUbicaciones: List<Ubicacion>) {
-        patogenoService.agregarEspecie(listaDePatogenos[0].id!!, especie1.nombre, listaDeUbicaciones[0].id!!)
-        patogenoService.agregarEspecie(listaDePatogenos[1].id!!, especie2.nombre, listaDeUbicaciones[1].id!!)
-        patogenoService.agregarEspecie(listaDePatogenos[2].id!!, especie3.nombre, listaDeUbicaciones[2].id!!)
-    }
-
     private fun crearVectores(listaDeUbicaciones: List<Ubicacion>) {
         vectorService.crearVector(TipoDeVector.Animal, listaDeUbicaciones[0].id!!)
         vectorService.crearVector(TipoDeVector.Insecto, listaDeUbicaciones[1].id!!)
@@ -71,6 +64,15 @@ class DataServiceHibernate : DataService {
         vectorService.crearVector(TipoDeVector.Persona, listaDeUbicaciones[2].id!!)
         vectorService.crearVector(TipoDeVector.Persona, listaDeUbicaciones[2].id!!)
     }
+
+    private fun crearEspecies(listaDePatogenos: List<Patogeno>, listaDeUbicaciones: List<Ubicacion>) {
+        patogenoService.agregarEspecie(listaDePatogenos[0].id!!, "especie1", listaDeUbicaciones[0].id!!)
+        patogenoService.agregarEspecie(listaDePatogenos[1].id!!, "especie2", listaDeUbicaciones[1].id!!)
+        patogenoService.agregarEspecie(listaDePatogenos[2].id!!, "especie3", listaDeUbicaciones[2].id!!)
+        patogenoService.agregarEspecie(listaDePatogenos[1].id!!, "especie4", listaDeUbicaciones[0].id!!)
+        patogenoService.agregarEspecie(listaDePatogenos[1].id!!, "especie5", listaDeUbicaciones[2].id!!)
+    }
+
 
     override fun eliminarTodo() {
         runTrx {

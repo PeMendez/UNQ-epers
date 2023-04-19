@@ -10,10 +10,6 @@ import ar.edu.unq.eperdemic.services.runner.TransactionRunner
 
 open class HibernateVectorDAO : HibernateDAO<Vector>(Vector::class.java),VectorDAO {
 
-    override fun infectar(vector: Vector, especie: Especie) {
-
-    }
-
     override fun enfermedades(vectorID: Long): List<Especie> {
         val session = TransactionRunner.currentSession
         val hql = ("select e from Vector v"

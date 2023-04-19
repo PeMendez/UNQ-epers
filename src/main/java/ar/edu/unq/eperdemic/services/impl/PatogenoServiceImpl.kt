@@ -15,13 +15,14 @@ class PatogenoServiceImpl(val patogenoDAO: PatogenoDAO) : PatogenoService {
     private val vectorDAO = HibernateVectorDAO()
     private val especieDAO = HibernateEspecieDAO()
     private val diosito = Diosito
+    private val vectorServiceImpl = VectorServiceImpl(vectorDAO)
 
     override fun crearPatogeno(patogeno: Patogeno): Patogeno {
         return runTrx { patogenoDAO.crear(patogeno) }
     }
 
     override fun recuperarPatogeno(id: Long): Patogeno {
-        return runTrx { patogenoDAO.recuperar(id) }
+        return runTrx { patogenoDAO.recuperarPatogeno(id) }
     }
 
     override fun recuperarATodosLosPatogenos(): List<Patogeno> {
@@ -30,13 +31,13 @@ class PatogenoServiceImpl(val patogenoDAO: PatogenoDAO) : PatogenoService {
 
     override fun agregarEspecie(id: Long, nombre: String, ubicacionId: Long): Especie {
         return runTrx {
-            val patogeno = patogenoDAO.recuperar(id)
+            val patogeno = patogenoDAO.recuperarPatogeno(id)
             val ubicacion = ubicacionDAO.recuperar(ubicacionId)
             val especie = patogeno.crearEspecie(nombre, ubicacion.nombre)
             try {
                 val vectores = ubicacionDAO.recuperarVectores(ubicacionId)
                 val vectorAInfectar = vectores[diosito.decidir(vectores.size-1)]
-                vectorDAO.infectar(vectorAInfectar, especie)
+                vectorServiceImpl.infectar(vectorAInfectar, especie)
             } catch (e: Exception){
                 throw Exception("no hay ningún vector en la ubicación dada")
             }

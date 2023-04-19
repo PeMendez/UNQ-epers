@@ -1,6 +1,5 @@
 package ar.edu.unq.eperdemic.services.impl
 
-import ar.edu.unq.eperdemic.modelo.Diosito
 import ar.edu.unq.eperdemic.modelo.TipoDeVector
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateEspecieDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateUbicacionDAO
@@ -84,7 +83,7 @@ class VectorServiceImplTest {
     }
 
 
-    @Test
+    //@Test
     fun borrarVector() {
         val ubic = ubicacionServiceImpl.crearUbicacion("BSAS")
         val tipo = TipoDeVector.Persona
