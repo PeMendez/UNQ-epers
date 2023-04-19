@@ -21,7 +21,6 @@ class VectorServiceImplTest {
 
     @BeforeEach
     fun setUp() {
-        Diosito.switchModo(false)
         dataServiceHibernate.crearSetDeDatosIniciales()
     }
 

@@ -35,7 +35,7 @@ class DataServiceHibernate : DataService {
 
     override fun crearSetDeDatosIniciales() {
         runTrx {
-            //Diosito.switchModo(false)
+            Diosito.switchModo(false)
             val listaPatogenosCreados = crearPatogenos()
             val listaDeUbicacionesCreadas = crearUbicaciones()
             crearVectores(listaDeUbicacionesCreadas)
