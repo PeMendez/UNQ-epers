@@ -7,10 +7,7 @@ import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateUbicacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateVectorDAO
 import ar.edu.unq.eperdemic.utils.DataServiceHibernate
 import org.junit.Assert
-import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.Assertions
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.*
 
 class VectorServiceImplTest {
 
@@ -24,13 +21,9 @@ class VectorServiceImplTest {
 
     @BeforeEach
     fun setUp() {
-        Diosito.switchModo(false)
         dataServiceHibernate.crearSetDeDatosIniciales()
     }
 
-    @AfterEach
-    fun tearDown() {
-    }
 
     @Test
     fun contagiar() {

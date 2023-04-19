@@ -1,9 +1,6 @@
 package ar.edu.unq.eperdemic.utils
 
-import ar.edu.unq.eperdemic.modelo.Especie
-import ar.edu.unq.eperdemic.modelo.Patogeno
-import ar.edu.unq.eperdemic.modelo.TipoDeVector
-import ar.edu.unq.eperdemic.modelo.Ubicacion
+import ar.edu.unq.eperdemic.modelo.*
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateDataDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernatePatogenoDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateUbicacionDAO
@@ -35,8 +32,10 @@ class DataServiceHibernate : DataService {
     val ubicacion3 = Ubicacion("ubicacion3")
 
 
+
     override fun crearSetDeDatosIniciales() {
         runTrx {
+            Diosito.switchModo(false)
             val listaPatogenosCreados = crearPatogenos()
             val listaDeUbicacionesCreadas = crearUbicaciones()
             crearVectores(listaDeUbicacionesCreadas)
@@ -45,6 +44,7 @@ class DataServiceHibernate : DataService {
         }
     }
     private fun crearPatogenos(): List<Patogeno> {
+        Diosito.switchModo(false)
         val patogeno1Creado = patogenoService.crearPatogeno(patogeno1)
         val patogeno2Creado = patogenoService.crearPatogeno(patogeno2)
         val patogeno3Creado = patogenoService.crearPatogeno(patogeno3)
