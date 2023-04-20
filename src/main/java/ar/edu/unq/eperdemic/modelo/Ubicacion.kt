@@ -8,7 +8,7 @@ class Ubicacion(@Column(unique=true) var nombre: String) {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id : Long? = null
 
-    @OneToMany(mappedBy = "ubicacion", cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
-    var vectores : MutableList<Vector> = mutableListOf()
+    //@OneToMany(mappedBy = "ubicacion", cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
+    //var vectores : MutableList<Vector> = mutableListOf()
 
 }

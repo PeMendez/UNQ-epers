@@ -16,18 +16,15 @@ class UbicacionServiceImpl(val ubicacionDAO: HibernateUbicacionDAO): UbicacionSe
 
         val vector = vectorServiceImpl.recuperarVector(vectorId)
 
-        val ubicacion =  runTrx {
+        val vectoresEnUbicacion = runTrx {
             val ubicacion = ubicacionDAO.recuperar(ubicacionid)
             vector.mover(ubicacion)
-            ubicacion.vectores.add(vector)
-            // habria que borrar al vector de la lista de vectores de la ubicacion vieja?
-            // y actualizar la ubicacion en el vector?
-            ubicacionDAO.actualizar(ubicacion)
-            ubicacion
+            hibernateVectorDAO.actualizar(vector)
+            ubicacionDAO.recuperarVectores(ubicacionid)
         }
 
-        if (vector.especies.isNotEmpty()) {
-            vectorServiceImpl.contagiar(vector, ubicacion.vectores)
+        if (!vector.estaSano()) {
+            vectorServiceImpl.contagiar(vector, vectoresEnUbicacion)
         }
     }
 

@@ -11,7 +11,7 @@ import ar.edu.unq.eperdemic.services.runner.TransactionRunner
 open class HibernateVectorDAO : HibernateDAO<Vector>(Vector::class.java),VectorDAO {
 
 
-    override fun enfermedades(vectorID: Long): List<Especie> {
+    /*override fun enfermedades(vectorID: Long): List<Especie> {
         val session = TransactionRunner.currentSession
         val hql = """
                 select e
@@ -23,19 +23,22 @@ open class HibernateVectorDAO : HibernateDAO<Vector>(Vector::class.java),VectorD
         query.setParameter("vectorId", vectorID)
 
         return query.resultList
-    }
+    }*/
 
-    /*override fun enfermedades(vectorID: Long): List<Especie> {
+    override fun enfermedades(vectorID: Long): List<Especie> {
         val session = TransactionRunner.currentSession
-        val hql = ("select e from Vector v"
-                + " inner join v.especies e "
-                + "where v.id = :vectorId ")
+        val hql = """
+                select e
+                from Vector v
+                inner join v.especies e
+                where v.id = :vectorId
+        """
 
         val query = session.createQuery(hql, Especie::class.java)
         query.setParameter("vectorId", vectorID)
 
         return query.resultList
-    }*/
+    }
 
     override fun crearVector(tipo: TipoDeVector, ubicacion: Ubicacion): Vector {
         val newVector = Vector(tipo,ubicacion)

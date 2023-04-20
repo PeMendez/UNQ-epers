@@ -35,7 +35,7 @@ class Vector(var tipo: TipoDeVector,
         return if (estaSano()) 0 else especies.map { e -> e.patogeno.capacidadDeDefensa }.average().toInt()
     }
 
-    private fun estaSano(): Boolean {
+    fun estaSano(): Boolean {
         return especies.isEmpty()
     }
 
