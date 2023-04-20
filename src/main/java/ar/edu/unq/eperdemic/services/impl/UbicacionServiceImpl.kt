@@ -2,31 +2,32 @@ package ar.edu.unq.eperdemic.services.impl
 
 import ar.edu.unq.eperdemic.modelo.Ubicacion
 import ar.edu.unq.eperdemic.modelo.Vector
-import ar.edu.unq.eperdemic.persistencia.dao.UbicacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateUbicacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateVectorDAO
 import ar.edu.unq.eperdemic.services.UbicacionService
-import ar.edu.unq.eperdemic.services.runner.TransactionRunner
 import ar.edu.unq.eperdemic.services.runner.TransactionRunner.runTrx
 
 class UbicacionServiceImpl(val ubicacionDAO: HibernateUbicacionDAO): UbicacionService {
 
-    val vectorDAO = HibernateVectorDAO()
-    val vectorService = VectorServiceImpl(vectorDAO)
+    val hibernateVectorDAO = HibernateVectorDAO()
+    val vectorServiceImpl = VectorServiceImpl(hibernateVectorDAO)
 
     override fun mover(vectorId: Long, ubicacionid: Long) {
-        runTrx {
+
+        val vector = vectorServiceImpl.recuperarVector(vectorId)
+
+        val ubicacion =  runTrx {
             val ubicacion = ubicacionDAO.recuperar(ubicacionid)
-            val vector = vectorService.recuperarVector(vectorId)
-
             vector.mover(ubicacion)
-
-            if (vector.especies.isNotEmpty()) {
-                vectorService.contagiar(vector, ubicacion.vectores)
-            }
-
             ubicacion.vectores.add(vector)
+            // habria que borrar al vector de la lista de vectores de la ubicacion vieja?
+            // y actualizar la ubicacion en el vector?
             ubicacionDAO.actualizar(ubicacion)
+            ubicacion
+        }
+
+        if (vector.especies.isNotEmpty()) {
+            vectorServiceImpl.contagiar(vector, ubicacion.vectores)
         }
     }
 
