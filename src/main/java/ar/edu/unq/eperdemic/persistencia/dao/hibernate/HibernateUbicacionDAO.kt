@@ -3,31 +3,13 @@ package ar.edu.unq.eperdemic.persistencia.dao.hibernate
 import ar.edu.unq.eperdemic.modelo.ReporteDeContagios
 import ar.edu.unq.eperdemic.modelo.Ubicacion
 import ar.edu.unq.eperdemic.modelo.Vector
+import ar.edu.unq.eperdemic.modelo.exceptions.NombreDeUbicacionRepetido
 import ar.edu.unq.eperdemic.persistencia.dao.UbicacionDAO
 import ar.edu.unq.eperdemic.services.runner.TransactionRunner
 import javax.persistence.NoResultException
 
 open class HibernateUbicacionDAO : HibernateDAO<Ubicacion>(Ubicacion::class.java), UbicacionDAO {
 
-    override fun mover(vectorId: Long, ubicacionid: Long) {
-        val ubicacion = recuperar(ubicacionid)
-        val session = TransactionRunner.currentSession
-
-        val hql = """
-                    from Vector v 
-                    where v.id = :vectorIdDado
-        """
-
-        val query = session.createQuery(hql, Vector::class.java)
-        query.setParameter("vectorIdDado", vectorId)
-
-        val vector = query.singleResult
-
-        vector.mover(ubicacion)
-        ubicacion.vectores.add(vector)
-
-        actualizar(ubicacion)
-    }
 
     override fun expandir(ubicacionId: Long) {
         TODO("Not yet implemented")
@@ -51,7 +33,7 @@ open class HibernateUbicacionDAO : HibernateDAO<Ubicacion>(Ubicacion::class.java
             guardar(ubicacionCreada)
             return ubicacionCreada
         }
-        throw Exception("Ya existe una ubicacion con ese nombre.")
+        throw NombreDeUbicacionRepetido("Ya existe una ubicacion con ese nombre.")
     }
 
     override fun recuperarTodos(): List<Ubicacion> {
@@ -65,10 +47,6 @@ open class HibernateUbicacionDAO : HibernateDAO<Ubicacion>(Ubicacion::class.java
 
         return query.resultList
 
-    }
-
-    override fun recuperarUbicacion(ubicacionId: Long): Ubicacion {
-        return recuperar(ubicacionId)
     }
 
     override fun recuperarVectores(ubicacionId: Long) : List<Vector> {
