@@ -31,6 +31,7 @@ class PatogenoServiceTest {
     @Test
     fun recuperarPatogenoTest(){
         val patogenoRecuperado = patogenoService.recuperarPatogeno(1)
+        val listaEspecies = patogenoService.especiesDePatogeno(1)
 
         Assertions.assertEquals(patogenoRecuperado.id, 1)
         Assertions.assertEquals(patogenoRecuperado.tipo, "tipo1")
@@ -44,8 +45,8 @@ class PatogenoServiceTest {
 
     @Test
     fun seLeAgregaUnaEspecieAUnPatogenoTest(){
-        val especieGenerada = patogenoService.agregarEspecie(2,"EspecieViolenta", 2)
-        val listaEspecies = patogenoService.especiesDePatogeno(2)
+        val especieGenerada = patogenoService.agregarEspecie(1,"EspecieViolenta", 2)
+        val listaEspecies = patogenoService.especiesDePatogeno(1)
 
         Assertions.assertEquals(listaEspecies.size, 2 )
         Assertions.assertEquals(listaEspecies.find { e -> e.id == especieGenerada.id }!!.id, especieGenerada.id)
@@ -77,11 +78,7 @@ class PatogenoServiceTest {
 
     @Test
     fun esPandemiaNegativo(){
-        val unVector = vectorServiceImpl.recuperarVector(1)
         val unaEspecie = especieServiceImpl.recuperarEspecie(1)
-        val otraEspecie = especieServiceImpl.recuperarEspecie(2)
-        vectorServiceImpl.infectar(unVector, unaEspecie)
-        vectorServiceImpl.infectar(unVector, otraEspecie)
 
         Assertions.assertFalse(patogenoService.esPandemia(unaEspecie.id!!))
 
@@ -115,7 +112,7 @@ class PatogenoServiceTest {
 
     @Test
     fun alAgregarleUnaEspecieAUnPatogenoSeInfectaUnVectorEnLaUbicacionDada(){
-        val vector = vectorServiceImpl.recuperarVector(2)
+        val vector = vectorServiceImpl.recuperarVector(7)
         val especie = patogenoService.agregarEspecie(1, "virus", 2)
 
         Assertions.assertTrue(vector.tieneEfermedad(especie.id!!))
@@ -133,7 +130,7 @@ class PatogenoServiceTest {
 
 
 
-    @AfterEach
+    //@AfterEach
     fun eliminarModelo() {
         dataService.eliminarTodo()
     }

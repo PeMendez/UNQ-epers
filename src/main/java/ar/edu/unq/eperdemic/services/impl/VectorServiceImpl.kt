@@ -4,7 +4,6 @@ import ar.edu.unq.eperdemic.modelo.Especie
 import ar.edu.unq.eperdemic.modelo.TipoDeVector
 import ar.edu.unq.eperdemic.modelo.Vector
 import ar.edu.unq.eperdemic.persistencia.dao.VectorDAO
-import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateEspecieDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateUbicacionDAO
 import ar.edu.unq.eperdemic.services.VectorService
 import ar.edu.unq.eperdemic.services.runner.TransactionRunner.runTrx
@@ -12,7 +11,6 @@ import ar.edu.unq.eperdemic.services.runner.TransactionRunner.runTrx
 class VectorServiceImpl(private val vectorDAO: VectorDAO): VectorService {
 
     val hibernateUbicacionDAO = HibernateUbicacionDAO()
-    val hibernateEspecieDAO = HibernateEspecieDAO()
 
     override fun contagiar(vectorInfectado: Vector, vectores: List<Vector>) {
         return runTrx {
@@ -28,7 +26,6 @@ class VectorServiceImpl(private val vectorDAO: VectorDAO): VectorService {
     override fun infectar(vector: Vector, especie: Especie) {
         runTrx {
             vector.especies.add(especie)
-            hibernateEspecieDAO.guardar(especie)
             vectorDAO.guardar(vector)
         }
     }
