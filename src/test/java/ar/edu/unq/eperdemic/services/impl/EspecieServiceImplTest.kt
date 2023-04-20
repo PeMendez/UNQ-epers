@@ -1,9 +1,7 @@
 package ar.edu.unq.eperdemic.services.impl
 
-import ar.edu.unq.eperdemic.modelo.Patogeno
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateEspecieDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernatePatogenoDAO
-import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateUbicacionDAO
 import ar.edu.unq.eperdemic.utils.DataServiceHibernate
 import org.junit.Assert
 import org.junit.jupiter.api.AfterEach
@@ -15,8 +13,6 @@ class EspecieServiceImplTest {
 
     private val hibernateEspecieDAO = HibernateEspecieDAO()
     private val especieService = EspecieServiceImpl(hibernateEspecieDAO)
-    private val hibernatePatogenoDAO = HibernatePatogenoDAO()
-    private val patogenoService = PatogenoServiceImpl(hibernatePatogenoDAO)
     var dataService = DataServiceHibernate()
 
 
@@ -54,11 +50,16 @@ class EspecieServiceImplTest {
         Assertions.assertNotNull(especies.find { it.id == 1.toLong() })
         Assertions.assertNotNull(especies.find { it.id == 2.toLong() })
         Assertions.assertNotNull(especies.find { it.id == 3.toLong() })
-        Assertions.assertNotNull(especies.find { it.id == 1.toLong() })
-        Assertions.assertNotNull(especies.find { it.id == 2.toLong() })
-        Assertions.assertNotNull(especies.find { it.id == 3.toLong() })
+        Assertions.assertNotNull(especies.find { it.id == 4.toLong() })
+        Assertions.assertNotNull(especies.find { it.id == 5.toLong() })
+        Assertions.assertNotNull(especies.find { it.id == 6.toLong() })
+        Assertions.assertNotNull(especies.find { it.id == 7.toLong() })
+        Assertions.assertNotNull(especies.find { it.id == 8.toLong() })
+        Assertions.assertNotNull(especies.find { it.id == 9.toLong() })
+        Assertions.assertNotNull(especies.find { it.id == 10.toLong() })
+        Assertions.assertNotNull(especies.find { it.id == 11.toLong() })
 
-        Assertions.assertTrue(especies.size == 3)
+        Assertions.assertTrue(especies.size == 11)
 
     }
 
