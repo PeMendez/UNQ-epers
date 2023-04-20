@@ -2,7 +2,6 @@ package ar.edu.unq.eperdemic.services.impl
 
 import ar.edu.unq.eperdemic.modelo.Patogeno
 import ar.edu.unq.eperdemic.modelo.exceptions.NingunVectorAInfectarEnLaUbicacionDada
-import ar.edu.unq.eperdemic.modelo.exceptions.NombreDeUbicacionRepetido
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.*
 import ar.edu.unq.eperdemic.utils.DataServiceHibernate
 import org.junit.jupiter.api.*
@@ -36,7 +35,7 @@ class PatogenoServiceTest {
 
         Assertions.assertEquals(patogenoRecuperado.id, 1)
         Assertions.assertEquals(patogenoRecuperado.tipo, "tipo1")
-        Assertions.assertEquals(patogenoRecuperado.cantidadDeEspecies, 1)
+        Assertions.assertEquals(patogenoRecuperado.cantidadDeEspecies, 2)
         Assertions.assertEquals(patogenoRecuperado.capacidadDeContagio, 100)
         Assertions.assertEquals(patogenoRecuperado.capacidadDeBiomecanizacion,100)
         Assertions.assertEquals(patogenoRecuperado.capacidadDeDefensa, 100)
@@ -54,7 +53,7 @@ class PatogenoServiceTest {
         val especieGenerada = patogenoService.agregarEspecie(1,"EspecieViolenta", 2)
         val listaEspecies = patogenoService.especiesDePatogeno(1)
 
-        Assertions.assertEquals(listaEspecies.size, 2 )
+        Assertions.assertEquals(listaEspecies.size, 3 )
         Assertions.assertEquals(listaEspecies.find { e -> e.id == especieGenerada.id }!!.id, especieGenerada.id)
     }
 
@@ -99,40 +98,31 @@ class PatogenoServiceTest {
         Assertions.assertNotNull(listaDePatogenosRecuperados.find { it.id == 1.toLong() })
         Assertions.assertNotNull(listaDePatogenosRecuperados.find { it.id == 2.toLong() })
         Assertions.assertNotNull(listaDePatogenosRecuperados.find { it.id == 3.toLong() })
-        Assertions.assertNotNull(listaDePatogenosRecuperados.find { it.id == 4.toLong() })
-        Assertions.assertNotNull(listaDePatogenosRecuperados.find { it.id == 5.toLong() })
-        Assertions.assertNotNull(listaDePatogenosRecuperados.find { it.id == 6.toLong() })
-        Assertions.assertNotNull(listaDePatogenosRecuperados.find { it.id == 7.toLong() })
-        Assertions.assertNotNull(listaDePatogenosRecuperados.find { it.id == 8.toLong() })
-        Assertions.assertNotNull(listaDePatogenosRecuperados.find { it.id == 9.toLong() })
-        Assertions.assertNotNull(listaDePatogenosRecuperados.find { it.id == 10.toLong() })
-        Assertions.assertNotNull(listaDePatogenosRecuperados.find { it.id == 11.toLong() })
 
-        Assertions.assertTrue(listaDePatogenosRecuperados.size == 11)
+        Assertions.assertTrue(listaDePatogenosRecuperados.size == 3)
 
     }
 
     @Test
     fun seRecuperanTodasLasEspeciesDeUnPatogeno() {
 
-        val listaDeEspeciesRecuperadas = patogenoService.especiesDePatogeno(2)
+        val listaDeEspeciesRecuperadas = patogenoService.especiesDePatogeno(1)
 
-        Assertions.assertNotNull(listaDeEspeciesRecuperadas.find { it.id == 2.toLong() })
-        Assertions.assertNotNull(listaDeEspeciesRecuperadas.find { it.id == 4.toLong() })
-        Assertions.assertNotNull(listaDeEspeciesRecuperadas.find { it.id == 5.toLong() })
+        Assertions.assertNotNull(listaDeEspeciesRecuperadas.find { it.id == 1.toLong() })
+        Assertions.assertNotNull(listaDeEspeciesRecuperadas.find { it.id == 6.toLong() })
 
-        Assertions.assertTrue(listaDeEspeciesRecuperadas.size == 3)
+        Assertions.assertTrue(listaDeEspeciesRecuperadas.size == 2)
 
     }
 
     @Test
     fun alAgregarleUnaEspecieAUnPatogenoSeInfectaUnVectorEnLaUbicacionDada(){
-        val vectorPrevioAInfectarse = vectorServiceImpl.recuperarVector(2)
+        val vectorPrevioAInfectarse = vectorServiceImpl.recuperarVector(7)
 
         Assertions.assertFalse(vectorPrevioAInfectarse.tieneEfermedad(6))
 
-        val especie = patogenoService.agregarEspecie(1, "virus", 2)
-        val vector = vectorServiceImpl.recuperarVector(2)
+        val especie = patogenoService.agregarEspecie(1, "virus", 8)
+        val vector = vectorServiceImpl.recuperarVector(7)
 
         Assertions.assertTrue(vector.tieneEfermedad(especie.id!!))
     }
