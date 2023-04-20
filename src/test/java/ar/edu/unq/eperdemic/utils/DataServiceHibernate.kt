@@ -54,7 +54,15 @@ class DataServiceHibernate : DataService {
         val ubicacion1Creada = ubicacionService.crearUbicacion(ubicacion1.nombre)
         val ubicacion2Creada = ubicacionService.crearUbicacion(ubicacion2.nombre)
         val ubicacion3Creada = ubicacionService.crearUbicacion(ubicacion3.nombre)
-        return listOf(ubicacion1Creada, ubicacion2Creada, ubicacion3Creada)
+        val ubicacion4Creada = ubicacionService.crearUbicacion("ubicacion4")
+        val ubicacion5Creada = ubicacionService.crearUbicacion("ubicacion5")
+        val ubicacion6Creada = ubicacionService.crearUbicacion("ubicacion6")
+        val ubicacion7Creada = ubicacionService.crearUbicacion("ubicacion7")
+        val ubicacion8Creada = ubicacionService.crearUbicacion("ubicacion8")
+        val ubicacion9Creada = ubicacionService.crearUbicacion("ubicacion9")
+        return listOf(ubicacion1Creada, ubicacion2Creada, ubicacion3Creada,
+                      ubicacion4Creada, ubicacion5Creada, ubicacion6Creada,
+                      ubicacion7Creada, ubicacion8Creada, ubicacion9Creada)
     }
 
     private fun crearVectores(listaDeUbicaciones: List<Ubicacion>) {
@@ -63,6 +71,9 @@ class DataServiceHibernate : DataService {
         vectorService.crearVector(TipoDeVector.Persona, listaDeUbicaciones[2].id!!)
         vectorService.crearVector(TipoDeVector.Persona, listaDeUbicaciones[2].id!!)
         vectorService.crearVector(TipoDeVector.Persona, listaDeUbicaciones[2].id!!)
+        vectorService.crearVector(TipoDeVector.Persona, listaDeUbicaciones[6].id!!)
+        vectorService.crearVector(TipoDeVector.Persona, listaDeUbicaciones[7].id!!)
+
     }
 
     private fun crearEspecies(listaDePatogenos: List<Patogeno>, listaDeUbicaciones: List<Ubicacion>) {

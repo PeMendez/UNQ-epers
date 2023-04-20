@@ -1,6 +1,8 @@
 package ar.edu.unq.eperdemic.services.impl
 
 import ar.edu.unq.eperdemic.modelo.Patogeno
+import ar.edu.unq.eperdemic.modelo.exceptions.NingunVectorAInfectarEnLaUbicacionDada
+import ar.edu.unq.eperdemic.modelo.exceptions.NombreDeUbicacionRepetido
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.*
 import ar.edu.unq.eperdemic.utils.DataServiceHibernate
 import org.junit.jupiter.api.*
@@ -31,7 +33,6 @@ class PatogenoServiceTest {
     @Test
     fun recuperarPatogenoTest(){
         val patogenoRecuperado = patogenoService.recuperarPatogeno(1)
-        val listaEspecies = patogenoService.especiesDePatogeno(1)
 
         Assertions.assertEquals(patogenoRecuperado.id, 1)
         Assertions.assertEquals(patogenoRecuperado.tipo, "tipo1")
@@ -41,7 +42,12 @@ class PatogenoServiceTest {
         Assertions.assertEquals(patogenoRecuperado.capacidadDeDefensa, 100)
     }
 
-    // falta test cuando el id no es correcto
+    @Test
+    fun seIntentaRecuperarUnPatogenoInexistente(){
+
+        Assertions.assertNull(patogenoService.recuperarPatogeno(10))
+
+    }
 
     @Test
     fun seLeAgregaUnaEspecieAUnPatogenoTest(){
@@ -63,14 +69,16 @@ class PatogenoServiceTest {
 
     @Test
     fun esPandemiaAfirmativo(){
-        val unVector = vectorServiceImpl.recuperarVector(1)
-        val otroVector = vectorServiceImpl.recuperarVector(2)
+        val unVector = vectorServiceImpl.recuperarVector(6)
+        val otroVector = vectorServiceImpl.recuperarVector(7)
+        val otroVectormas = vectorServiceImpl.recuperarVector(5)
+        val otroVectorcitoMas = vectorServiceImpl.recuperarVector(4)
         val unaEspecie = especieServiceImpl.recuperarEspecie(1)
-        val otraEspecie = especieServiceImpl.recuperarEspecie(2)
 
         vectorServiceImpl.infectar(otroVector, unaEspecie)
-        vectorServiceImpl.infectar(otroVector, otraEspecie)
         vectorServiceImpl.infectar(unVector, unaEspecie)
+        vectorServiceImpl.infectar(otroVectormas, unaEspecie)
+        vectorServiceImpl.infectar(otroVectorcitoMas, unaEspecie)
 
         Assertions.assertTrue(patogenoService.esPandemia((unaEspecie.id!!)))
 
@@ -78,11 +86,11 @@ class PatogenoServiceTest {
 
     @Test
     fun esPandemiaNegativo(){
-        val unaEspecie = especieServiceImpl.recuperarEspecie(1)
 
-        Assertions.assertFalse(patogenoService.esPandemia(unaEspecie.id!!))
+        Assertions.assertFalse(patogenoService.esPandemia(1))
 
     }
+
     @Test
     fun seRecuperanTodosLosPatogenosExistentes() {
 
@@ -112,8 +120,12 @@ class PatogenoServiceTest {
 
     @Test
     fun alAgregarleUnaEspecieAUnPatogenoSeInfectaUnVectorEnLaUbicacionDada(){
-        val vector = vectorServiceImpl.recuperarVector(7)
+        val vectorPrevioAInfectarse = vectorServiceImpl.recuperarVector(2)
+
+        Assertions.assertFalse(vectorPrevioAInfectarse.tieneEfermedad(6))
+
         val especie = patogenoService.agregarEspecie(1, "virus", 2)
+        val vector = vectorServiceImpl.recuperarVector(2)
 
         Assertions.assertTrue(vector.tieneEfermedad(especie.id!!))
     }
@@ -121,16 +133,15 @@ class PatogenoServiceTest {
     @Test
     fun alAgregarleUnaEspecieAUnPatogenoSeIntentaInfectarAUnVectorPeroNoHayNingunoEnLaUbicacionDada(){
 
+        try {
+            patogenoService.agregarEspecie(1, "virus", 9)
+            fail("Debería haber lanzado la excepción que no existe un vector en la ubicación dada")
+        } catch (ex: Exception) {
+            Assertions.assertTrue(ex is NingunVectorAInfectarEnLaUbicacionDada)
+        }
     }
 
-    /*
-    * testear que cuando se crea una especie se infecta un vector.
-    * testear el error que no hay vector en la ubiación
-    * */
-
-
-
-    //@AfterEach
+    @AfterEach
     fun eliminarModelo() {
         dataService.eliminarTodo()
     }

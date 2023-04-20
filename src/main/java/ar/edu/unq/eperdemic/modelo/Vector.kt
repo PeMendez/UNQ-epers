@@ -41,7 +41,7 @@ class Vector(var tipo: TipoDeVector,
 
     fun tieneEfermedad(especieId : Long) : Boolean {
 
-        return !isNull(especies.find { e -> e.id == especieId })
+        return especies.filter { e -> e.id == especieId}.isNotEmpty()
     }
 
     fun mover(ubicacion: Ubicacion)  {
