@@ -4,15 +4,15 @@ import ar.edu.unq.eperdemic.modelo.Especie
 import ar.edu.unq.eperdemic.modelo.TipoDeVector
 import ar.edu.unq.eperdemic.modelo.Vector
 import ar.edu.unq.eperdemic.persistencia.dao.VectorDAO
+import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateEspecieDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateUbicacionDAO
-import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateVectorDAO
 import ar.edu.unq.eperdemic.services.VectorService
 import ar.edu.unq.eperdemic.services.runner.TransactionRunner.runTrx
 
 class VectorServiceImpl(private val vectorDAO: VectorDAO): VectorService {
 
     val hibernateUbicacionDAO = HibernateUbicacionDAO()
-    val hibernateVectorDAO = HibernateVectorDAO()
+    val hibernateEspecieDAO = HibernateEspecieDAO()
 
     override fun contagiar(vectorInfectado: Vector, vectores: List<Vector>) {
         return runTrx {
@@ -20,15 +20,16 @@ class VectorServiceImpl(private val vectorDAO: VectorDAO): VectorService {
                 vectorInfectado.especies.forEach { e ->
                     v.intentarInfectar(vectorInfectado,e)
                 }
-                hibernateVectorDAO.guardar(v)
+                vectorDAO.guardar(v)
             }
         }
     }
 
     override fun infectar(vector: Vector, especie: Especie) {
-        return runTrx {
+        runTrx {
             vector.especies.add(especie)
-            hibernateVectorDAO.actualizar(vector)
+            hibernateEspecieDAO.guardar(especie)
+            vectorDAO.guardar(vector)
         }
     }
 

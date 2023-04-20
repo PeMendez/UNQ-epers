@@ -21,7 +21,7 @@ class EspecieServiceImplTest {
 
     @BeforeEach
     fun crearModelo() {
-        dataService.crearSetDeDatosIniciales()
+     //   dataService.crearSetDeDatosIniciales()
     }
 
 
@@ -80,7 +80,7 @@ class EspecieServiceImplTest {
 
     @AfterEach
     fun eliminarModelo() {
-        dataService.eliminarTodo()
+       dataService.eliminarTodo()
     }
 
 }
