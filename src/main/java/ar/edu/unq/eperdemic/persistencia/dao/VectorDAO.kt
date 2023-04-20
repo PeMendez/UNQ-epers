@@ -12,5 +12,6 @@ interface VectorDAO {
     fun borrarVector(vectorId: Long)
     fun recuperarTodos() : List<Vector>
     fun guardar(entity : Vector)
+    fun actualizar(vector: Vector)
 
 }
