@@ -16,6 +16,7 @@ class PatogenoServiceImpl(val patogenoDAO: PatogenoDAO) : PatogenoService {
     private val especieDAO = HibernateEspecieDAO()
     private val diosito = Diosito
     private val vectorServiceImpl = VectorServiceImpl(vectorDAO)
+    private val ubicacionServiceImpl = UbicacionServiceImpl(ubicacionDAO)
 
     override fun crearPatogeno(patogeno: Patogeno): Patogeno {
         return runTrx { patogenoDAO.crear(patogeno) }
@@ -28,25 +29,28 @@ class PatogenoServiceImpl(val patogenoDAO: PatogenoDAO) : PatogenoService {
     override fun recuperarATodosLosPatogenos(): List<Patogeno> {
         return runTrx { patogenoDAO.recuperarATodos() }
     }
-
-    /* FALTA MANEJAR EL ERROR DE QUE NO HAYA VECTORES, CREO QUE HABRIA QUE HACERLO EN EL MODELO
+    
     override fun agregarEspecie(id: Long, nombre: String, ubicacionId: Long): Especie {
 
         val ubicacion = ubicacionServiceImpl.recuperar(ubicacionId)
         val vectores = ubicacionServiceImpl.recuperarVectores(ubicacionId)
-        val vectorAInfectar = vectores[diosito.decidir(vectores.size-1)]
+        val vectorAInfectar = try{
+            vectores[diosito.decidir(vectores.size)-1]
+        } catch (e: Exception){
+            throw Exception("no hay ningún vector en la ubicación dada")
+        }
         val especie = runTrx {
             val patogeno = patogenoDAO.recuperarPatogeno(id)
-            val especie = patogeno.crearEspecie(nombre, ubicacion.nombre)
-            hibernateEspecieDAO.guardar(especie)
-            especie
+            val especieGenerada = patogeno.crearEspecie(nombre, ubicacion.nombre)
+            especieDAO.guardar(especieGenerada)
+            especieGenerada
         }
 
         vectorServiceImpl.infectar(vectorAInfectar, especie)
         return especie
     }
-    */
-    override fun agregarEspecie(id: Long, nombre: String, ubicacionId: Long): Especie {
+
+    /*override fun agregarEspecie(id: Long, nombre: String, ubicacionId: Long): Especie {
         return runTrx {
             val patogeno = patogenoDAO.recuperarPatogeno(id)
             val ubicacion = ubicacionDAO.recuperar(ubicacionId)
@@ -62,12 +66,12 @@ class PatogenoServiceImpl(val patogenoDAO: PatogenoDAO) : PatogenoService {
             especie
         }
 
-    }
+    }*/
 
     override fun esPandemia(especieId: Long): Boolean {
         return runTrx {
-            val cantUbicaciones = ubicacionDAO.recuperarTodos().size
-            val vectoresConEspecieId = vectorDAO.recuperarTodos().filter { v -> v.tieneEfermedad(especieId) }
+            val cantUbicaciones = ubicacionServiceImpl.recuperarTodos().size
+            val vectoresConEspecieId = vectorServiceImpl.recuperarTodos().filter { v -> v.tieneEfermedad(especieId) }
             var ubicacionesDeVectoresEnfermosConEspecie = vectoresConEspecieId.map { v -> v.ubicacion}
             ubicacionesDeVectoresEnfermosConEspecie.distinctBy { it.nombre }
             val cantUbicacionesDeLaEspecie = ubicacionesDeVectoresEnfermosConEspecie.size

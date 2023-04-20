@@ -40,12 +40,14 @@ class PatogenoServiceTest {
         Assertions.assertEquals(patogenoRecuperado.capacidadDeDefensa, 100)
     }
 
+    // falta test cuando el id no es correcto
+
     @Test
     fun seLeAgregaUnaEspecieAUnPatogenoTest(){
-        val especieGenerada = patogenoService.agregarEspecie(1,"EspecieViolenta", 2)
-        val listaEspecies = patogenoService.especiesDePatogeno(1)
+        val especieGenerada = patogenoService.agregarEspecie(2,"EspecieViolenta", 2)
+        val listaEspecies = patogenoService.especiesDePatogeno(2)
 
-        Assertions.assertTrue(listaEspecies.size == 1 )
+        Assertions.assertEquals(listaEspecies.size, 2 )
         Assertions.assertEquals(listaEspecies.find { e -> e.id == especieGenerada.id }!!.id, especieGenerada.id)
     }
 

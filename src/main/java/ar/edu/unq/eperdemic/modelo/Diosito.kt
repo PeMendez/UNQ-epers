@@ -6,7 +6,7 @@ object Diosito {
     fun decidir(limiteFinal: Int) : Int {
 
         return if (esRandom){
-                    (0..limiteFinal).random()
+                    (1..limiteFinal).random()
                 } else {
                     limiteFinal
                 }

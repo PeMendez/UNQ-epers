@@ -25,7 +25,7 @@ class UbicacionServiceImpl(val hibernateUbicacionDAO: UbicacionDAO): UbicacionSe
     }
 
     override fun recuperarTodos(): List<Ubicacion> {
-        TODO("Not yet implemented")
+        return runTrx { hibernateUbicacionDAO.recuperarTodos() }
     }
 
     fun recuperar(ubicacionId: Long) : Ubicacion {

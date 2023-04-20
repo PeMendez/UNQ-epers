@@ -40,7 +40,7 @@ class DataServiceHibernate : DataService {
             val listaDeUbicacionesCreadas = crearUbicaciones()
             crearVectores(listaDeUbicacionesCreadas)
 
-            //crearEspecies(listaPatogenosCreados, listaDeUbicacionesCreadas)
+            crearEspecies(listaPatogenosCreados, listaDeUbicacionesCreadas)
         }
     }
     private fun crearPatogenos(): List<Patogeno> {
