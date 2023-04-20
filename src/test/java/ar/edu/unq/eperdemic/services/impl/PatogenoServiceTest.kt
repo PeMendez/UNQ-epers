@@ -99,11 +99,18 @@ class PatogenoServiceTest {
         Assertions.assertNotNull(listaDePatogenosRecuperados.find { it.id == 1.toLong() })
         Assertions.assertNotNull(listaDePatogenosRecuperados.find { it.id == 2.toLong() })
         Assertions.assertNotNull(listaDePatogenosRecuperados.find { it.id == 3.toLong() })
+        Assertions.assertNotNull(listaDePatogenosRecuperados.find { it.id == 4.toLong() })
+        Assertions.assertNotNull(listaDePatogenosRecuperados.find { it.id == 5.toLong() })
+        Assertions.assertNotNull(listaDePatogenosRecuperados.find { it.id == 6.toLong() })
+        Assertions.assertNotNull(listaDePatogenosRecuperados.find { it.id == 7.toLong() })
+        Assertions.assertNotNull(listaDePatogenosRecuperados.find { it.id == 8.toLong() })
+        Assertions.assertNotNull(listaDePatogenosRecuperados.find { it.id == 9.toLong() })
+        Assertions.assertNotNull(listaDePatogenosRecuperados.find { it.id == 10.toLong() })
+        Assertions.assertNotNull(listaDePatogenosRecuperados.find { it.id == 11.toLong() })
 
-        Assertions.assertTrue(listaDePatogenosRecuperados.size == 3)
+        Assertions.assertTrue(listaDePatogenosRecuperados.size == 11)
 
     }
-
 
     @Test
     fun seRecuperanTodasLasEspeciesDeUnPatogeno() {

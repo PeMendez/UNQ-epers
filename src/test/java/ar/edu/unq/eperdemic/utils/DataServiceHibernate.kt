@@ -73,6 +73,8 @@ class DataServiceHibernate : DataService {
         vectorService.crearVector(TipoDeVector.Persona, listaDeUbicaciones[2].id!!)
         vectorService.crearVector(TipoDeVector.Persona, listaDeUbicaciones[6].id!!)
         vectorService.crearVector(TipoDeVector.Persona, listaDeUbicaciones[7].id!!)
+        vectorService.crearVector(TipoDeVector.Animal, listaDeUbicaciones[1].id!!)
+        vectorService.crearVector(TipoDeVector.Insecto, listaDeUbicaciones[0].id!!)
 
     }
 
@@ -82,6 +84,13 @@ class DataServiceHibernate : DataService {
         patogenoService.agregarEspecie(listaDePatogenos[2].id!!, "especie3", listaDeUbicaciones[2].id!!)
         patogenoService.agregarEspecie(listaDePatogenos[1].id!!, "especie4", listaDeUbicaciones[0].id!!)
         patogenoService.agregarEspecie(listaDePatogenos[1].id!!, "especie5", listaDeUbicaciones[2].id!!)
+        patogenoService.agregarEspecie(listaDePatogenos[0].id!!, "especie6", listaDeUbicaciones[0].id!!)
+        patogenoService.agregarEspecie(listaDePatogenos[1].id!!, "especie7", listaDeUbicaciones[1].id!!)
+        patogenoService.agregarEspecie(listaDePatogenos[2].id!!, "especie8", listaDeUbicaciones[2].id!!)
+        patogenoService.agregarEspecie(listaDePatogenos[1].id!!, "especie9", listaDeUbicaciones[0].id!!)
+        patogenoService.agregarEspecie(listaDePatogenos[1].id!!, "especie10", listaDeUbicaciones[2].id!!)
+        patogenoService.agregarEspecie(listaDePatogenos[1].id!!, "especie11", listaDeUbicaciones[2].id!!)
+
     }
 
 

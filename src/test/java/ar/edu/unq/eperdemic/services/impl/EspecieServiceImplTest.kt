@@ -7,6 +7,7 @@ import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateUbicacionDAO
 import ar.edu.unq.eperdemic.utils.DataServiceHibernate
 import org.junit.Assert
 import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
@@ -21,59 +22,43 @@ class EspecieServiceImplTest {
 
     @BeforeEach
     fun crearModelo() {
-     //   dataService.crearSetDeDatosIniciales()
+       dataService.crearSetDeDatosIniciales()
     }
 
 
     @Test
     fun recuperarEspecie() {
-        val patogeno = Patogeno("Virus")
-        patogenoService.crearPatogeno(patogeno)
 
-        val hibernateUbicacionDAO = HibernateUbicacionDAO()
-        val ubicacion = UbicacionServiceImpl(hibernateUbicacionDAO)
-        val ubicacionCreada = ubicacion.crearUbicacion("Argentina")
+        val especieRecuperada = especieService.recuperarEspecie(1)
 
+        Assertions.assertEquals(especieRecuperada.id, 1)
+        Assertions.assertEquals(especieRecuperada.nombre, "especie1")
+        Assertions.assertEquals(especieRecuperada.paisDeOrigen, "ubicacion1")
+        Assertions.assertEquals(especieRecuperada.patogeno.id, 1)
 
-        val ubicacionRecuperada = ubicacion.recuperar(ubicacionCreada.id!!)
-
-
-        val especieGenerada = patogenoService.agregarEspecie(patogeno.id!!,"EspecieViolenta", ubicacionRecuperada.id!!)
-        val especieRecuperada = especieService.recuperarEspecie(especieGenerada.id!!)
-        Assert.assertEquals(especieGenerada.id!!, especieRecuperada.id!!)
     }
 
 
     @Test
     fun cantidadDeInfectados() {
-        var patogeno = Patogeno("Virus")
-        patogeno = patogenoService.crearPatogeno(patogeno)
-        var patogenoBacteria = Patogeno("Bacteria")
-        patogeno = patogenoService.crearPatogeno(patogenoBacteria)
 
-        var hibernateUbicacionDAO = HibernateUbicacionDAO()
-        var ubicacion = UbicacionServiceImpl(hibernateUbicacionDAO)
-        var ubicacionCreada = ubicacion.crearUbicacion("Argentina")
-        var ubicacionRecuperada = ubicacion.recuperar(ubicacionCreada.id!!)
-
-
-
-        var virusConEspecieViolenta = patogenoService.agregarEspecie(patogeno.id!!,"EspecieViolenta", ubicacionRecuperada.id!!)
-        patogenoService.agregarEspecie(patogenoBacteria.id!!,"EspecieViolenta", ubicacionRecuperada.id!!)
-        Assert.assertEquals(especieService.cantidadDeInfectados(virusConEspecieViolenta.id!!),2)
+        Assert.assertEquals(especieService.cantidadDeInfectados(1),2)
     }
 
 
     @Test
     fun recuperarTodas() {
-        val unaEspecie = especieService.recuperarEspecie(1)
-        val otraEspecie = especieService.recuperarEspecie(2)
-        val otraOtraEspecie = especieService.recuperarEspecie(3)
+
         val especies = especieService.recuperarTodas()
 
-        Assert.assertEquals(especies[0].id, unaEspecie.id)
-        Assert.assertEquals(especies[1].id, otraEspecie.id)
-        Assert.assertEquals(especies[2].id, otraOtraEspecie.id)
+        Assertions.assertNotNull(especies.find { it.id == 1.toLong() })
+        Assertions.assertNotNull(especies.find { it.id == 2.toLong() })
+        Assertions.assertNotNull(especies.find { it.id == 3.toLong() })
+        Assertions.assertNotNull(especies.find { it.id == 1.toLong() })
+        Assertions.assertNotNull(especies.find { it.id == 2.toLong() })
+        Assertions.assertNotNull(especies.find { it.id == 3.toLong() })
+
+        Assertions.assertTrue(especies.size == 3)
 
     }
 
