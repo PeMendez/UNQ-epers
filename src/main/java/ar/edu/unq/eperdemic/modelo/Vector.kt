@@ -8,7 +8,7 @@ class Vector(var tipo: TipoDeVector,
              @ManyToOne
              var ubicacion: Ubicacion,
              @ManyToMany(fetch = FetchType.EAGER)
-             var especies : MutableList<Especie> = mutableListOf()) {
+             var especies : MutableSet<Especie> = mutableSetOf()) {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
