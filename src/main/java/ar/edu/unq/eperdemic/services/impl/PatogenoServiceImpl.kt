@@ -29,6 +29,23 @@ class PatogenoServiceImpl(val patogenoDAO: PatogenoDAO) : PatogenoService {
         return runTrx { patogenoDAO.recuperarATodos() }
     }
 
+    /* FALTA MANEJAR EL ERROR DE QUE NO HAYA VECTORES, CREO QUE HABRIA QUE HACERLO EN EL MODELO
+    override fun agregarEspecie(id: Long, nombre: String, ubicacionId: Long): Especie {
+
+        val ubicacion = ubicacionServiceImpl.recuperar(ubicacionId)
+        val vectores = ubicacionServiceImpl.recuperarVectores(ubicacionId)
+        val vectorAInfectar = vectores[diosito.decidir(vectores.size-1)]
+        val especie = runTrx {
+            val patogeno = patogenoDAO.recuperarPatogeno(id)
+            val especie = patogeno.crearEspecie(nombre, ubicacion.nombre)
+            hibernateEspecieDAO.guardar(especie)
+            especie
+        }
+
+        vectorServiceImpl.infectar(vectorAInfectar, especie)
+        return especie
+    }
+    */
     override fun agregarEspecie(id: Long, nombre: String, ubicacionId: Long): Especie {
         return runTrx {
             val patogeno = patogenoDAO.recuperarPatogeno(id)
