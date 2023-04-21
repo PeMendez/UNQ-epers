@@ -25,7 +25,7 @@ class VectorServiceImpl(private val vectorDAO: VectorDAO): VectorService {
 
     override fun infectar(vector: Vector, especie: Especie) {
         runTrx {
-            vector.especies.add(especie)
+            vector.infectarCon(especie)
             vectorDAO.actualizar(vector)
         }
     }

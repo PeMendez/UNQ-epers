@@ -17,8 +17,12 @@ class Vector(var tipo: TipoDeVector,
 
     fun intentarInfectar(vectorInfectado: Vector, especie: Especie) {
         if (esContagioExitoso(vectorInfectado,especie)) {
-            especies.add(especie)
+            this.infectarCon(especie)
         }
+    }
+
+    fun infectarCon(especie: Especie) {
+        especies.add(especie)
     }
 
     fun esContagioExitoso(vectorInfectado: Vector, especie: Especie): Boolean {
@@ -48,7 +52,6 @@ class Vector(var tipo: TipoDeVector,
         this.ubicacion = ubicacion
 
     }
-
 }
 
 enum class TipoDeVector {
