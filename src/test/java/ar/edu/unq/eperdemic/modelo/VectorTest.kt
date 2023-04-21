@@ -26,11 +26,6 @@ class VectorTest {
         dataServiceHibernate.crearSetDeDatosIniciales()
     }
 
-    @AfterEach
-    fun tearDown() {
-        dataServiceHibernate.eliminarTodo()
-    }
-
     @Test
     fun intentarInfectar() {
     }
@@ -63,5 +58,10 @@ class VectorTest {
 
     @Test
     fun mover() {
+    }
+
+    @AfterEach
+    fun tearDown() {
+        dataServiceHibernate.eliminarTodo()
     }
 }
