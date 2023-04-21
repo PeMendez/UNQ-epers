@@ -29,5 +29,4 @@ class EspecieServiceImpl(val hibernateEspecieDAO: HibernateEspecieDAO) : Especie
         return runTrx { hibernateEspecieDAO.lideres() }
     }
 
-
 }

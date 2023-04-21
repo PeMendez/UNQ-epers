@@ -1,6 +1,7 @@
 package ar.edu.unq.eperdemic.services.impl
 
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateEspecieDAO
+import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateVectorDAO
 import ar.edu.unq.eperdemic.utils.DataServiceHibernate
 import org.junit.Assert
 import org.junit.jupiter.api.AfterEach
@@ -12,7 +13,9 @@ class EspecieServiceImplTest {
 
     private val hibernateEspecieDAO = HibernateEspecieDAO()
     private val especieService = EspecieServiceImpl(hibernateEspecieDAO)
-    var dataService = DataServiceHibernate()
+    private var dataService = DataServiceHibernate()
+    private val vectorDAO = HibernateVectorDAO()
+    private val vectorServiceImpl = VectorServiceImpl(vectorDAO)
 
 
     @BeforeEach
@@ -41,9 +44,13 @@ class EspecieServiceImplTest {
 
     @Test
     fun especieLider() {
-        especieService.especieLider()
-    }
+        val especie = especieService.recuperarEspecie(4)
+        val vector = vectorServiceImpl.recuperarVector(6)
 
+        vectorServiceImpl.infectar(vector, especie)
+
+        Assertions.assertEquals(especieService.especieLider().nombre, "especie4")
+    }
 
     @Test
     fun recuperarTodas() {
