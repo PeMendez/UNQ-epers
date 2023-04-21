@@ -1,6 +1,5 @@
 package ar.edu.unq.eperdemic.modelo
 
-import java.util.Objects.isNull
 import javax.persistence.*
 
 @Entity
@@ -35,7 +34,7 @@ class Vector(var tipo: TipoDeVector,
         return Diosito.decidir(10) + especie.patogeno.capacidadDeContagio
     }
 
-    fun estaSano(): Boolean {
+    fun estaSano() : Boolean {
         return especies.isEmpty()
     }
 

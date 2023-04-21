@@ -35,18 +35,6 @@ open class HibernateVectorDAO : HibernateDAO<Vector>(Vector::class.java),VectorD
         return recuperar(vectorId)
     }
 
-    /*
-    override fun borrarVector(vectorId: Long) {
-        val session = TransactionRunner.currentSession
-        val hql = """
-                delete from Vector
-                where id = :vectorABorrar
-        """
-        val query = session.createQuery(hql, Vector ::class.java)
-        query.setParameter("vectorABorrar", vectorId)
-        query.executeUpdate()
-    }*/
-
     override fun recuperarTodos(): List<Vector> {
         val session = TransactionRunner.currentSession
 
