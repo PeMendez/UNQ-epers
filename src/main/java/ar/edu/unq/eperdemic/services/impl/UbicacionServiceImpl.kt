@@ -1,5 +1,6 @@
 package ar.edu.unq.eperdemic.services.impl
 
+import ar.edu.unq.eperdemic.modelo.Diosito
 import ar.edu.unq.eperdemic.modelo.Ubicacion
 import ar.edu.unq.eperdemic.modelo.Vector
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateUbicacionDAO
@@ -29,7 +30,11 @@ class UbicacionServiceImpl(val ubicacionDAO: HibernateUbicacionDAO): UbicacionSe
     }
 
     override fun expandir(ubicacionId: Long) {
-        TODO("Not yet implemented")
+        return runTrx { val vectores = ubicacionDAO.recuperarVectores(ubicacionId)
+                        val vectoresInfectados = vectores.filter { v -> !v.estaSano()}
+                        val vectorAlAzar = vectoresInfectados[Diosito.decidir(vectoresInfectados.size)-1]
+                        vectorServiceImpl.contagiar(vectorAlAzar, vectores)
+        }
     }
 
     override fun crearUbicacion(nombreUbicacion: String): Ubicacion {
