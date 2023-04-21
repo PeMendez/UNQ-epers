@@ -7,7 +7,7 @@ import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateUbicacionDAO
 import ar.edu.unq.eperdemic.services.EstadisticaService
 import ar.edu.unq.eperdemic.services.runner.TransactionRunner.runTrx
 
-class EstadisticaServiceImpl() : EstadisticaService {
+class EstadisticaServiceImpl : EstadisticaService {
 
     val especieDAO = HibernateEspecieDAO()
     val ubicacionDAO = HibernateUbicacionDAO()
@@ -25,7 +25,7 @@ class EstadisticaServiceImpl() : EstadisticaService {
             val ubicacion = ubicacionDAO.recuperarUbicacionPorNombre(nombreDeLaUbicacion)
             val cantidadVectores = ubicacionDAO.recuperarVectores(ubicacion.id!!).size
             val cantidadInfectados = ubicacionDAO.recuperarVectores(ubicacion.id!!).filter {v -> !v.estaSano()}.size
-            val especieLider = especieDAO.especieLider().toString()
+            val especieLider = especieLider().nombre
             val reporte = ReporteDeContagios(cantidadVectores, cantidadInfectados, especieLider)
             reporte
         }
