@@ -35,10 +35,6 @@ class Vector(var tipo: TipoDeVector,
         return Diosito.decidir(10) + especie.patogeno.capacidadDeContagio
     }
 
-    fun capacidadDeDefensa():Int{
-        return if (estaSano()) 0 else especies.map { e -> e.patogeno.capacidadDeDefensa }.average().toInt()
-    }
-
     fun estaSano(): Boolean {
         return especies.isEmpty()
     }
