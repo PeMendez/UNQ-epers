@@ -25,8 +25,8 @@ class EstadisticaServiceImpl : EstadisticaService {
             val ubicacion = ubicacionDAO.recuperarUbicacionPorNombre(nombreDeLaUbicacion)
             val cantidadVectores = ubicacionDAO.recuperarVectores(ubicacion.id!!).size
             val cantidadInfectados = ubicacionDAO.recuperarVectores(ubicacion.id!!).filter {v -> !v.estaSano()}.size
-            val especieLider = especieLider().nombre
-            val reporte = ReporteDeContagios(cantidadVectores, cantidadInfectados, especieLider)
+            val especieLider = especieDAO.especieLiderDeUbicacion(ubicacion.id!!)
+            val reporte = ReporteDeContagios(cantidadVectores, cantidadInfectados, especieLider.nombre)
             reporte
         }
     }

@@ -39,6 +39,11 @@ class EspecieServiceImplTest {
         Assert.assertEquals(especieService.cantidadDeInfectados(1),1)
     }
 
+    @Test
+    fun especieLider() {
+        especieService.especieLider()
+    }
+
 
     @Test
     fun recuperarTodas() {

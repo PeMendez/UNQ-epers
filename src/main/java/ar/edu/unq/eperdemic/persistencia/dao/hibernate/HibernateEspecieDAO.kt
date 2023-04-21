@@ -72,5 +72,19 @@ open class HibernateEspecieDAO : HibernateDAO<Especie>(Especie::class.java), Esp
         return query.setMaxResults(10).resultList
     }
 
+    override fun especieLiderDeUbicacion(ubicacionId: Long) : Especie {
+        val session = TransactionRunner.currentSession
+        val hql = """select e
+                    from Vector v
+                    join v.especies e
+                    where v.ubicacion.id = :ubicacionId
+                    group by e 
+                    order by count(v) desc
+        """
+        val query = session.createQuery(hql, Especie::class.java)
+        query.setParameter("ubicacionId", ubicacionId)
+        return query.resultList.first()
+    }
+
 
 }
