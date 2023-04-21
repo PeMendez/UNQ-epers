@@ -21,7 +21,14 @@ class EstadisticaServiceImpl() : EstadisticaService {
     }
 
     override fun reporteDeContagios(nombreDeLaUbicacion: String): ReporteDeContagios {
-        return runTrx { ubicacionDAO.reporteDeContagios(nombreDeLaUbicacion) }
+        return runTrx {
+            val ubicacion = ubicacionDAO.recuperarUbicacionPorNombre(nombreDeLaUbicacion)
+            val cantidadVectores = ubicacionDAO.recuperarVectores(ubicacion.id!!).size
+            val cantidadInfectados = ubicacionDAO.recuperarVectores(ubicacion.id!!).filter {v -> !v.estaSano()}.size
+            val especieLider = especieDAO.especieLider().toString()
+            val reporte = ReporteDeContagios(cantidadVectores, cantidadInfectados, especieLider)
+            reporte
+        }
     }
 
 

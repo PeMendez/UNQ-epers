@@ -1,6 +1,5 @@
 package ar.edu.unq.eperdemic.persistencia.dao.hibernate
 
-import ar.edu.unq.eperdemic.modelo.ReporteDeContagios
 import ar.edu.unq.eperdemic.modelo.Ubicacion
 import ar.edu.unq.eperdemic.modelo.Vector
 import ar.edu.unq.eperdemic.modelo.exceptions.NombreDeUbicacionRepetido
@@ -64,7 +63,16 @@ open class HibernateUbicacionDAO : HibernateDAO<Ubicacion>(Ubicacion::class.java
         return query.resultList
     }
 
-    override fun reporteDeContagios(nombreDeLaUbicacion: String): ReporteDeContagios {
-        return ReporteDeContagios(1,1,"a")
+    override fun recuperarUbicacionPorNombre(nombreUbicacion: String) : Ubicacion{
+        val session = TransactionRunner.currentSession
+        val hql = """ 
+                    from Ubicacion u 
+                    where u.nombre = :nombreBuscado
+        """
+        val query = session.createQuery(hql, Ubicacion::class.java)
+        query.setParameter("nombreBuscado", nombreUbicacion)
+        return query.singleResult
     }
+
+
 }
