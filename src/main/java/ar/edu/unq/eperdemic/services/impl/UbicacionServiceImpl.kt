@@ -20,12 +20,13 @@ class UbicacionServiceImpl(val ubicacionDAO: HibernateUbicacionDAO): UbicacionSe
         val vectoresEnUbicacion = runTrx {
             val ubicacion = ubicacionDAO.recuperar(ubicacionid)
             vector.mover(ubicacion)
-            hibernateVectorDAO.actualizar(vector)
             ubicacionDAO.recuperarVectores(ubicacionid)
         }
-
-        if (!vector.estaSano()) {
-            vectorServiceImpl.contagiar(vector, vectoresEnUbicacion)
+        runTrx {
+            hibernateVectorDAO.actualizar(vector)
+            if (!vector.estaSano()) {
+                vectorServiceImpl.contagiar(vector, vectoresEnUbicacion)
+            }
         }
     }
 

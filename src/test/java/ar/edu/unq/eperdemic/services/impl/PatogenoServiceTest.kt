@@ -98,8 +98,9 @@ class PatogenoServiceTest {
         Assertions.assertNotNull(listaDePatogenosRecuperados.find { it.id == 1.toLong() })
         Assertions.assertNotNull(listaDePatogenosRecuperados.find { it.id == 2.toLong() })
         Assertions.assertNotNull(listaDePatogenosRecuperados.find { it.id == 3.toLong() })
+        Assertions.assertNotNull(listaDePatogenosRecuperados.find { it.id == 4.toLong() })
 
-        Assertions.assertTrue(listaDePatogenosRecuperados.size == 3)
+        Assertions.assertEquals(listaDePatogenosRecuperados.size, 4)
 
     }
 

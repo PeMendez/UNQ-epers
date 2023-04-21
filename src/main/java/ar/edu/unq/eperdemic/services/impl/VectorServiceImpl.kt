@@ -4,6 +4,7 @@ import ar.edu.unq.eperdemic.modelo.Especie
 import ar.edu.unq.eperdemic.modelo.TipoDeVector
 import ar.edu.unq.eperdemic.modelo.Vector
 import ar.edu.unq.eperdemic.persistencia.dao.VectorDAO
+import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateUbicacionDAO
 import ar.edu.unq.eperdemic.services.VectorService
 import ar.edu.unq.eperdemic.services.runner.TransactionRunner.runTrx
@@ -18,7 +19,7 @@ class VectorServiceImpl(private val vectorDAO: VectorDAO): VectorService {
                 vectorInfectado.especies.forEach { e ->
                     v.intentarInfectar(vectorInfectado,e)
                 }
-                vectorDAO.guardar(v)
+                vectorDAO.actualizar(v)
             }
         }
     }

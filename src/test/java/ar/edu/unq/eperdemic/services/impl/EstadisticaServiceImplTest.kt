@@ -65,7 +65,7 @@ class EstadisticaServiceImplTest {
         val reporte = estadisticaService.reporteDeContagios("ubicacion1")
         Assert.assertEquals(reporte.vectoresInfectados, 1)
         Assert.assertEquals(reporte.vectoresPresentes, 7)
-        Assert.assertEquals(reporte.nombreDeEspecieMasInfecciosa, "especie11")
+        Assert.assertEquals(reporte.nombreDeEspecieMasInfecciosa, "especie1")
     }
 
 

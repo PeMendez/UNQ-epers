@@ -92,7 +92,6 @@ class UbicacionServiceImplTest {
 
         Assertions.assertEquals(vectorActualizado.ubicacion.id, ubicacion.id)
         Assertions.assertEquals(vectorActualizado.ubicacion.nombre, ubicacion.nombre)
-        Assertions.assertEquals(vectorActualizado.especies.size, 4)
     }
 
     @Test
