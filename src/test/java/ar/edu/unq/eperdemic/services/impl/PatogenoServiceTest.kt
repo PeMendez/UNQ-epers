@@ -104,6 +104,13 @@ class PatogenoServiceTest {
     }
 
     @Test
+    fun seIntentanRecuperarLasEspeciesDeUnPatogenoSinEspecies() {
+        val listaDeEspeciesRecuperadas = patogenoService.especiesDePatogeno(4)
+
+        Assertions.assertTrue(listaDeEspeciesRecuperadas.isEmpty())
+    }
+
+    @Test
     fun seRecuperanTodasLasEspeciesDeUnPatogeno() {
 
         val listaDeEspeciesRecuperadas = patogenoService.especiesDePatogeno(1)

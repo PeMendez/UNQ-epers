@@ -1,8 +1,6 @@
 package ar.edu.unq.eperdemic.services.impl
 
 import ar.edu.unq.eperdemic.modelo.Diosito
-import ar.edu.unq.eperdemic.modelo.TipoDeVector
-import ar.edu.unq.eperdemic.modelo.Ubicacion
 import ar.edu.unq.eperdemic.modelo.exceptions.NombreDeUbicacionRepetido
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateEspecieDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateUbicacionDAO
@@ -96,40 +94,36 @@ class UbicacionServiceImplTest {
         Assertions.assertEquals(vectorActualizado.ubicacion.nombre, ubicacion.nombre)
     }
 
-    /*@Test
+    @Test
     fun alMoverUnVectorInfectadoAUnaUbicacionEntoncesSeInfectaUnVectorAlAzar() {
-        Diosito.switchModo(false)
+        val ubicacion = ubicacionService.recuperar(8)
+        val vectorInfectado = vectorService.recuperarVector(8)
+        val vectorNoInfectado = vectorService.recuperarVector(7)
 
-        val ubicacionNueva = ubicacionService.crearUbicacion("testMoverEInfectar")
+        Assertions.assertTrue(vectorNoInfectado.estaSano())
 
-        Assertions.assertTrue(ubicacionNueva.vectores.isEmpty())
+        ubicacionService.mover(vectorInfectado.id!!, ubicacion.id!!)
 
-        val vectorNuevo = vectorService.crearVector(TipoDeVector.Persona, ubicacionNueva.id!!)
-        val ubicacionRecuperada = ubicacionService.recuperar(ubicacionNueva.id!!)
+        val vectorInfectadoYLoSabe = vectorService.recuperarVector(vectorNoInfectado.id!!)
+        val vectorInfectadoMovido = vectorService.recuperarVector(vectorInfectado.id!!)
 
-        Assertions.assertTrue(ubicacionRecuperada.vectores.size == 1)
-        ubicacionRecuperada.vectores.forEach { v -> Assertions.assertTrue(v.especies.isEmpty()) }
-
-        val especie = especieService.recuperarEspecie(1)
-        val vector2 = vectorService.recuperarVector(4)
-
-        vectorService.infectar(vector2, especie)
-        val vector2Infectado = vectorService.recuperarVector(vector2.id!!)
-
-        Assertions.assertTrue(vector2Infectado.especies.isNotEmpty())
-
-        ubicacionService.mover(vector2Infectado.id!!, ubicacionRecuperada.id!!)
-
-        val ubicacionPostInfeccion = ubicacionService.recuperar(ubicacionRecuperada.id!!)
-
-        ubicacionPostInfeccion.vectores.forEach { v -> Assertions.assertTrue(v.especies.isNotEmpty()) }
-
-    }*/
+        Assertions.assertEquals(vectorInfectadoMovido.ubicacion.id!!, vectorInfectadoYLoSabe.ubicacion.id!!)
+        Assertions.assertFalse(vectorInfectadoYLoSabe.estaSano())
+        //forEach
+    }
 
     @Test
     fun alMoverUnVectorNoInfectadoAUnaUbicacionEntoncesNoSeHaceNada() {
 
     }
+
+
+
+
+
+
+
+
 
 
     @AfterEach

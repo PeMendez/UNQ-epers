@@ -9,11 +9,6 @@ import javax.persistence.NoResultException
 
 open class HibernateUbicacionDAO : HibernateDAO<Ubicacion>(Ubicacion::class.java), UbicacionDAO {
 
-
-    override fun expandir(ubicacionId: Long) {
-        TODO("Not yet implemented")
-    }
-
     override fun crearUbicacion(nombreUbicacion: String): Ubicacion {
         val session = TransactionRunner.currentSession
 

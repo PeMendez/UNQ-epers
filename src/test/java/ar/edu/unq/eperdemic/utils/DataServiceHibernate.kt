@@ -24,6 +24,7 @@ class DataServiceHibernate : DataService {
     val patogeno1 = Patogeno("tipo1")
     val patogeno2 = Patogeno("tipo2")
     val patogeno3 = Patogeno("tipo3")
+    val patogeno4 = Patogeno("tipo4")
     val ubicacion1 = Ubicacion("ubicacion1")
     val ubicacion2 = Ubicacion("ubicacion2")
     val ubicacion3 = Ubicacion("ubicacion3")
@@ -44,7 +45,8 @@ class DataServiceHibernate : DataService {
         val patogeno1Creado = patogenoService.crearPatogeno(patogeno1)
         val patogeno2Creado = patogenoService.crearPatogeno(patogeno2)
         val patogeno3Creado = patogenoService.crearPatogeno(patogeno3)
-        return listOf(patogeno1Creado, patogeno2Creado, patogeno3Creado)
+        val patogeno4Creano = patogenoService.crearPatogeno(patogeno4)
+        return listOf(patogeno1Creado, patogeno2Creado, patogeno3Creado, patogeno4Creano)
     }
 
     private fun crearUbicaciones(): List<Ubicacion> {

@@ -24,11 +24,7 @@ class VectorTest {
     @BeforeEach
     fun setUp() {
         dataServiceHibernate.crearSetDeDatosIniciales()
-    }
 
-    @AfterEach
-    fun tearDown() {
-        dataServiceHibernate.eliminarTodo()
     }
 
     @Test
@@ -36,7 +32,29 @@ class VectorTest {
     }
 
     @Test
-    fun infectarCon() {
+    fun alInfectarUnVectorConUnaEspecieEstaSeGuarda() {
+        val vector = vectorServiceImpl.recuperarVector(1)
+        val especie = especieServiceImpl.recuperarEspecie(1)
+
+        vector.infectarCon(especie)
+
+        assertTrue(vector.especies.contains(especie))
+
+    }
+    @Test
+    fun alIntentarInfectarUnVectorConUnaEspecieQueYaEstaInfectadoNoSeDuplica() {
+        val vector = vectorServiceImpl.recuperarVector(1)
+        val especie = especieServiceImpl.recuperarEspecie(1)
+
+        vector.infectarCon(especie)
+
+        assertEquals(vector.especies.size, 1)
+
+        vector.infectarCon(especie)
+
+        assertEquals(vector.especies.size, 1)
+
+
     }
 
     @Test
@@ -82,5 +100,10 @@ class VectorTest {
 
     @Test
     fun mover() {
+    }
+
+    @AfterEach
+    fun tearDown() {
+        dataServiceHibernate.eliminarTodo()
     }
 }
