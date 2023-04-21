@@ -9,9 +9,8 @@ interface VectorDAO {
     fun enfermedades(vectorID: Long) : List<Especie>
     fun crearVector(tipo: TipoDeVector, ubicacion: Ubicacion): Vector
     fun recuperarVector(vectorId: Long): Vector
-    fun borrarVector(vectorId: Long)
     fun recuperarTodos() : List<Vector>
     fun guardar(entity : Vector)
     fun actualizar(vector: Vector)
-
+    fun borrar(vector: Vector)
 }

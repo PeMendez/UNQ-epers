@@ -10,21 +10,6 @@ import ar.edu.unq.eperdemic.services.runner.TransactionRunner
 
 open class HibernateVectorDAO : HibernateDAO<Vector>(Vector::class.java),VectorDAO {
 
-
-    /*override fun enfermedades(vectorID: Long): List<Especie> {
-        val session = TransactionRunner.currentSession
-        val hql = """
-                select e
-                from Especie e
-                where e.patogeno.id = :vectorId
-                """
-
-        val query = session.createQuery(hql, Especie::class.java)
-        query.setParameter("vectorId", vectorID)
-
-        return query.resultList
-    }*/
-
     override fun enfermedades(vectorID: Long): List<Especie> {
         val session = TransactionRunner.currentSession
         val hql = """
@@ -50,16 +35,17 @@ open class HibernateVectorDAO : HibernateDAO<Vector>(Vector::class.java),VectorD
         return recuperar(vectorId)
     }
 
+    /*
     override fun borrarVector(vectorId: Long) {
         val session = TransactionRunner.currentSession
         val hql = """
-                delete from Vector v
-                where v.id = :vectorABorrar
+                delete from Vector
+                where id = :vectorABorrar
         """
         val query = session.createQuery(hql, Vector ::class.java)
         query.setParameter("vectorABorrar", vectorId)
         query.executeUpdate()
-    }
+    }*/
 
     override fun recuperarTodos(): List<Vector> {
         val session = TransactionRunner.currentSession

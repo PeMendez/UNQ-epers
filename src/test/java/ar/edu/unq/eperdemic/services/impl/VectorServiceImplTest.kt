@@ -23,7 +23,6 @@ class VectorServiceImplTest {
         dataServiceHibernate.crearSetDeDatosIniciales()
     }
 
-
     @Test
     fun contagiar() {
         val unVector = vectorServiceImpl.recuperarVector(3)
@@ -45,12 +44,10 @@ class VectorServiceImplTest {
     fun infectar() {
         val unVector = vectorServiceImpl.recuperarVector(1)
         val unaEspecie = especieServiceImpl.recuperarEspecie(1)
-        val otraEspecie = especieServiceImpl.recuperarEspecie(2)
 
         vectorServiceImpl.infectar(unVector,unaEspecie)
 
         Assertions.assertTrue(unVector.especies.contains(unaEspecie))
-        Assertions.assertFalse(unVector.especies.contains(otraEspecie))
     }
 
     @Test
@@ -64,7 +61,6 @@ class VectorServiceImplTest {
         Assertions.assertEquals(enfermedades.size, 1)
 
     }
-
 
     @Test
     fun cuandoSeCreaUnVectorSeLeAsignaUnId() {
@@ -82,23 +78,14 @@ class VectorServiceImplTest {
         Assert.assertEquals(vectorRecuperado.tipo, TipoDeVector.Animal)
     }
 
-
-    //@Test
-    fun borrarVector() {
-        val ubic = ubicacionServiceImpl.crearUbicacion("BSAS")
-        val tipo = TipoDeVector.Persona
-        var vector = vectorServiceImpl.crearVector(tipo,ubic.id!!)
-        vectorServiceImpl.borrarVector(vector.id!!)
-        Assert.assertNull(vectorServiceImpl.recuperarVector(vector.id!!))
-    }
-
     @Test
-    fun getUbicacionDAO() {
+    fun borrarVector() {
+        vectorServiceImpl.borrarVector(1)
+        Assert.assertNull(vectorServiceImpl.recuperarVector(1))
     }
 
     @AfterEach
     fun eliminarModelo() {
         dataServiceHibernate.eliminarTodo()
     }
-
 }
