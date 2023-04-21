@@ -65,12 +65,13 @@ class VectorTest {
         vectorServiceImpl.infectar(vectorPersonaEnfermo, especie)
 
         assertEquals(vectorPersonaSano.ubicacion.nombre,vectorPersonaEnfermo.ubicacion.nombre)
+        assertEquals(vectorPersonaSano.tipo,vectorPersonaEnfermo.tipo)
 
         val vectoresAInfectar = listOf(vectorPersonaSano)
         assertTrue(vectorPersonaSano.estaSano())
         assertFalse(vectorPersonaEnfermo.estaSano())
         vectorServiceImpl.contagiar(vectorPersonaEnfermo,vectoresAInfectar)
-        assertFalse(vectorPersonaSano.estaSano())
+        assertFalse(vectorPersonaEnfermo.estaSano())
     }
     @Test
     fun esContagioExitosoFalse() {
