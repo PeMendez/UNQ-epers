@@ -109,6 +109,7 @@ class UbicacionServiceImplTest {
 
         Assertions.assertEquals(vectorInfectadoMovido.ubicacion.id!!, vectorInfectadoYLoSabe.ubicacion.id!!)
         Assertions.assertFalse(vectorInfectadoYLoSabe.estaSano())
+        //forEach
     }
 
     @Test
