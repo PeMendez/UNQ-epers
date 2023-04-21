@@ -6,6 +6,7 @@ import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateEspecieDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateUbicacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateVectorDAO
 import ar.edu.unq.eperdemic.utils.DataServiceHibernate
+import org.junit.Assert
 import org.junit.jupiter.api.*
 
 class UbicacionServiceImplTest {
@@ -104,27 +105,87 @@ class UbicacionServiceImplTest {
 
         ubicacionService.mover(vectorInfectado.id!!, ubicacion.id!!)
 
-        val vectorInfectadoYLoSabe = vectorService.recuperarVector(vectorNoInfectado.id!!)
+        val vectorNoInfectadoActualizado = vectorService.recuperarVector(vectorNoInfectado.id!!)
         val vectorInfectadoMovido = vectorService.recuperarVector(vectorInfectado.id!!)
 
-        Assertions.assertEquals(vectorInfectadoMovido.ubicacion.id!!, vectorInfectadoYLoSabe.ubicacion.id!!)
-        Assertions.assertFalse(vectorInfectadoYLoSabe.estaSano())
-        //forEach
+        Assertions.assertEquals(vectorInfectadoMovido.ubicacion.id!!, vectorNoInfectadoActualizado.ubicacion.id!!)
+        Assertions.assertFalse(vectorNoInfectadoActualizado.estaSano())
     }
 
     @Test
     fun alMoverUnVectorNoInfectadoAUnaUbicacionEntoncesNoSeHaceNada() {
+        val ubicacion = ubicacionService.recuperar(8)
+        val vectorNoInfectado1 = vectorService.recuperarVector(2)
+        val vectorNoInfectado2 = vectorService.recuperarVector(7)
 
+        Assertions.assertTrue(vectorNoInfectado2.estaSano())
+        Assertions.assertTrue(vectorNoInfectado1.estaSano())
+        Assertions.assertTrue(vectorNoInfectado2.tipo.puedeSerInfectado(vectorNoInfectado1.tipo))
+
+        ubicacionService.mover(vectorNoInfectado1.id!!, ubicacion.id!!)
+
+        val vectorNoInfectado2Actualizado = vectorService.recuperarVector(vectorNoInfectado2.id!!)
+        val vectorNoInfectado1Actualizado = vectorService.recuperarVector(vectorNoInfectado1.id!!)
+
+        Assertions.assertEquals(vectorNoInfectado1Actualizado.ubicacion.id!!, vectorNoInfectado2Actualizado.ubicacion.id!!)
+        Assertions.assertTrue(vectorNoInfectado2Actualizado.estaSano())
+        Assertions.assertTrue(vectorNoInfectado1Actualizado.estaSano())
     }
 
+    @Test
+    fun seRecuperanTodosLosVectoresDeLaUbicacionCorrectamente() {
+        val ubicacion = ubicacionService.recuperar(2)
+        val vector2 = vectorService.recuperarVector(2)
+        val vector8 = vectorService.recuperarVector(8)
 
+        val vectoresEnUbicacion = ubicacionService.recuperarVectores(2)
 
+        Assertions.assertEquals(2, vectoresEnUbicacion.size)
+        Assertions.assertNotNull(vectoresEnUbicacion.find { it.id == vector2.id  && it.ubicacion.id!! == ubicacion.id!! && it.especies.size == vector2.especies.size})
+        Assertions.assertNotNull(vectoresEnUbicacion.find { it.id == vector8.id  && it.ubicacion.id!! == ubicacion.id!! && it.especies.size == vector8.especies.size})
+    }
 
+    @Test
+    fun alIntentarExpandirEnUnaUbicacionConUnVectorContagiadoYOtrosSanosQuePuedenSerInfectadosSeContagian() {
+        val vectoresUbicacion3 = ubicacionService.recuperarVectores(3)
+        val vectorSano1 = vectoresUbicacion3[0]
+        val vectorSano2 = vectoresUbicacion3[1]
+        val vectorInfectado = vectoresUbicacion3[2]
 
+        Assertions.assertTrue(vectorSano1.estaSano())
+        Assertions.assertTrue(vectorSano2.estaSano())
+        Assertions.assertFalse(vectorInfectado.estaSano())
+        Assertions.assertEquals(3, vectoresUbicacion3.size)
 
+        ubicacionService.expandir(3)
 
+        val vectorSano1Actualizado = vectorService.recuperarVector(vectorSano1.id!!)
+        val vectorSano2Actualizado = vectorService.recuperarVector(vectorSano2.id!!)
+        val vectorInfectadoActualizado = vectorService.recuperarVector(vectorInfectado.id!!)
 
+        Assertions.assertFalse(vectorSano1Actualizado.estaSano())
+        Assertions.assertFalse(vectorSano2Actualizado.estaSano())
+        Assertions.assertFalse(vectorInfectadoActualizado.estaSano())
+    }
 
+    @Test
+    fun alIntentarExpandirEnUnaUbicacionConVectoresSanosEntoncesNoHaceNada() {
+        val vectoresUbicacion3 = ubicacionService.recuperarVectores(7)
+        val vectorSano1 = vectoresUbicacion3[0]
+        val vectorSano2 = vectoresUbicacion3[1]
+
+        Assertions.assertTrue(vectorSano1.estaSano())
+        Assertions.assertTrue(vectorSano2.estaSano())
+        Assertions.assertEquals(2, vectoresUbicacion3.size)
+
+        ubicacionService.expandir(7)
+
+        val vectorSano1Actualizado = vectorService.recuperarVector(vectorSano1.id!!)
+        val vectorSano2Actualizado = vectorService.recuperarVector(vectorSano2.id!!)
+
+        Assertions.assertTrue(vectorSano1Actualizado.estaSano())
+        Assertions.assertTrue(vectorSano2Actualizado.estaSano())
+    }
 
     @AfterEach
     fun clearAll() {

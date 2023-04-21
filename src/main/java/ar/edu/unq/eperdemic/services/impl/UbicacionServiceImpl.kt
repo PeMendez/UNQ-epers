@@ -31,10 +31,13 @@ class UbicacionServiceImpl(val ubicacionDAO: HibernateUbicacionDAO): UbicacionSe
     }
 
     override fun expandir(ubicacionId: Long) {
-        return runTrx { val vectores = ubicacionDAO.recuperarVectores(ubicacionId)
-                        val vectoresInfectados = vectores.filter { v -> !v.estaSano()}
-                        val vectorAlAzar = vectoresInfectados[Diosito.decidir(vectoresInfectados.size)-1]
-                        vectorServiceImpl.contagiar(vectorAlAzar, vectores)
+       val vectores = runTrx { ubicacionDAO.recuperarVectores(ubicacionId) }
+        runTrx {
+            val vectoresInfectados = vectores.filter {  v -> !v.estaSano() }
+            if (vectoresInfectados.isNotEmpty()) {
+                val vectorAlAzar = vectoresInfectados[Diosito.decidir(vectoresInfectados.size)-1]
+                vectorServiceImpl.contagiar(vectorAlAzar, vectores)
+            }
         }
     }
 
