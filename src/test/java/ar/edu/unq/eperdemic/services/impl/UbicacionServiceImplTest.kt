@@ -70,8 +70,14 @@ class UbicacionServiceImplTest {
         Assertions.assertNotNull(ubicacionesRecuperadas.find { it.id == 1.toLong() })
         Assertions.assertNotNull(ubicacionesRecuperadas.find { it.id == 2.toLong() })
         Assertions.assertNotNull(ubicacionesRecuperadas.find { it.id == 3.toLong() })
+        Assertions.assertNotNull(ubicacionesRecuperadas.find { it.id == 4.toLong() })
+        Assertions.assertNotNull(ubicacionesRecuperadas.find { it.id == 5.toLong() })
+        Assertions.assertNotNull(ubicacionesRecuperadas.find { it.id == 6.toLong() })
+        Assertions.assertNotNull(ubicacionesRecuperadas.find { it.id == 7.toLong() })
+        Assertions.assertNotNull(ubicacionesRecuperadas.find { it.id == 8.toLong() })
+        Assertions.assertNotNull(ubicacionesRecuperadas.find { it.id == 9.toLong() })
 
-        Assertions.assertTrue(ubicacionesRecuperadas.size == 3)
+        Assertions.assertTrue(ubicacionesRecuperadas.size == 9)
 
     }
 
