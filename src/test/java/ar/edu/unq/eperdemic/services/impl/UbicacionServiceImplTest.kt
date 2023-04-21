@@ -1,12 +1,9 @@
 package ar.edu.unq.eperdemic.services.impl
 
-import ar.edu.unq.eperdemic.modelo.Diosito
 import ar.edu.unq.eperdemic.modelo.exceptions.NombreDeUbicacionRepetido
-import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateEspecieDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateUbicacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateVectorDAO
 import ar.edu.unq.eperdemic.utils.DataServiceHibernate
-import org.junit.Assert
 import org.junit.jupiter.api.*
 
 class UbicacionServiceImplTest {
@@ -17,9 +14,6 @@ class UbicacionServiceImplTest {
 
     val vectorDAO = HibernateVectorDAO()
     val vectorService = VectorServiceImpl(vectorDAO)
-
-    val especieDAO = HibernateEspecieDAO()
-    val especieService = EspecieServiceImpl(especieDAO)
 
     @BeforeEach
     fun setUp() {

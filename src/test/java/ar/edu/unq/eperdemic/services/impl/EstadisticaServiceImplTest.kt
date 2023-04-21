@@ -5,10 +5,7 @@ import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateEspecieDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateVectorDAO
 import ar.edu.unq.eperdemic.utils.DataServiceHibernate
 import org.junit.Assert
-import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
-
+import org.junit.jupiter.api.*
 class EstadisticaServiceImplTest {
 
     var dataService = DataServiceHibernate()
@@ -63,7 +60,7 @@ class EstadisticaServiceImplTest {
         val reporte = estadisticaService.reporteDeContagios("ubicacion1")
         Assert.assertEquals(reporte.vectoresInfectados, 1)
         Assert.assertEquals(reporte.vectoresPresentes, 7)
-        Assert.assertEquals(reporte.nombreDeEspecieMasInfecciosa, "especie11")
+        Assert.assertEquals(reporte.nombreDeEspecieMasInfecciosa, "especie1")
     }
 
 
