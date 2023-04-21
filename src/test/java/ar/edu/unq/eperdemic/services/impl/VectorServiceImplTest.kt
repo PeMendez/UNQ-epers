@@ -34,8 +34,13 @@ class VectorServiceImplTest {
 
         val vectores = listOf(otroVector,otroVectorMas)
 
+        //reviso que los vectores a contagiar no tengan la especie de id 1
+        Assertions.assertFalse(otroVector.tieneEfermedad(unaEspecie.id!!))
+        Assertions.assertFalse(otroVectorMas.tieneEfermedad(unaEspecie.id!!))
+
         vectorServiceImpl.contagiar(unVector,vectores)
 
+        //reviso que los vectores a contagiar ahora si tengan la especie de id 1
         Assertions.assertTrue(otroVector.tieneEfermedad(unaEspecie.id!!))
         Assertions.assertTrue(otroVectorMas.tieneEfermedad(unaEspecie.id!!))
     }
