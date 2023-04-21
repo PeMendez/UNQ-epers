@@ -62,8 +62,10 @@ class EstadisticaServiceImplTest {
 
     @Test
     fun reporteDeContagios() {
-
-
+        val reporte = estadisticaService.reporteDeContagios("ubicacion1")
+        Assert.assertEquals(reporte.vectoresInfectados, 1)
+        Assert.assertEquals(reporte.vectoresPresentes, 7)
+        Assert.assertEquals(reporte.nombreDeEspecieMasInfecciosa, "especie11")
     }
 
 
