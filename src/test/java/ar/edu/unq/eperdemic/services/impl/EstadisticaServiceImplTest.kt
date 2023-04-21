@@ -62,6 +62,8 @@ class EstadisticaServiceImplTest {
 
     @Test
     fun reporteDeContagios() {
+
+
     }
 
 
