@@ -12,6 +12,9 @@ class Especie(@ManyToOne
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id : Long? = null
 
+
+    @ManyToMany(mappedBy = "especies", cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
+    val vectores : MutableSet<Vector> = HashSet()
 }
 
 

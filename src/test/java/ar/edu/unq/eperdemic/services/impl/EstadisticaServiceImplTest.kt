@@ -24,8 +24,8 @@ class EstadisticaServiceImplTest {
     }
 
     @Test
-    fun especieLider() {
-        val especieQueMasInfecto = especieService.recuperarEspecie(1)
+    fun unaEspecieEsEspecieLiderInfectandoPersonas() {
+        val especieQueMasInfecto = especieService.recuperarEspecie(3)
         val unVector = vectorServiceImpl.recuperarVector(3)
 
         vectorServiceImpl.infectar(unVector,especieQueMasInfecto)
@@ -33,24 +33,32 @@ class EstadisticaServiceImplTest {
         Assert.assertEquals(especieQueMasInfecto.id, estadisticaService.especieLider().id)
     }
 
-    /*
+
     @Test
-    fun lideres() {
-        val especieInf = especieService.recuperarEspecie(2)
-        val unVector = vectorServiceImpl.recuperarVector(3)
-        val otroVector = vectorServiceImpl.recuperarVector(1)
+    fun lideresQueInfectaronLaMayorCantidadDeHumanosYAnimales() {
 
+        val especiePeron = especieService.recuperarEspecie(1)
+        val especieMacrista = especieService.recuperarEspecie(10)
+        val vectorCristina = vectorServiceImpl.recuperarVector(12)
+        val vectorNestor = vectorServiceImpl.recuperarVector(11)
+        val vectorDemente = vectorServiceImpl.recuperarVector(10)
+        val vectorMacrista = vectorServiceImpl.recuperarVector(9)
+        val vectorEvita = vectorServiceImpl.recuperarVector(13)
+        val vectorDominante = vectorServiceImpl.recuperarVector(14)
 
-        vectorServiceImpl.infectar(unVector,especieInf)
-        vectorServiceImpl.infectar(otroVector,especieInf)
+        vectorServiceImpl.infectar(vectorCristina, especiePeron)
+        vectorServiceImpl.infectar(vectorNestor, especiePeron)
+        vectorServiceImpl.infectar(vectorDemente, especiePeron)
+        vectorServiceImpl.infectar(vectorMacrista, especiePeron)
+        vectorServiceImpl.infectar(vectorEvita, especiePeron)
+        vectorServiceImpl.infectar(vectorDominante, especiePeron)
 
-        Assert.assertEquals(unVector.tipo, TipoDeVector.Persona)
-        Assert.assertEquals(otroVector.tipo, TipoDeVector.Animal)
-        //Assert.assertEquals(especieInf.id, estadisticaService.especieLider().id)
+        Assert.assertEquals(estadisticaService.lideres().size, 10)
+        Assert.assertEquals(estadisticaService.lideres().first().id, especiePeron.id)
+        Assert.assertEquals(estadisticaService.lideres().last().id, especieMacrista.id)
 
     }
 
-     */
 
     @Test
     fun reporteDeContagios() {
