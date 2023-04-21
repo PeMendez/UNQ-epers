@@ -1,7 +1,6 @@
 package ar.edu.unq.eperdemic.services.impl
 
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateEspecieDAO
-import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernatePatogenoDAO
 import ar.edu.unq.eperdemic.utils.DataServiceHibernate
 import org.junit.Assert
 import org.junit.jupiter.api.AfterEach
@@ -35,10 +34,9 @@ class EspecieServiceImplTest {
     }
 
 
-    //@Test
+    @Test
     fun cantidadDeInfectados() {
-
-        Assert.assertEquals(especieService.cantidadDeInfectados(1),2)
+        Assert.assertEquals(especieService.cantidadDeInfectados(1),1)
     }
 
 

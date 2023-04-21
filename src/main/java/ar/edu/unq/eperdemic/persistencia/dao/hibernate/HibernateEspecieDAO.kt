@@ -30,7 +30,8 @@ open class HibernateEspecieDAO : HibernateDAO<Especie>(Especie::class.java), Esp
                 """
         val query = session.createQuery(hql)
         query.setParameter("especieId", especieId)
-        return query.uniqueResult() as Int
+        val result = query.uniqueResult() as? Long
+        return result!!.toInt()
     }
 
 

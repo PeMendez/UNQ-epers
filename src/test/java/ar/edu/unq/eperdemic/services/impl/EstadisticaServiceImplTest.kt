@@ -43,15 +43,13 @@ class EstadisticaServiceImplTest {
         val vectorNestor = vectorServiceImpl.recuperarVector(11)
         val vectorDemente = vectorServiceImpl.recuperarVector(10)
         val vectorMacrista = vectorServiceImpl.recuperarVector(9)
-        val vectorEvita = vectorServiceImpl.recuperarVector(13)
-        val vectorDominante = vectorServiceImpl.recuperarVector(14)
+        val vectorChristianGrey = vectorServiceImpl.recuperarVector(13)
 
         vectorServiceImpl.infectar(vectorCristina, especiePeron)
         vectorServiceImpl.infectar(vectorNestor, especiePeron)
         vectorServiceImpl.infectar(vectorDemente, especiePeron)
         vectorServiceImpl.infectar(vectorMacrista, especiePeron)
-        vectorServiceImpl.infectar(vectorEvita, especiePeron)
-        vectorServiceImpl.infectar(vectorDominante, especiePeron)
+        vectorServiceImpl.infectar(vectorChristianGrey, especiePeron)
 
         Assert.assertEquals(estadisticaService.lideres().size, 10)
         Assert.assertEquals(estadisticaService.lideres().first().id, especiePeron.id)
@@ -65,7 +63,7 @@ class EstadisticaServiceImplTest {
         val reporte = estadisticaService.reporteDeContagios("ubicacion1")
         Assert.assertEquals(reporte.vectoresInfectados, 1)
         Assert.assertEquals(reporte.vectoresPresentes, 7)
-        Assert.assertEquals(reporte.nombreDeEspecieMasInfecciosa, "especie1")
+        Assert.assertEquals(reporte.nombreDeEspecieMasInfecciosa, "especie11")
     }
 
 
