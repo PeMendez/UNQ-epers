@@ -40,21 +40,40 @@ class VectorTest {
     }
 
     @Test
-    fun esContagioExitoso() {
+    fun esContagioExitosoTrue() {
+        val vectorPersonaSano = vectorServiceImpl.recuperarVector(7)
+        val vectorPersonaEnfermo = vectorServiceImpl.recuperarVector(14)
+        val especie = especieServiceImpl.recuperarEspecie(1)
+        vectorServiceImpl.infectar(vectorPersonaEnfermo, especie)
+
+        assertEquals(vectorPersonaSano.ubicacion.nombre,vectorPersonaEnfermo.ubicacion.nombre)
+
+        //val vectoresAInfectar = listOf(vectorPersonaSano)
+        //assertTrue(vectorPersonaSano.estaSano())
+        //assertFalse(vectorPersonaEnfermo.estaSano())
+        //vectorServiceImpl.contagiar(vectorPersonaEnfermo,vectoresAInfectar)
+        //assertFalse(vectorPersonaSano.estaSano())
+    }
+    @Test
+    fun esContagioExitosoFalse() {
 
     }
-
     @Test
     fun porcentajeDeContagioExitoso() {
     }
 
     @Test
-    fun estaSano() {
-        val vector = vectorServiceImpl.recuperarVector(7)
+    fun estaSanoTrue() {
+        val vectorSano = vectorServiceImpl.recuperarVector(7)
+        assertTrue(vectorSano.estaSano())
+    }
+    @Test
+    fun estaSanoFalse() {
+        val vectorAInfectar = vectorServiceImpl.recuperarVector(7)
         val especie = especieServiceImpl.recuperarEspecie(1)
-        assertTrue(vector.estaSano())
-        vector.infectarCon(especie)
-        assertFalse(vector.estaSano())
+        assertTrue(vectorAInfectar.estaSano())
+        vectorAInfectar.infectarCon(especie)
+        assertFalse(vectorAInfectar.estaSano())
     }
 
     @Test

@@ -77,6 +77,7 @@ class DataServiceHibernate : DataService {
         vectorService.crearVector(TipoDeVector.Animal, listaDeUbicaciones[0].id!!)
         vectorService.crearVector(TipoDeVector.Persona, listaDeUbicaciones[0].id!!)
         vectorService.crearVector(TipoDeVector.Persona, listaDeUbicaciones[0].id!!)
+        vectorService.crearVector(TipoDeVector.Persona, listaDeUbicaciones[7].id!!)
 
     }
 
