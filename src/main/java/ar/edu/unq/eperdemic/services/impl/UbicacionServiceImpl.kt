@@ -1,6 +1,6 @@
 package ar.edu.unq.eperdemic.services.impl
 
-import ar.edu.unq.eperdemic.modelo.Diosito
+import ar.edu.unq.eperdemic.modelo.Random
 import ar.edu.unq.eperdemic.modelo.Ubicacion
 import ar.edu.unq.eperdemic.modelo.Vector
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateUbicacionDAO
@@ -35,7 +35,7 @@ class UbicacionServiceImpl(val ubicacionDAO: HibernateUbicacionDAO): UbicacionSe
         runTrx {
             val vectoresInfectados = vectores.filter {  v -> !v.estaSano() }
             if (vectoresInfectados.isNotEmpty()) {
-                val vectorAlAzar = vectoresInfectados[Diosito.decidir(vectoresInfectados.size)-1]
+                val vectorAlAzar = vectoresInfectados[Random.decidir(vectoresInfectados.size)-1]
                 vectorServiceImpl.contagiar(vectorAlAzar, vectores)
             }
         }

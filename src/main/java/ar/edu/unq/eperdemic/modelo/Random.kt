@@ -1,8 +1,8 @@
 package ar.edu.unq.eperdemic.modelo
 
-object Diosito {
+object Random {
 
-    var esRandom : Boolean = true
+    private var esRandom : Boolean = true
     fun decidir(limiteFinal: Int) : Int {
 
         return if (esRandom){

@@ -1,6 +1,6 @@
 package ar.edu.unq.eperdemic.services.impl
 
-import ar.edu.unq.eperdemic.modelo.Diosito
+import ar.edu.unq.eperdemic.modelo.Random
 import ar.edu.unq.eperdemic.modelo.Especie
 import ar.edu.unq.eperdemic.modelo.Patogeno
 import ar.edu.unq.eperdemic.modelo.exceptions.NingunVectorAInfectarEnLaUbicacionDada
@@ -17,7 +17,7 @@ class PatogenoServiceImpl(val patogenoDAO: PatogenoDAO) : PatogenoService {
     private val ubicacionDAO = HibernateUbicacionDAO()
     private val vectorDAO = HibernateVectorDAO()
     private val especieDAO = HibernateEspecieDAO()
-    private val diosito = Diosito
+    private val diosito = Random
     private val vectorServiceImpl = VectorServiceImpl(vectorDAO)
     private val ubicacionServiceImpl = UbicacionServiceImpl(ubicacionDAO)
 
