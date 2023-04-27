@@ -26,7 +26,7 @@ class PatogenoServiceTest {
         var patogenoVirus = Patogeno("Virus")
         patogenoVirus = patogenoService.crearPatogeno(patogenoVirus)
 
-        Assertions.assertTrue(patogenoVirus.id != null)
+        Assertions.assertNotNull(patogenoVirus.id)
     }
 
     @Test
@@ -138,12 +138,10 @@ class PatogenoServiceTest {
     @Test
     fun alAgregarleUnaEspecieAUnPatogenoSeIntentaInfectarAUnVectorPeroNoHayNingunoEnLaUbicacionDada(){
 
-        try {
-            patogenoService.agregarEspecie(1, "virus", 9)
-            fail("Debería haber lanzado la excepción que no existe un vector en la ubicación dada")
-        } catch (ex: Exception) {
-            Assertions.assertTrue(ex is NingunVectorAInfectarEnLaUbicacionDada)
-        }
+        val ex = assertThrows<NingunVectorAInfectarEnLaUbicacionDada> { patogenoService.agregarEspecie(1, "virus", 9)  }
+
+        Assertions.assertEquals("No hay ningún vector en la ubicación dada", ex.message)
+
     }
 
     @AfterEach
