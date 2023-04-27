@@ -62,7 +62,7 @@ enum class TipoDeVector {
     },
     Animal{
         override fun puedeSerInfectado(vector: TipoDeVector): Boolean {
-            return this.ordinal == vector.ordinal +1
+            return vector == Insecto
         }
     };
     abstract fun puedeSerInfectado(vector: TipoDeVector): Boolean
