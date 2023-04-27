@@ -4,6 +4,7 @@ import ar.edu.unq.eperdemic.modelo.Random
 import ar.edu.unq.eperdemic.modelo.Especie
 import ar.edu.unq.eperdemic.modelo.Patogeno
 import ar.edu.unq.eperdemic.modelo.exceptions.NingunVectorAInfectarEnLaUbicacionDada
+import ar.edu.unq.eperdemic.modelo.exceptions.NoExisteElid
 import ar.edu.unq.eperdemic.persistencia.dao.PatogenoDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateEspecieDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateUbicacionDAO
@@ -26,7 +27,8 @@ class PatogenoServiceImpl(val patogenoDAO: PatogenoDAO) : PatogenoService {
     }
 
     override fun recuperarPatogeno(id: Long): Patogeno {
-        return runTrx { patogenoDAO.recuperarPatogeno(id) }
+        return runTrx {
+            patogenoDAO.recuperarPatogeno(id)?: throw NoExisteElid("el id buscado no existe en la base de datos") }
     }
 
     override fun recuperarATodosLosPatogenos(): List<Patogeno> {
@@ -34,8 +36,11 @@ class PatogenoServiceImpl(val patogenoDAO: PatogenoDAO) : PatogenoService {
     }
 
     override fun agregarEspecie(id: Long, nombre: String, ubicacionId: Long): Especie {
-
-        val ubicacion = ubicacionServiceImpl.recuperar(ubicacionId)
+        val ubicacion = try{
+            ubicacionServiceImpl.recuperar(ubicacionId)
+        } catch (e: NoExisteElid){
+            throw NoExisteElid("La ubicacion no existe en la base de datos")
+        }
         val vectores = ubicacionServiceImpl.recuperarVectores(ubicacionId)
         val vectorAInfectar = try{
             vectores[diosito.decidir(vectores.size)-1]

@@ -2,6 +2,7 @@ package ar.edu.unq.eperdemic.services.impl
 
 import ar.edu.unq.eperdemic.modelo.Patogeno
 import ar.edu.unq.eperdemic.modelo.exceptions.NingunVectorAInfectarEnLaUbicacionDada
+import ar.edu.unq.eperdemic.modelo.exceptions.NoExisteElid
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.*
 import ar.edu.unq.eperdemic.utils.DataServiceHibernate
 import org.junit.jupiter.api.*
@@ -44,8 +45,9 @@ class PatogenoServiceTest {
     @Test
     fun seIntentaRecuperarUnPatogenoInexistente(){
 
-        Assertions.assertNull(patogenoService.recuperarPatogeno(10))
+        val ex = assertThrows<NoExisteElid> { patogenoService.recuperarPatogeno(10)  }
 
+        Assertions.assertEquals("el id buscado no existe en la base de datos", ex.message)
     }
 
     @Test
@@ -64,6 +66,14 @@ class PatogenoServiceTest {
         val patogenoRecuperado = patogenoService.recuperarPatogeno(1)
 
         Assertions.assertEquals(patogenoRecuperado.cantidadDeEspecies, patogeno.cantidadDeEspecies + 1)
+    }
+
+    @Test
+    fun seIntentaAgregarUnaEspecieEnUnaUbicacionInexistente(){
+
+        val ex = assertThrows<NoExisteElid> { patogenoService.agregarEspecie(1,"EspecieViolenta", 400)  }
+
+        Assertions.assertEquals("La ubicacion no existe en la base de datos", ex.message)
     }
 
     @Test
@@ -102,6 +112,13 @@ class PatogenoServiceTest {
 
         Assertions.assertEquals(listaDePatogenosRecuperados.size, 4)
 
+    }
+
+    @Test
+    fun siSeIntentanRecuperarTodosLosPatogenosPeroNoHayPatogenosExistentesDevuelveUnaListaVacia() {
+        dataService.eliminarTodo()
+
+        Assertions.assertTrue(patogenoService.recuperarATodosLosPatogenos().isEmpty())
     }
 
     @Test

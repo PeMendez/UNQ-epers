@@ -3,6 +3,7 @@ package ar.edu.unq.eperdemic.services.impl
 import ar.edu.unq.eperdemic.modelo.Random
 import ar.edu.unq.eperdemic.modelo.Ubicacion
 import ar.edu.unq.eperdemic.modelo.Vector
+import ar.edu.unq.eperdemic.modelo.exceptions.NoExisteElid
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateUbicacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateVectorDAO
 import ar.edu.unq.eperdemic.services.UbicacionService
@@ -50,7 +51,9 @@ class UbicacionServiceImpl(val ubicacionDAO: HibernateUbicacionDAO): UbicacionSe
     }
 
     fun recuperar(ubicacionId: Long) : Ubicacion {
-        return runTrx { ubicacionDAO.recuperar(ubicacionId)}
+        return runTrx {
+            ubicacionDAO.recuperar(ubicacionId)?: throw NoExisteElid("el id buscado no existe en la base de datos")
+        }
     }
 
     fun recuperarVectores(ubicacionId: Long): List<Vector> {
