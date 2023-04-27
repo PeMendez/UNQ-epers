@@ -44,5 +44,21 @@ open class HibernatePatogenoDAO : HibernateDAO<Patogeno>(Patogeno::class.java), 
 
     }
 
+    override fun esPandemia(especieId: Long): Boolean {
+        val session = TransactionRunner.currentSession
+
+        val hql = """
+                        select count(v.ubicacion) > (select count(*) from Ubicacion ub) / 2
+                        from Vector v
+                        join v.especies e 
+                        where e.id = :idBuscado
+            
+        """
+
+        val query = session.createQuery(hql, Boolean::class.javaObjectType)
+        query.setParameter("idBuscado", especieId)
+
+        return query.singleResult
+    }
 
 }

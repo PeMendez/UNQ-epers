@@ -55,17 +55,15 @@ class PatogenoServiceImpl(val patogenoDAO: PatogenoDAO) : PatogenoService {
 
     override fun esPandemia(especieId: Long): Boolean {
         return runTrx {
-            val cantUbicaciones = ubicacionServiceImpl.recuperarTodos().size
-            val vectoresConEspecieId = vectorServiceImpl.recuperarTodos().filter { v -> v.tieneEfermedad(especieId) }
-            val ubicacionesDeVectoresEnfermosConEspecie = vectoresConEspecieId.map { v -> v.ubicacion}
-            ubicacionesDeVectoresEnfermosConEspecie.distinctBy { it.nombre }
-            val cantUbicacionesDeLaEspecie = ubicacionesDeVectoresEnfermosConEspecie.size
-
-            cantUbicaciones/2 < cantUbicacionesDeLaEspecie
+            patogenoDAO.esPandemia(especieId)
         }
     }
 
     override fun especiesDePatogeno(patogenoId: Long ): List<Especie> {
-        return runTrx {  patogenoDAO.especiesDePatogeno(patogenoId) }
+        return runTrx {
+            val patogeno = patogenoDAO.recuperarPatogeno(patogenoId)
+            patogeno.especies.toList()
+            //patogenoDAO.especiesDePatogeno(patogenoId)
+        }
     }
 }
