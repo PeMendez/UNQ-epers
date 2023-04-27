@@ -14,12 +14,17 @@ class Patogeno(var tipo: String) : Serializable{
     var capacidadDeDefensa: Int= Random.decidir(100)
     var capacidadDeBiomecanizacion: Int = Random.decidir(100)
 
+    @OneToMany(mappedBy = "patogeno", cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
+    var especies: MutableSet<Especie> = HashSet()
+
     override fun toString(): String {
         return tipo
     }
 
     fun crearEspecie(nombreEspecie: String, paisDeOrigen: String) : Especie {
         cantidadDeEspecies++
-        return Especie(this, nombreEspecie, paisDeOrigen)
+        val especie = Especie(this, nombreEspecie, paisDeOrigen)
+        especies.add(especie)
+        return especie
     }
 }
