@@ -8,9 +8,16 @@ class PatogenoTest {
     @Test
     fun alCrearleUnaEspecieAUnPatogenoSeIncrementaSuCantidadDeEspecies() {
         val patogeno = Patogeno("virus")
-        val cantEspeciesDelPatogeno = patogeno.cantidadDeEspecies
         patogeno.crearEspecie("especieViolenta", "Canada")
 
-        Assertions.assertEquals(cantEspeciesDelPatogeno, patogeno.cantidadDeEspecies - 1)
+        Assertions.assertEquals(1, patogeno.cantidadDeEspecies)
+    }
+
+    @Test
+    fun alCrearleUnaEspecieAUnPatogenoSeAgregaEnSuSet() {
+        val patogeno = Patogeno("virus")
+        val especie = patogeno.crearEspecie("especieViolenta", "Canada")
+
+        Assertions.assertTrue(patogeno.especies.contains(especie))
     }
 }
