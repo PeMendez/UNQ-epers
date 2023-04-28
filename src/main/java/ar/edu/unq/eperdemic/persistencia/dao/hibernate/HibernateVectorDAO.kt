@@ -25,8 +25,7 @@ open class HibernateVectorDAO : HibernateDAO<Vector>(Vector::class.java),VectorD
         return query.resultList
     }
 
-    override fun crearVector(tipo: TipoDeVector, ubicacion: Ubicacion): Vector {
-        val newVector = Vector(tipo,ubicacion)
+    override fun crearVector(newVector: Vector): Vector {
         guardar(newVector)
         return newVector
     }

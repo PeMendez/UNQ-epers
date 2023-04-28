@@ -7,7 +7,7 @@ import ar.edu.unq.eperdemic.modelo.Vector
 
 interface VectorDAO {
     fun enfermedades(vectorID: Long) : List<Especie>
-    fun crearVector(tipo: TipoDeVector, ubicacion: Ubicacion): Vector
+    fun crearVector(vector: Vector): Vector
     fun recuperarVector(vectorId: Long): Vector
     fun recuperarTodos() : List<Vector>
     fun guardar(entity : Vector)

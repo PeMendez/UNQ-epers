@@ -3,6 +3,7 @@ package ar.edu.unq.eperdemic.services.impl
 import ar.edu.unq.eperdemic.modelo.Especie
 import ar.edu.unq.eperdemic.modelo.TipoDeVector
 import ar.edu.unq.eperdemic.modelo.Vector
+import ar.edu.unq.eperdemic.modelo.exceptions.NoExisteElid
 import ar.edu.unq.eperdemic.persistencia.dao.VectorDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateUbicacionDAO
 import ar.edu.unq.eperdemic.services.VectorService
@@ -40,17 +41,24 @@ class VectorServiceImpl(private val vectorDAO: VectorDAO): VectorService {
     override fun crearVector(tipo: TipoDeVector, ubicacionId: Long): Vector {
         return runTrx {
             val ubicacion = hibernateUbicacionDAO.recuperar(ubicacionId)
-            vectorDAO.crearVector(tipo,ubicacion)
+            val vector = Vector(tipo, ubicacion)
+            vectorDAO.crearVector(vector)
         }
     }
 
     override fun recuperarVector(vectorId: Long): Vector {
-        return runTrx { vectorDAO.recuperarVector(vectorId) }
+        return runTrx {
+            vectorDAO.recuperarVector(vectorId)?: throw NoExisteElid("El id ingresado no existe")
+        }
     }
 
     override fun borrarVector(vectorId: Long) {
         return runTrx {
-            val vectorABorrar = vectorDAO.recuperarVector(vectorId)
+            val vectorABorrar =  try {
+                vectorDAO.recuperarVector(vectorId)
+            } catch (ex: NoExisteElid){
+                throw NoExisteElid("El id ingresado no existe")
+            }
             vectorDAO.borrar(vectorABorrar) }
     }
 
