@@ -65,10 +65,6 @@ class PatogenoServiceImpl(val patogenoDAO: PatogenoDAO) : PatogenoService {
     }
 
     override fun especiesDePatogeno(patogenoId: Long ): List<Especie> {
-        return runTrx {
-            val patogeno = patogenoDAO.recuperarPatogeno(patogenoId)
-            patogeno.especies.toList()
-            //patogenoDAO.especiesDePatogeno(patogenoId)
-        }
+        return runTrx { patogenoDAO.especiesDePatogeno(patogenoId) }
     }
 }
