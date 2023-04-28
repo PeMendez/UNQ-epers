@@ -1,9 +1,12 @@
 package ar.edu.unq.eperdemic.services.impl
 
+import ar.edu.unq.eperdemic.modelo.exceptions.NoExisteElid
+import ar.edu.unq.eperdemic.modelo.exceptions.NoPuedeEstarVacioOContenerCaracteresEspeciales
 import ar.edu.unq.eperdemic.modelo.exceptions.NombreDeUbicacionRepetido
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateUbicacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateVectorDAO
 import ar.edu.unq.eperdemic.utils.DataServiceHibernate
+import org.junit.Assert
 import org.junit.jupiter.api.*
 
 class UbicacionServiceImplTest {
@@ -21,6 +24,33 @@ class UbicacionServiceImplTest {
     }
 
     @Test
+    fun alRecuperarTodasLasUbicacionesDeUnaBDDVaciaEntoncesSeRetornaUnaListaVacia() {
+        dataService.eliminarTodo()
+        val todasLasUbicaciones = ubicacionService.recuperarTodos()
+        Assertions.assertTrue(todasLasUbicaciones.isEmpty())
+    }
+
+    @Test
+    fun noSePuedeCrearUnaUbicacionConUnStringVacio() {
+        Assertions.assertThrows(NoPuedeEstarVacioOContenerCaracteresEspeciales::class.java) {
+            ubicacionService.crearUbicacion("")
+        }
+    }
+
+    @Test
+    fun noSePuedeCrearUnaUbicacionConCaracteresEspeciales() {
+        Assertions.assertThrows(NoPuedeEstarVacioOContenerCaracteresEspeciales::class.java) {
+            ubicacionService.crearUbicacion("ubicacion#1")
+        }
+        Assertions.assertThrows(NoPuedeEstarVacioOContenerCaracteresEspeciales::class.java) {
+            ubicacionService.crearUbicacion("ubicacion-2")
+        }
+        Assertions.assertThrows(NoPuedeEstarVacioOContenerCaracteresEspeciales::class.java) {
+            ubicacionService.crearUbicacion("@ubicacion3")
+        }
+    }
+
+    @Test
     fun unaUbicacionCreadaTieneUnIdGenerado() {
         val ubicacionCreada = ubicacionService.crearUbicacion("testUbicacion")
 
@@ -28,10 +58,37 @@ class UbicacionServiceImplTest {
     }
 
     @Test
-    fun seRecuperaUnaUbicacionConTodosSusDatosCorrectos() {
-        val ubicacionRecuperada = ubicacionService.recuperar(1)
+    fun noSePuedeRecuperarUnaUbicacionConUnIdInexistente() {
+        Assertions.assertThrows(NoExisteElid::class.java) {
+            ubicacionService.recuperar(777)
+        }
+    }
 
-        Assertions.assertEquals(ubicacionRecuperada.nombre, "ubicacion1")
+    @Test
+    fun unaUbicacionCreadaDeCeroNoTieneVectores() {
+        val ubicacionCreada = ubicacionService.crearUbicacion("testVectores")
+
+        Assertions.assertTrue(ubicacionService.recuperarVectores(ubicacionCreada.id!!).isEmpty())
+    }
+
+    @Test
+    fun seRecuperaUnaUbicacionConTodosSusDatosCorrectos() {
+        val ubicacionCreada = ubicacionService.crearUbicacion("nombreATestear")
+        val ubicacionRecuperada = ubicacionService.recuperar(ubicacionCreada.id!!)
+
+        Assertions.assertEquals(ubicacionCreada.nombre, ubicacionRecuperada.nombre)
+        Assertions.assertEquals(ubicacionCreada.id!!, ubicacionRecuperada.id!!)
+    }
+
+    @Test
+    fun seRecuperanLosVectoresDeUnaUbicacionCorrectamente() {
+        val ubicacionCreada = ubicacionService.crearUbicacion("testVectores")
+
+        Assertions.assertTrue(ubicacionService.recuperarVectores(ubicacionCreada.id!!).isEmpty())
+
+        ubicacionService.mover(1, ubicacionCreada.id!!)
+
+        Assertions.assertTrue(ubicacionService.recuperarVectores(ubicacionCreada.id!!).size == 1)
     }
 
     @Test
@@ -42,14 +99,16 @@ class UbicacionServiceImplTest {
             fail("Debería haber lanzado una excepción de restricción única")
         } catch (ex: Exception) {
             Assertions.assertTrue(ex is NombreDeUbicacionRepetido)
+            Assertions.assertEquals("Ya existe una ubicacion con ese nombre.", ex.message)
         }
     }
 
     @Test
     fun puedenExistirDosUbicacionesConNombresDistintos() {
-        ubicacionService.crearUbicacion("nombreDistinto")
+        val ubicacion1 = ubicacionService.crearUbicacion("nombreDistinto")
         try {
-            ubicacionService.crearUbicacion("otroNombre")
+            val ubicacion2 = ubicacionService.crearUbicacion("otroNombre")
+            Assertions.assertNotEquals(ubicacion1.nombre, ubicacion2.nombre)
         } catch (ex: NombreDeUbicacionRepetido) {
             fail("No tendria que haber lanzado una excepcion porque son distintos nombres")
         }
@@ -72,6 +131,45 @@ class UbicacionServiceImplTest {
 
         Assertions.assertTrue(ubicacionesRecuperadas.size == 9)
 
+    }
+
+    @Test
+    fun noSePuedeMoverUnVectorAUnaUbicacionInexistente() {
+        val vectorExistente = vectorService.recuperarVector(1)
+        Assertions.assertThrows(NullPointerException::class.java) {
+            ubicacionService.mover(vectorExistente.id!!, 777)
+        }
+    }
+
+    @Test
+    fun noSePuedeMoverUnVectorInexistenteAUnaUbicacion() {
+        val ubicacionExistente = ubicacionService.recuperar(2)
+        Assertions.assertThrows(NullPointerException::class.java) {
+            ubicacionService.mover(204, ubicacionExistente.id!!)
+        }
+    }
+
+    @Test
+    fun siUnVectorYaSeEncuentraEnUnaUbicacionEntoncesAlMoverNoSeHaceNada() {
+        val ubicacionRecuperada = ubicacionService.recuperar(2)
+        val vectorRecuperado1 = vectorService.recuperarVector(2)
+        val vectorRecuperado2 = vectorService.recuperarVector(8)
+
+        Assertions.assertEquals(vectorRecuperado1.ubicacion.id!!, ubicacionRecuperada.id!!)
+        Assertions.assertEquals(vectorRecuperado2.ubicacion.id!!, ubicacionRecuperada.id!!)
+
+        Assertions.assertTrue(vectorRecuperado1.estaSano())
+        Assertions.assertFalse(vectorRecuperado2.estaSano())
+        Assertions.assertEquals(ubicacionService.recuperarVectores(ubicacionRecuperada.id!!).size, 2)
+
+        ubicacionService.mover(vectorRecuperado2.id!!, ubicacionRecuperada.id!!)
+
+        val vectorActualizado1 = vectorService.recuperarVector(2)
+        val vectorActualizado2 = vectorService.recuperarVector(8)
+
+        Assertions.assertTrue(vectorActualizado1.estaSano())
+        Assertions.assertEquals(vectorRecuperado2.especies.size, vectorActualizado2.especies.size)
+        Assertions.assertEquals(ubicacionService.recuperarVectores(ubicacionRecuperada.id!!).size, 2)
     }
 
     @Test
@@ -140,6 +238,13 @@ class UbicacionServiceImplTest {
     }
 
     @Test
+    fun noSePuedeExpandirEnUnaUbicacionInexistente() {
+        Assertions.assertThrows(NullPointerException::class.java) {
+            ubicacionService.expandir(2222)
+        }
+    }
+
+    @Test
     fun alIntentarExpandirEnUnaUbicacionConUnVectorContagiadoYOtrosSanosQuePuedenSerInfectadosSeContagian() {
         val vectoresUbicacion3 = ubicacionService.recuperarVectores(3)
         val vectorSano1 = vectoresUbicacion3[0]
@@ -179,6 +284,17 @@ class UbicacionServiceImplTest {
 
         Assertions.assertTrue(vectorSano1Actualizado.estaSano())
         Assertions.assertTrue(vectorSano2Actualizado.estaSano())
+    }
+
+    @Test
+    fun alIntentarExpandirEnUnaUbicacionSinVectoresEntoncesNoHaceNada() {
+        val nuevaUbicacion = ubicacionService.crearUbicacion("expandirTest")
+
+        Assertions.assertTrue(ubicacionService.recuperarVectores(nuevaUbicacion.id!!).isEmpty())
+
+        ubicacionService.expandir(nuevaUbicacion.id!!)
+
+        Assertions.assertTrue(ubicacionService.recuperarVectores(nuevaUbicacion.id!!).isEmpty())
     }
 
     @AfterEach

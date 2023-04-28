@@ -21,21 +21,25 @@ class UbicacionServiceImpl(val ubicacionDAO: HibernateUbicacionDAO): UbicacionSe
 
         val vector = vectorServiceImpl.recuperarVector(vectorId)
 
-        val vectoresEnUbicacion = runTrx {
-            val ubicacion = ubicacionDAO.recuperar(ubicacionid)
-            vector.mover(ubicacion)
-            ubicacionDAO.recuperarVectores(ubicacionid)
-        }
-        runTrx {
-            hibernateVectorDAO.actualizar(vector)
-            if (!vector.estaSano()) {
-                vectorServiceImpl.contagiar(vector, vectoresEnUbicacion)
+        if (vector.ubicacion.id!! != ubicacionid) {
+            val vectoresEnUbicacion = runTrx {
+                val ubicacion = ubicacionDAO.recuperar(ubicacionid)
+                vector.mover(ubicacion)
+                ubicacionDAO.recuperarVectores(ubicacionid)
+            }
+
+            runTrx {
+                hibernateVectorDAO.actualizar(vector)
+                if (!vector.estaSano()) {
+                    vectorServiceImpl.contagiar(vector, vectoresEnUbicacion)
+                }
             }
         }
     }
 
     override fun expandir(ubicacionId: Long) {
-       val vectores = runTrx { ubicacionDAO.recuperarVectores(ubicacionId) }
+        val ubicacion = runTrx { ubicacionDAO.recuperar(ubicacionId) }
+        val vectores = runTrx { ubicacionDAO.recuperarVectores(ubicacion.id!!) }
         runTrx {
             val vectoresInfectados = vectores.filter {  v -> !v.estaSano() }
             if (vectoresInfectados.isNotEmpty()) {
@@ -47,7 +51,7 @@ class UbicacionServiceImpl(val ubicacionDAO: HibernateUbicacionDAO): UbicacionSe
 
     override fun crearUbicacion(nombreUbicacion: String): Ubicacion {
         try {
-            runTrx { ubicacionDAO.recuperarPorNombre(nombreUbicacion) }
+            runTrx { ubicacionDAO.recuperarUbicacionPorNombre(nombreUbicacion) }
         } catch (e: NoResultException) {
             val nuevaUbicacion = Ubicacion(nombreUbicacion)
             return runTrx { ubicacionDAO.crearUbicacion(nuevaUbicacion) }
