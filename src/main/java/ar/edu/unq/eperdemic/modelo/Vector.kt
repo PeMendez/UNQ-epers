@@ -47,6 +47,8 @@ class Vector(var tipo: TipoDeVector,
         this.ubicacion = ubicacion
 
     }
+
+
 }
 
 enum class TipoDeVector {
