@@ -1,13 +1,16 @@
 package ar.edu.unq.eperdemic.services.impl
 
+import ar.edu.unq.eperdemic.modelo.Check
 import ar.edu.unq.eperdemic.modelo.Random
 import ar.edu.unq.eperdemic.modelo.Ubicacion
 import ar.edu.unq.eperdemic.modelo.Vector
 import ar.edu.unq.eperdemic.modelo.exceptions.NoExisteElid
+import ar.edu.unq.eperdemic.modelo.exceptions.NombreDeUbicacionRepetido
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateUbicacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateVectorDAO
 import ar.edu.unq.eperdemic.services.UbicacionService
 import ar.edu.unq.eperdemic.services.runner.TransactionRunner.runTrx
+import javax.persistence.NoResultException
 
 class UbicacionServiceImpl(val ubicacionDAO: HibernateUbicacionDAO): UbicacionService {
 
@@ -43,7 +46,13 @@ class UbicacionServiceImpl(val ubicacionDAO: HibernateUbicacionDAO): UbicacionSe
     }
 
     override fun crearUbicacion(nombreUbicacion: String): Ubicacion {
-        return runTrx { ubicacionDAO.crearUbicacion(nombreUbicacion) }
+        try {
+            runTrx { ubicacionDAO.recuperarPorNombre(nombreUbicacion) }
+        } catch (e: NoResultException) {
+            val nuevaUbicacion = Ubicacion(nombreUbicacion)
+            return runTrx { ubicacionDAO.crearUbicacion(nuevaUbicacion) }
+        }
+        throw NombreDeUbicacionRepetido("Ya existe una ubicacion con ese nombre.")
     }
 
     override fun recuperarTodos(): List<Ubicacion> {

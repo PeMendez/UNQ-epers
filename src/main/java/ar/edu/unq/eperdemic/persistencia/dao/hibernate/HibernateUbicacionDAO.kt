@@ -9,7 +9,12 @@ import javax.persistence.NoResultException
 
 open class HibernateUbicacionDAO : HibernateDAO<Ubicacion>(Ubicacion::class.java), UbicacionDAO {
 
-    override fun crearUbicacion(nombreUbicacion: String): Ubicacion {
+    override fun crearUbicacion(ubicacion: Ubicacion): Ubicacion {
+        guardar(ubicacion)
+        return ubicacion
+    }
+
+    override fun recuperarPorNombre(nombreUbicacion: String): Ubicacion {
         val session = TransactionRunner.currentSession
 
         val hql = """
@@ -19,15 +24,7 @@ open class HibernateUbicacionDAO : HibernateDAO<Ubicacion>(Ubicacion::class.java
 
         val query = session.createQuery(hql, Ubicacion::class.java)
         query.setParameter("nombreBuscado", nombreUbicacion)
-
-        try {
-            query.singleResult
-        } catch (e: NoResultException) {
-            val ubicacionCreada = Ubicacion(nombreUbicacion)
-            guardar(ubicacionCreada)
-            return ubicacionCreada
-        }
-        throw NombreDeUbicacionRepetido("Ya existe una ubicacion con ese nombre.")
+        return query.singleResult
     }
 
     override fun recuperarTodos(): List<Ubicacion> {
