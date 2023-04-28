@@ -6,7 +6,6 @@ import ar.edu.unq.eperdemic.modelo.exceptions.NombreDeUbicacionRepetido
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateUbicacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateVectorDAO
 import ar.edu.unq.eperdemic.utils.DataServiceHibernate
-import org.junit.Assert
 import org.junit.jupiter.api.*
 
 class UbicacionServiceImplTest {
@@ -54,7 +53,7 @@ class UbicacionServiceImplTest {
     fun unaUbicacionCreadaTieneUnIdGenerado() {
         val ubicacionCreada = ubicacionService.crearUbicacion("testUbicacion")
 
-        Assertions.assertTrue(ubicacionCreada.id != null)
+        Assertions.assertNotNull(ubicacionCreada.id)
     }
 
     @Test
