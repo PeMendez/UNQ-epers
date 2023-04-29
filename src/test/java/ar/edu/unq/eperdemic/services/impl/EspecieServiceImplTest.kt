@@ -100,7 +100,7 @@ class EspecieServiceImplTest {
         val vectorAnimalCreado = vectorServiceImpl.crearVector(TipoDeVector.Animal, ubicacionCreada2.id!!)
         val especieCreada2 = patogenoService.agregarEspecie(patogenoCreado2.id!!, "nombrenuevo", ubicacionCreada2.id!!)
 
-        vectorServiceImpl.infectar(vectorAnimalCreado, especieCreada2)
+        vectorServiceImpl.infectar(vectorInsectoCreado, especieCreada2)
 
         Assertions.assertEquals(especieService.cantidadDeInfectados(especieCreada2.id!!), 2)
         Assertions.assertEquals(especieService.cantidadDeInfectados(especieCreada1.id!!), 1)
@@ -250,7 +250,7 @@ class EspecieServiceImplTest {
         val vectorAnimalCreado1 = vectorServiceImpl.crearVector(TipoDeVector.Animal, ubicacionCreada1.id!!)
         val vectorAnimalCreado2 = vectorServiceImpl.crearVector(TipoDeVector.Animal, ubicacionCreada1.id!!)
         val especieCreada1 = patogenoService.agregarEspecie(patogenoCreado1.id!!, "cualquierNombre", ubicacionCreada1.id!!)
-        vectorServiceImpl.infectar(vectorAnimalCreado2, especieCreada1)
+        vectorServiceImpl.infectar(vectorAnimalCreado1, especieCreada1)
 
         val patogeno2 = Patogeno("otroNombre")
         val patogenoCreado2 = patogenoService.crearPatogeno(patogeno2)
