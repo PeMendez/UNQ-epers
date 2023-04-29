@@ -37,7 +37,7 @@ class UbicacionServiceImpl(val ubicacionDAO: HibernateUbicacionDAO): UbicacionSe
     }
 
     override fun expandir(ubicacionId: Long) {
-        val ubicacion = runTrx { ubicacionDAO.recuperar(ubicacionId) }
+        val ubicacion = runTrx { ubicacionDAO.recuperar(ubicacionId)?: throw NoExisteElid("el id buscado no existe en la base de datos") }
         val vectores = runTrx { ubicacionDAO.recuperarVectores(ubicacion.id!!) }
         runTrx {
             val vectoresInfectados = vectores.filter {  v -> !v.estaSano() }
