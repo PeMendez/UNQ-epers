@@ -5,6 +5,7 @@ import ar.edu.unq.eperdemic.modelo.TipoDeVector
 import ar.edu.unq.eperdemic.modelo.Vector
 import ar.edu.unq.eperdemic.modelo.exceptions.NoExisteElid
 import ar.edu.unq.eperdemic.persistencia.dao.VectorDAO
+import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateEspecieDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateUbicacionDAO
 import ar.edu.unq.eperdemic.services.VectorService
 import ar.edu.unq.eperdemic.services.runner.TransactionRunner.runTrx
@@ -12,9 +13,15 @@ import ar.edu.unq.eperdemic.services.runner.TransactionRunner.runTrx
 class VectorServiceImpl(private val vectorDAO: VectorDAO): VectorService {
 
     val hibernateUbicacionDAO = HibernateUbicacionDAO()
+    val especieDAO = HibernateEspecieDAO()
 
     override fun contagiar(vectorInfectado: Vector, vectores: List<Vector>) {
-        runTrx{vectores.forEach { v ->
+        try {
+            runTrx { vectorDAO.recuperarVector(vectorInfectado.id!!)?: throw NoExisteElid("El ID de Vector dado no existe") }
+        } catch (e: Exception) {
+            throw NoExisteElid("El ID de Vector dado no existe")
+        }
+        runTrx { vectores.forEach { v ->
                 intentarInfectarConEspeciesDeVector(v,vectorInfectado)
                 vectorDAO.actualizar(v)
             }
@@ -28,6 +35,16 @@ class VectorServiceImpl(private val vectorDAO: VectorDAO): VectorService {
     }
 
     override fun infectar(vector: Vector, especie: Especie) {
+        try {
+            runTrx { vectorDAO.recuperarVector(vector.id!!)?: throw NoExisteElid("El id de Vector ingresado no existe") }
+        } catch (e: Exception) {
+            throw NoExisteElid("El ID del Vector dado no es válido.")
+        }
+        try {
+            runTrx { especieDAO.recuperarEspecie(especie.id!!)?: throw NoExisteElid("El id de Especie ingresado no existe") }
+        } catch (e: Exception) {
+            throw NoExisteElid("El ID de la Especie dada no es válido.")
+        }
         runTrx {
             vector.infectarCon(especie)
             vectorDAO.actualizar(vector)
@@ -35,12 +52,15 @@ class VectorServiceImpl(private val vectorDAO: VectorDAO): VectorService {
     }
 
     override fun enfermedades(vectorId: Long): List<Especie> {
-        return runTrx { vectorDAO.enfermedades(vectorId) }
+        return runTrx {
+            vectorDAO.recuperarVector(vectorId)?: throw NoExisteElid("El id de Vector ingresado no existe")
+            vectorDAO.enfermedades(vectorId)
+        }
     }
 
     override fun crearVector(tipo: TipoDeVector, ubicacionId: Long): Vector {
         return runTrx {
-            val ubicacion = hibernateUbicacionDAO.recuperar(ubicacionId)
+            val ubicacion = hibernateUbicacionDAO.recuperar(ubicacionId)?: throw NoExisteElid("El id de Ubicacion ingresado no existe")
             val vector = Vector(tipo, ubicacion)
             vectorDAO.crearVector(vector)
         }
@@ -54,11 +74,7 @@ class VectorServiceImpl(private val vectorDAO: VectorDAO): VectorService {
 
     override fun borrarVector(vectorId: Long) {
         return runTrx {
-            val vectorABorrar =  try {
-                vectorDAO.recuperarVector(vectorId)
-            } catch (ex: NoExisteElid){
-                throw NoExisteElid("El id ingresado no existe")
-            }
+            val vectorABorrar = vectorDAO.recuperarVector(vectorId)?: throw NoExisteElid("El id ingresado no existe")
             vectorDAO.borrar(vectorABorrar) }
     }
 

@@ -41,6 +41,7 @@ class PatogenoServiceImpl(val patogenoDAO: PatogenoDAO) : PatogenoService {
         } catch (e: NoExisteElid){
             throw NoExisteElid("La ubicacion no existe en la base de datos")
         }
+        runTrx { patogenoDAO.recuperarPatogeno(id)?: throw NoExisteElid("El Patogeno con el ID dado no existe en la base de datos") }
         val vectores = ubicacionServiceImpl.recuperarVectores(ubicacionId)
         val vectorAInfectar = try{
             vectores[diosito.decidir(vectores.size)-1]

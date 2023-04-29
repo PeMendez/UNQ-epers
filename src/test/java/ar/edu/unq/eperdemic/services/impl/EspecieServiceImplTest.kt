@@ -9,7 +9,6 @@ import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernatePatogenoDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateUbicacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateVectorDAO
 import ar.edu.unq.eperdemic.utils.DataServiceHibernate
-import org.junit.Assert
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
@@ -49,7 +48,7 @@ class EspecieServiceImplTest {
         val patogeno = Patogeno("testEspecie")
         val patogenoCreado = patogenoService.crearPatogeno(patogeno)
         val ubicacionCreada = ubicacionService.crearUbicacion("ubicacionTestEspecie")
-        val vectorCreado = vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada.id!!)
+        vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada.id!!)
         val especieCreada = patogenoService.agregarEspecie(patogenoCreado.id!!, "cualquierNombre", ubicacionCreada.id!!)
 
         val especieRecuperada = especieService.recuperarEspecie(especieCreada.id!!)
@@ -73,7 +72,7 @@ class EspecieServiceImplTest {
         val patogeno = Patogeno("testEspecie")
         val patogenoCreado = patogenoService.crearPatogeno(patogeno)
         val ubicacionCreada = ubicacionService.crearUbicacion("ubicacionTestEspecie")
-        val vectorCreado = vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada.id!!)
+        vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada.id!!)
         val vectorRecuperado = vectorServiceImpl.recuperarVector(1)
         val especieCreada = patogenoService.agregarEspecie(patogenoCreado.id!!, "cualquierNombre", ubicacionCreada.id!!)
 
@@ -90,14 +89,14 @@ class EspecieServiceImplTest {
         val patogeno1 = Patogeno("testEspecie")
         val patogenoCreado1 = patogenoService.crearPatogeno(patogeno1)
         val ubicacionCreada1 = ubicacionService.crearUbicacion("ubicacionTestEspecie")
-        val vectorPersonaCreado = vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada1.id!!)
+        vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada1.id!!)
         val especieCreada1 = patogenoService.agregarEspecie(patogenoCreado1.id!!, "cualquierNombre", ubicacionCreada1.id!!)
 
         val patogeno2 = Patogeno("otroNombre")
         val patogenoCreado2 = patogenoService.crearPatogeno(patogeno2)
         val ubicacionCreada2 = ubicacionService.crearUbicacion("otroNombre")
         val vectorInsectoCreado = vectorServiceImpl.crearVector(TipoDeVector.Insecto, ubicacionCreada2.id!!)
-        val vectorAnimalCreado = vectorServiceImpl.crearVector(TipoDeVector.Animal, ubicacionCreada2.id!!)
+        vectorServiceImpl.crearVector(TipoDeVector.Animal, ubicacionCreada2.id!!)
         val especieCreada2 = patogenoService.agregarEspecie(patogenoCreado2.id!!, "nombrenuevo", ubicacionCreada2.id!!)
 
         vectorServiceImpl.infectar(vectorInsectoCreado, especieCreada2)
@@ -114,13 +113,13 @@ class EspecieServiceImplTest {
         val patogeno1 = Patogeno("testEspecie")
         val patogenoCreado1 = patogenoService.crearPatogeno(patogeno1)
         val ubicacionCreada1 = ubicacionService.crearUbicacion("ubicacionTestEspecie")
-        val vectorAnimalCreado = vectorServiceImpl.crearVector(TipoDeVector.Animal, ubicacionCreada1.id!!)
+        vectorServiceImpl.crearVector(TipoDeVector.Animal, ubicacionCreada1.id!!)
         val especieCreada1 = patogenoService.agregarEspecie(patogenoCreado1.id!!, "cualquierNombre", ubicacionCreada1.id!!)
 
         val patogeno2 = Patogeno("otroNombre")
         val patogenoCreado2 = patogenoService.crearPatogeno(patogeno2)
         val ubicacionCreada2 = ubicacionService.crearUbicacion("otroNombreDeUbicacion")
-        val vectorInsectoCreado = vectorServiceImpl.crearVector(TipoDeVector.Insecto, ubicacionCreada2.id!!)
+        vectorServiceImpl.crearVector(TipoDeVector.Insecto, ubicacionCreada2.id!!)
         val especieCreada2 = patogenoService.agregarEspecie(patogenoCreado2.id!!, "cualquierNombre", ubicacionCreada2.id!!)
 
         Assertions.assertEquals(especieService.cantidadDeInfectados(especieCreada1.id!!), 1)
@@ -145,13 +144,13 @@ class EspecieServiceImplTest {
         val patogeno1 = Patogeno("testEspecie")
         val patogenoCreado1 = patogenoService.crearPatogeno(patogeno1)
         val ubicacionCreada1 = ubicacionService.crearUbicacion("ubicacionTestEspecie")
-        val vectorAnimalCreado = vectorServiceImpl.crearVector(TipoDeVector.Animal, ubicacionCreada1.id!!)
+        vectorServiceImpl.crearVector(TipoDeVector.Animal, ubicacionCreada1.id!!)
         val especieCreada1 = patogenoService.agregarEspecie(patogenoCreado1.id!!, "cualquierNombre", ubicacionCreada1.id!!)
 
         val patogeno2 = Patogeno("otroNombre")
         val patogenoCreado2 = patogenoService.crearPatogeno(patogeno2)
         val ubicacionCreada2 = ubicacionService.crearUbicacion("otroNombreDeUbicacion")
-        val vectorInsectoCreado = vectorServiceImpl.crearVector(TipoDeVector.Insecto, ubicacionCreada2.id!!)
+        vectorServiceImpl.crearVector(TipoDeVector.Insecto, ubicacionCreada2.id!!)
         val especieCreada2 = patogenoService.agregarEspecie(patogenoCreado2.id!!, "cualquierNombre", ubicacionCreada2.id!!)
 
         val especiesRecuperadas = especieService.recuperarTodas()
@@ -177,13 +176,13 @@ class EspecieServiceImplTest {
         val patogeno1 = Patogeno("testEspecie")
         val patogenoCreado1 = patogenoService.crearPatogeno(patogeno1)
         val ubicacionCreada1 = ubicacionService.crearUbicacion("ubicacionTestEspecie")
-        val vectorAnimalCreado = vectorServiceImpl.crearVector(TipoDeVector.Animal, ubicacionCreada1.id!!)
+        vectorServiceImpl.crearVector(TipoDeVector.Animal, ubicacionCreada1.id!!)
         val especieCreada1 = patogenoService.agregarEspecie(patogenoCreado1.id!!, "cualquierNombre", ubicacionCreada1.id!!)
 
         val patogeno2 = Patogeno("otroNombre")
         val patogenoCreado2 = patogenoService.crearPatogeno(patogeno2)
         val ubicacionCreada2 = ubicacionService.crearUbicacion("otroNombreDeUbicacion")
-        val vectorInsectoCreado = vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada2.id!!)
+        vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada2.id!!)
         val especieCreada2 = patogenoService.agregarEspecie(patogenoCreado2.id!!, "cualquierNombre", ubicacionCreada2.id!!)
 
         val lideres = especieService.lideres()
@@ -200,14 +199,14 @@ class EspecieServiceImplTest {
         val patogeno1 = Patogeno("testEspecie")
         val patogenoCreado1 = patogenoService.crearPatogeno(patogeno1)
         val ubicacionCreada1 = ubicacionService.crearUbicacion("ubicacionTestEspecie")
-        val vectorAnimalCreado = vectorServiceImpl.crearVector(TipoDeVector.Animal, ubicacionCreada1.id!!)
+        vectorServiceImpl.crearVector(TipoDeVector.Animal, ubicacionCreada1.id!!)
         val especieCreada1 = patogenoService.agregarEspecie(patogenoCreado1.id!!, "cualquierNombre", ubicacionCreada1.id!!)
 
         val patogeno2 = Patogeno("otroNombre")
         val patogenoCreado2 = patogenoService.crearPatogeno(patogeno2)
         val ubicacionCreada2 = ubicacionService.crearUbicacion("otroNombreDeUbicacion")
-        val vectorInsectoCreado = vectorServiceImpl.crearVector(TipoDeVector.Insecto, ubicacionCreada2.id!!)
-        val especieCreada2 = patogenoService.agregarEspecie(patogenoCreado2.id!!, "cualquierNombre", ubicacionCreada2.id!!)
+        vectorServiceImpl.crearVector(TipoDeVector.Insecto, ubicacionCreada2.id!!)
+        patogenoService.agregarEspecie(patogenoCreado2.id!!, "cualquierNombre", ubicacionCreada2.id!!)
 
         val lideres = especieService.lideres()
 
@@ -222,19 +221,19 @@ class EspecieServiceImplTest {
         val patogeno1 = Patogeno("testEspecie")
         val patogenoCreado1 = patogenoService.crearPatogeno(patogeno1)
         val ubicacionCreada1 = ubicacionService.crearUbicacion("ubicacionTestEspecie")
-        val vectorAnimalCreado = vectorServiceImpl.crearVector(TipoDeVector.Animal, ubicacionCreada1.id!!)
-        val especieCreada1 = patogenoService.agregarEspecie(patogenoCreado1.id!!, "especie1", ubicacionCreada1.id!!)
-        val especieCreada2 = patogenoService.agregarEspecie(patogenoCreado1.id!!, "especie2", ubicacionCreada1.id!!)
-        val especieCreada3 = patogenoService.agregarEspecie(patogenoCreado1.id!!, "especie3", ubicacionCreada1.id!!)
-        val especieCreada4 = patogenoService.agregarEspecie(patogenoCreado1.id!!, "especie4", ubicacionCreada1.id!!)
-        val especieCreada5 = patogenoService.agregarEspecie(patogenoCreado1.id!!, "especie5", ubicacionCreada1.id!!)
-        val especieCreada6 = patogenoService.agregarEspecie(patogenoCreado1.id!!, "especie6", ubicacionCreada1.id!!)
-        val especieCreada7 = patogenoService.agregarEspecie(patogenoCreado1.id!!, "especie7", ubicacionCreada1.id!!)
-        val especieCreada8 = patogenoService.agregarEspecie(patogenoCreado1.id!!, "especie8", ubicacionCreada1.id!!)
-        val especieCreada9 = patogenoService.agregarEspecie(patogenoCreado1.id!!, "especie9", ubicacionCreada1.id!!)
-        val especieCreada10 = patogenoService.agregarEspecie(patogenoCreado1.id!!, "especie10", ubicacionCreada1.id!!)
-        val especieCreada11 = patogenoService.agregarEspecie(patogenoCreado1.id!!, "especie11", ubicacionCreada1.id!!)
-        val especieCreada12 = patogenoService.agregarEspecie(patogenoCreado1.id!!, "especie12", ubicacionCreada1.id!!)
+        vectorServiceImpl.crearVector(TipoDeVector.Animal, ubicacionCreada1.id!!)
+        patogenoService.agregarEspecie(patogenoCreado1.id!!, "especie1", ubicacionCreada1.id!!)
+        patogenoService.agregarEspecie(patogenoCreado1.id!!, "especie2", ubicacionCreada1.id!!)
+        patogenoService.agregarEspecie(patogenoCreado1.id!!, "especie3", ubicacionCreada1.id!!)
+        patogenoService.agregarEspecie(patogenoCreado1.id!!, "especie4", ubicacionCreada1.id!!)
+        patogenoService.agregarEspecie(patogenoCreado1.id!!, "especie5", ubicacionCreada1.id!!)
+        patogenoService.agregarEspecie(patogenoCreado1.id!!, "especie6", ubicacionCreada1.id!!)
+        patogenoService.agregarEspecie(patogenoCreado1.id!!, "especie7", ubicacionCreada1.id!!)
+        patogenoService.agregarEspecie(patogenoCreado1.id!!, "especie8", ubicacionCreada1.id!!)
+        patogenoService.agregarEspecie(patogenoCreado1.id!!, "especie9", ubicacionCreada1.id!!)
+        patogenoService.agregarEspecie(patogenoCreado1.id!!, "especie10", ubicacionCreada1.id!!)
+        patogenoService.agregarEspecie(patogenoCreado1.id!!, "especie11", ubicacionCreada1.id!!)
+        patogenoService.agregarEspecie(patogenoCreado1.id!!, "especie12", ubicacionCreada1.id!!)
 
         val lideres = especieService.lideres()
 
@@ -248,14 +247,14 @@ class EspecieServiceImplTest {
         val patogenoCreado1 = patogenoService.crearPatogeno(patogeno1)
         val ubicacionCreada1 = ubicacionService.crearUbicacion("ubicacionTestEspecie")
         val vectorAnimalCreado1 = vectorServiceImpl.crearVector(TipoDeVector.Animal, ubicacionCreada1.id!!)
-        val vectorAnimalCreado2 = vectorServiceImpl.crearVector(TipoDeVector.Animal, ubicacionCreada1.id!!)
+        vectorServiceImpl.crearVector(TipoDeVector.Animal, ubicacionCreada1.id!!)
         val especieCreada1 = patogenoService.agregarEspecie(patogenoCreado1.id!!, "cualquierNombre", ubicacionCreada1.id!!)
         vectorServiceImpl.infectar(vectorAnimalCreado1, especieCreada1)
 
         val patogeno2 = Patogeno("otroNombre")
         val patogenoCreado2 = patogenoService.crearPatogeno(patogeno2)
         val ubicacionCreada2 = ubicacionService.crearUbicacion("otroNombreDeUbicacion")
-        val vectorPersonaCreado = vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada2.id!!)
+        vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada2.id!!)
         val especieCreada2 = patogenoService.agregarEspecie(patogenoCreado2.id!!, "cualquierNombre", ubicacionCreada2.id!!)
 
         val lideres = especieService.lideres()

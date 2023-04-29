@@ -1,8 +1,10 @@
 package ar.edu.unq.eperdemic.services.impl
 
 import ar.edu.unq.eperdemic.modelo.Patogeno
+import ar.edu.unq.eperdemic.modelo.TipoDeVector
 import ar.edu.unq.eperdemic.modelo.exceptions.NingunVectorAInfectarEnLaUbicacionDada
 import ar.edu.unq.eperdemic.modelo.exceptions.NoExisteElid
+import ar.edu.unq.eperdemic.modelo.exceptions.NoPuedeEstarVacioOContenerCaracteresEspeciales
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.*
 import ar.edu.unq.eperdemic.utils.DataServiceHibernate
 import org.junit.jupiter.api.*
@@ -16,6 +18,8 @@ class PatogenoServiceTest {
     private val vectorServiceImpl = VectorServiceImpl(hibernateVectorDAO)
     private val hibernateEspecieDAO = HibernateEspecieDAO()
     private val especieServiceImpl = EspecieServiceImpl(hibernateEspecieDAO)
+    private val ubicacionDAO = HibernateUbicacionDAO()
+    private val ubicacionService = UbicacionServiceImpl(ubicacionDAO)
 
     @BeforeEach
     fun setUp() {
@@ -74,6 +78,76 @@ class PatogenoServiceTest {
         val ex = assertThrows<NoExisteElid> { patogenoService.agregarEspecie(1,"EspecieViolenta", 400)  }
 
         Assertions.assertEquals("La ubicacion no existe en la base de datos", ex.message)
+    }
+
+    @Test
+    fun alCrearUnaEspecieSeLeAsignaUnId() {
+        val patogeno = Patogeno("testEspecie")
+        val patogenoCreado = patogenoService.crearPatogeno(patogeno)
+        val ubicacionCreada = ubicacionService.crearUbicacion("ubicacionTestEspecie")
+        vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada.id!!)
+        val especieCreada = patogenoService.agregarEspecie(patogenoCreado.id!!, "cualquierNombre", ubicacionCreada.id!!)
+
+        Assertions.assertNotNull(especieCreada.id!!)
+    }
+
+    @Test
+    fun noSePuedeCrearUnaEspecieConNombreVacio() {
+        val patogeno = Patogeno("testEspecie")
+        val patogenoCreado = patogenoService.crearPatogeno(patogeno)
+        val ubicacionCreada = ubicacionService.crearUbicacion("ubicacionTestEspecie")
+        vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada.id!!)
+
+        Assertions.assertThrows(NoPuedeEstarVacioOContenerCaracteresEspeciales::class.java) {
+            patogenoService.agregarEspecie(patogenoCreado.id!!, "", ubicacionCreada.id!!)
+        }
+    }
+
+    @Test
+    fun noSePuedeCrearUnaEspecieConNombreConCaracteresEspeciales() {
+        val patogeno = Patogeno("testEspecie")
+        val patogenoCreado = patogenoService.crearPatogeno(patogeno)
+        val ubicacionCreada = ubicacionService.crearUbicacion("ubicacionTestEspecie")
+        vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada.id!!)
+
+        Assertions.assertThrows(NoPuedeEstarVacioOContenerCaracteresEspeciales::class.java) {
+            patogenoService.agregarEspecie(patogenoCreado.id!!, "", ubicacionCreada.id!!)
+        }
+        Assertions.assertThrows(NoPuedeEstarVacioOContenerCaracteresEspeciales::class.java) {
+            patogenoService.agregarEspecie(patogenoCreado.id!!, "especie#1", ubicacionCreada.id!!)
+        }
+        Assertions.assertThrows(NoPuedeEstarVacioOContenerCaracteresEspeciales::class.java) {
+            patogenoService.agregarEspecie(patogenoCreado.id!!, "especie--1", ubicacionCreada.id!!)
+        }
+        Assertions.assertThrows(NoPuedeEstarVacioOContenerCaracteresEspeciales::class.java) {
+            patogenoService.agregarEspecie(patogenoCreado.id!!, "especie@1", ubicacionCreada.id!!)
+        }
+    }
+
+    @Test
+    fun noSePuedeCrearUnaEspecieConUnPatogenoConIdInvalido() {
+        val patogeno = Patogeno("testEspecie")
+        val patogenoCreado = patogenoService.crearPatogeno(patogeno)
+
+        dataService.eliminarTodo()
+
+        val ubicacionCreada = ubicacionService.crearUbicacion("ubicacionTestEspecie")
+        vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada.id!!)
+
+        Assertions.assertThrows(NoExisteElid::class.java) {
+            patogenoService.agregarEspecie(patogenoCreado.id!!, "unNombreEspecie", ubicacionCreada.id!!)
+        }
+    }
+
+    @Test
+    fun noSePuedeCrearUnaEspecieEnUnaUbicacionSinVectores() {
+        val patogeno = Patogeno("testEspecie")
+        val patogenoCreado = patogenoService.crearPatogeno(patogeno)
+        val ubicacionCreada = ubicacionService.crearUbicacion("ubicacionTestEspecie")
+
+        Assertions.assertThrows(NingunVectorAInfectarEnLaUbicacionDada::class.java) {
+            patogenoService.agregarEspecie(patogenoCreado.id!!, "unNombreEspecie", ubicacionCreada.id!!)
+        }
     }
 
     @Test

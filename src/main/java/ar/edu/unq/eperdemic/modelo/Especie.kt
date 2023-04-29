@@ -15,7 +15,7 @@ class Especie() {
     lateinit var paisDeOrigen: String
 
     constructor(pathogen: Patogeno, name: String, pais: String ): this() {
-        if (Check.validar(name) || Check.validar(pais)){
+        if (Check.validar(name) && Check.validar(pais)){
             this.patogeno = pathogen
             this.nombre = name
             this.paisDeOrigen = pais
