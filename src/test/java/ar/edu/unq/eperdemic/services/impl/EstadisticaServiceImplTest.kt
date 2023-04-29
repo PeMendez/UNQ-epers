@@ -2,7 +2,6 @@ package ar.edu.unq.eperdemic.services.impl
 
 import ar.edu.unq.eperdemic.modelo.TipoDeVector
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateEspecieDAO
-import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateUbicacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateVectorDAO
 import ar.edu.unq.eperdemic.utils.DataServiceHibernate
 import org.junit.Assert
@@ -20,7 +19,6 @@ class EstadisticaServiceImplTest {
     private val hibernateVectorDAO = HibernateVectorDAO()
     private val vectorServiceImpl = VectorServiceImpl(hibernateVectorDAO)
     private val estadisticaService = EstadisticaServiceImpl()
-    val ubicacionDAO = HibernateUbicacionDAO()
 
     @BeforeEach
     fun setUp() {
