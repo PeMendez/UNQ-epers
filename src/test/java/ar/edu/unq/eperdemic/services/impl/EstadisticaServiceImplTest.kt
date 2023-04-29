@@ -6,7 +6,12 @@ import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateUbicacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateVectorDAO
 import ar.edu.unq.eperdemic.utils.DataServiceHibernate
 import org.junit.Assert
-import org.junit.jupiter.api.*
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import javax.persistence.NoResultException
+
 class EstadisticaServiceImplTest {
 
     var dataService = DataServiceHibernate()
@@ -65,6 +70,15 @@ class EstadisticaServiceImplTest {
         Assert.assertEquals(reporte.vectoresPresentes, 7)
         Assert.assertEquals(reporte.nombreDeEspecieMasInfecciosa, "especie1")
     }
+
+
+    @Test
+    fun reporteDeContagiosConUbicacionNoExistente() {
+        Assertions.assertThrows(NoResultException::class.java) {
+            estadisticaService.reporteDeContagios("Ubicacion NO EXISTENTE")
+        }
+    }
+
 
 
     @AfterEach

@@ -22,7 +22,7 @@ class EstadisticaServiceImpl : EstadisticaService {
 
     override fun reporteDeContagios(nombreDeLaUbicacion: String): ReporteDeContagios {
         return runTrx {
-            val ubicacion = ubicacionDAO.recuperarUbicacionPorNombre(nombreDeLaUbicacion)
+            val ubicacion = ubicacionDAO.recuperarUbicacionPorNombre(nombreDeLaUbicacion) ?: throw NoSuchElementException("No se encontró una ubicación con el nombre dado: $nombreDeLaUbicacion")
             val cantidadVectores = ubicacionDAO.recuperarVectores(ubicacion.id!!).size
             val cantidadInfectados = ubicacionDAO.recuperarVectores(ubicacion.id!!).filter {v -> !v.estaSano()}.size
             val especieLider = especieDAO.especieLiderDeUbicacion(ubicacion.id!!)
@@ -30,6 +30,5 @@ class EstadisticaServiceImpl : EstadisticaService {
             reporte
         }
     }
-
 
 }
