@@ -15,8 +15,6 @@ class PatogenoServiceTest {
     private var dataService = DataServiceHibernate()
     private val hibernateVectorDAO = HibernateVectorDAO()
     private val vectorServiceImpl = VectorServiceImpl(hibernateVectorDAO)
-    private val hibernateEspecieDAO = HibernateEspecieDAO()
-    private val especieServiceImpl = EspecieServiceImpl(hibernateEspecieDAO)
     private val ubicacionDAO = HibernateUbicacionDAO()
     private val ubicacionService = UbicacionServiceImpl(ubicacionDAO)
     private var patogenoVirusCruciartus = Patogeno("VirusCruciartus")
@@ -149,22 +147,10 @@ class PatogenoServiceTest {
         ubicacionLaMadriguera = ubicacionService.crearUbicacion("ubicacionLaMadriguera")
         vectorRonWeasley = vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionLaMadriguera.id!!)
         val especieImperius = patogenoService.agregarEspecie(patogenoMalDeDragon.id!!, "EspecieImperius", ubicacionPrivateDrive.id!!)
-        val u = ubicacionService.recuperarTodos()
-        vectorRonWeasley.infectarCon(especieImperius)
-        vectorHarryPotter.infectarCon(especieImperius)
-        //val unVector = vectorServiceImpl.recuperarVector(6)
-        //val otroVector = vectorServiceImpl.recuperarVector(7)
-        //val otroVectormas = vectorServiceImpl.recuperarVector(5)
-        //val otroVectorcitoMas = vectorServiceImpl.recuperarVector(4)
-        //val unaEspecie = especieServiceImpl.recuperarEspecie(1)
 
-        //vectorServiceImpl.infectar(otroVector, unaEspecie)
-        //vectorServiceImpl.infectar(unVector, unaEspecie)
-        //vectorServiceImpl.infectar(otroVectormas, unaEspecie)
-        //vectorServiceImpl.infectar(otroVectorcitoMas, unaEspecie)
+        vectorServiceImpl.infectar(vectorRonWeasley, especieImperius)
 
-        //Assertions.assertTrue(patogenoService.esPandemia((unaEspecie.id!!)))
-        //Assertions.assertTrue(patogenoService.esPandemia((especieImperius.id!!)))
+        Assertions.assertTrue(patogenoService.esPandemia((especieImperius.id!!)))
 
     }
 
