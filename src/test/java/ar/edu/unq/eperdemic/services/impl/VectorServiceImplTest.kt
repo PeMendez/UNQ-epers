@@ -62,7 +62,7 @@ class VectorServiceImplTest {
     }
 
     @Test
-    fun siSeIntectaContagiarAUnaListaDeVectoresVaciaEntoncesNoSeHaceNada() {
+    fun siSeIntentaContagiarAUnaListaDeVectoresVaciaEntoncesNoSeHaceNada() {
         val ubicacionCreada1 = ubicacionServiceImpl.crearUbicacion("enfermedadesTest")
         val vectorInsectoCreado1 = vectorServiceImpl.crearVector(TipoDeVector.Insecto, ubicacionCreada1.id!!)
         val unaEspecie = especieServiceImpl.recuperarEspecie(1)
