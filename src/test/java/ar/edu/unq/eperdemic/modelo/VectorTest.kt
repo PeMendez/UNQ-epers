@@ -1,7 +1,8 @@
 package ar.edu.unq.eperdemic.modelo
 
-import org.junit.jupiter.api.*
 import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 
 
 
@@ -90,14 +91,6 @@ class VectorTest {
         assertTrue(vectorPersonaSano.estaSano())
         vectorPersonaSano.infectarCon(especie1)
         assertFalse(vectorPersonaSano.estaSano())
-    }
-
-    @Test
-    fun tieneEfermedad() {//esto hay que replantearlo.
-
-        vectorPersonaSano.infectarCon(especie1)
-
-        //assertTrue(vector1.tieneEfermedad(especie1))
     }
 
     @Test
