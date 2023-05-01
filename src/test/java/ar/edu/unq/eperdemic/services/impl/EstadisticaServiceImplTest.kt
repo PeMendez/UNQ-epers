@@ -60,9 +60,9 @@ class EstadisticaServiceImplTest {
         val ubicacion7 = ubicacionService.crearUbicacion("Venezuela")
         val ubicacion8 = ubicacionService.crearUbicacion("Irlanda")
         val ubicacion9 = ubicacionService.crearUbicacion("Japon")
-        val ubicacion10 = ubicacionService.crearUbicacion("Rusia")
+        val ubicacion10 = ubicacionService.crearUbicacion("China")
         val ubicacion11 = ubicacionService.crearUbicacion("Korea")
-        val ubicacion12 = ubicacionService.crearUbicacion("Ubicacion12")
+        val ubicacion12 = ubicacionService.crearUbicacion("Romania")
 
         var patogenoModelo = Patogeno("patogeno")
         var patogeno = patogenoService.crearPatogeno(patogenoModelo)
