@@ -31,7 +31,6 @@ class EstadisticaServiceImplTest {
         dataService.crearSetDeDatosIniciales()
     }
 
-
     @Test
     fun lideresQueInfectaronLaMayorCantidadDeHumanosYAnimales() {
         dataService.eliminarTodo()
@@ -107,7 +106,6 @@ class EstadisticaServiceImplTest {
             estadisticaService.reporteDeContagios("Ubicacion NO EXISTENTE")
         }
     }
-
 
 
     @AfterEach
