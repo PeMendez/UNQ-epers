@@ -24,8 +24,6 @@ class EstadisticaServiceImplTest {
     private val ubicacionDAO = HibernateUbicacionDAO()
     private val ubicacionService = UbicacionServiceImpl(ubicacionDAO)
 
-    private val vectorDAO = HibernateVectorDAO()
-
     @BeforeEach
     fun setUp() {
         dataService.crearSetDeDatosIniciales()
@@ -92,11 +90,16 @@ class EstadisticaServiceImplTest {
 
     @Test
     fun reporteDeContagios() {
-        val reporte = estadisticaService.reporteDeContagios("ubicacion1")
-        Assert.assertEquals(reporte.vectoresInfectados, 1)
+        var patogenoModelo = Patogeno("patogeno")
+        var patogeno = patogenoService.crearPatogeno(patogenoModelo)
+        var ubicacion1 = ubicacionService.crearUbicacion("Argentina")
+        vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacion1.id!!)
+        var especie = patogenoService.agregarEspecie(patogeno.id!!, "Coxsackie", ubicacion1.id!!)
 
-        Assert.assertEquals(reporte.vectoresPresentes, 7)
-        Assert.assertEquals(reporte.nombreDeEspecieMasInfecciosa, "especie1")
+        val reporte = estadisticaService.reporteDeContagios(ubicacion1.nombre)
+        Assert.assertEquals(reporte.vectoresInfectados, 1)
+        Assert.assertEquals(reporte.vectoresPresentes, 1)
+        Assert.assertEquals(reporte.nombreDeEspecieMasInfecciosa, especie.nombre)
     }
 
 
