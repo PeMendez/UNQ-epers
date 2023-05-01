@@ -2,6 +2,7 @@ package ar.edu.unq.eperdemic.services.impl
 
 import ar.edu.unq.eperdemic.modelo.Patogeno
 import ar.edu.unq.eperdemic.modelo.TipoDeVector
+import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateEspecieDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernatePatogenoDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateUbicacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateVectorDAO
@@ -23,11 +24,28 @@ class EstadisticaServiceImplTest {
     private val patogenoService = PatogenoServiceImpl(patogenoDAO)
     private val ubicacionDAO = HibernateUbicacionDAO()
     private val ubicacionService = UbicacionServiceImpl(ubicacionDAO)
+    private val especieDAO = HibernateEspecieDAO()
+    private val especieService = EspecieServiceImpl(especieDAO)
 
     @BeforeEach
     fun setUp() {
         dataService.crearSetDeDatosIniciales()
     }
+
+    @Test
+    fun unaEspecieEsEspecieLiderInfectandoPersonas() {
+        dataService.eliminarTodo()
+
+        var paraguay = ubicacionService.crearUbicacion("Paraguay")
+        var virus = Patogeno("Virus")
+        var patogeno = patogenoService.crearPatogeno(virus)
+        val unVector = vectorServiceImpl.crearVector(TipoDeVector.Persona, paraguay.id!!)
+        val especieQueMasInfecto =  patogenoService.agregarEspecie(patogeno.id!!, "enterovirus", paraguay.id!!)
+
+        Assert.assertEquals(unVector.tipo, TipoDeVector.Persona)
+        Assert.assertEquals(especieQueMasInfecto.id, estadisticaService.especieLider().id)
+    }
+
 
     @Test
     fun lideresQueInfectaronLaMayorCantidadDeHumanosYAnimales() {
