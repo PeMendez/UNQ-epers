@@ -7,20 +7,29 @@ import ar.edu.unq.eperdemic.modelo.exceptions.NombreDeUbicacionRepetido
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateEspecieDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateUbicacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateVectorDAO
+import ar.edu.unq.eperdemic.services.UbicacionService
 import ar.edu.unq.eperdemic.utils.DataServiceHibernate
 import org.junit.jupiter.api.*
+import org.junit.jupiter.api.extension.ExtendWith
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.test.context.junit.jupiter.SpringExtension
 
+@ExtendWith(SpringExtension::class)
+@SpringBootTest
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class UbicacionServiceImplTest {
 
     val dataService = DataServiceHibernate()
-    val ubicacionDAO = HibernateUbicacionDAO()
-    val ubicacionService = UbicacionServiceImpl(ubicacionDAO)
 
-    val especieDAO = HibernateEspecieDAO()
-    val especieService = EspecieServiceImpl(especieDAO)
+    @Autowired
+    private lateinit var ubicacionService: UbicacionServiceImpl
 
-    val vectorDAO = HibernateVectorDAO()
-    val vectorService = VectorServiceImpl(vectorDAO)
+    @Autowired
+    private lateinit var especieService: EspecieServiceImpl
+
+    @Autowired
+    private lateinit var vectorService: VectorServiceImpl
 
     @BeforeEach
     fun setUp() {

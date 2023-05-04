@@ -5,16 +5,27 @@ import ar.edu.unq.eperdemic.modelo.Ubicacion
 import ar.edu.unq.eperdemic.modelo.Vector
 import ar.edu.unq.eperdemic.modelo.exceptions.NoExisteElid
 import ar.edu.unq.eperdemic.modelo.exceptions.NombreDeUbicacionRepetido
+import ar.edu.unq.eperdemic.persistencia.dao.UbicacionDAO
+import ar.edu.unq.eperdemic.persistencia.dao.VectorDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateUbicacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateVectorDAO
 import ar.edu.unq.eperdemic.services.UbicacionService
 import ar.edu.unq.eperdemic.services.runner.TransactionRunner.runTrx
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import javax.persistence.NoResultException
 
-class UbicacionServiceImpl(val ubicacionDAO: HibernateUbicacionDAO): UbicacionService {
+@Service
+@Transactional
+class UbicacionServiceImpl(): UbicacionService {
 
-    val hibernateVectorDAO = HibernateVectorDAO()
-    val vectorServiceImpl = VectorServiceImpl(hibernateVectorDAO)
+    @Autowired
+    private lateinit var vectorDAO: VectorDAO
+    @Autowired
+    private lateinit var vectorServiceImpl: VectorServiceImpl
+    @Autowired
+    private lateinit var ubicacionDAO: UbicacionDAO
 
     override fun mover(vectorId: Long, ubicacionid: Long) {
 
@@ -28,7 +39,7 @@ class UbicacionServiceImpl(val ubicacionDAO: HibernateUbicacionDAO): UbicacionSe
             }
 
             runTrx {
-                hibernateVectorDAO.actualizar(vector)
+                vectorDAO.actualizar(vector)
                 if (!vector.estaSano()) {
                     vectorServiceImpl.contagiar(vector, vectoresEnUbicacion)
                 }
