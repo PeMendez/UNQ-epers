@@ -1,19 +1,12 @@
 package ar.edu.unq.eperdemic.services.impl
 
-import ar.edu.unq.eperdemic.modelo.Mutacion
 import ar.edu.unq.eperdemic.services.MutacionService
+import ar.edu.unq.eperdemic.modelo.Mutacion
 
 class MutacionServiceImpl: MutacionService {
 
-    override fun mutar(especieId: Long, mutacionId: Long) {
+    override fun agregarMutacion(especieId: Long, mutacion: Mutacion): Mutacion {
         TODO("Not yet implemented")
     }
 
-    override fun crearMutacion(mutacion: Mutacion): Mutacion {
-        TODO("Not yet implemented")
-    }
-
-    override fun recuperarMutacion(mutacionId: Long): Mutacion {
-        TODO("Not yet implemented")
-    }
 }

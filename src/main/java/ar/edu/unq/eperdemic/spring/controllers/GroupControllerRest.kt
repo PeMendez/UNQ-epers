@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 @RequestMapping("/group")
 class GroupControllerREST(private val groupName : String) {
     @GetMapping
-    fun getGroup() = GroupData(groupName, 1)
+    fun getGroup() = GroupData(groupName, 2)
 }
 
 class GroupData(val name:String, val version: Int)
