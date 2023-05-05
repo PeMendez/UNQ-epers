@@ -1,26 +1,34 @@
 package ar.edu.unq.eperdemic.spring.controllers.dto
 
+import ar.edu.unq.eperdemic.modelo.Mutacion
+import ar.edu.unq.eperdemic.modelo.TipoDeMutacion
+import ar.edu.unq.eperdemic.modelo.TipoDeVector
+
 class MutacionDTO(
     val tipoDeMutacion: TipoDeMutacion,
     val especieId: Long,
     val tipoDeVector : TipoDeVector?,
-    val poderDeMutacion: Int?) {
+    val poderDeMutacion: Int?
+) {
 
-    enum class TipoDeVector {
-        Persona, Insecto, Animal
+    fun aModelo() : Mutacion {
+        var mutacion = Mutacion()
+        mutacion.tipoDeMutacion = this.tipoDeMutacion
+        mutacion.especieId = this.especieId
+        mutacion.tipoDeVector = this.tipoDeVector!!
+        mutacion.poderDeMutacion = this.poderDeMutacion!!
+        return mutacion
     }
-    enum class TipoDeMutacion {
-        Supresion_Biomecanica, Bioalteracion_Genetica,
+
+    companion object {
+        fun desdeModelo(mutacion: Mutacion) =
+            MutacionDTO(
+                tipoDeMutacion = mutacion.tipoDeMutacion,
+                especieId = mutacion.especieId!!,
+                tipoDeVector = mutacion.tipoDeVector,
+                poderDeMutacion = mutacion.poderDeMutacion
+
+            )
     }
-
-//    TODO: implementar aModelo
-//    fun aModelo() : Mutacion {
-//        return null
-//    }
-
-//    TODO: implementar desdeModelo
-//    companion object {
-//        fun desdeModelo(Mutacion:mutacion) = null
-//    }
 
 }

@@ -6,36 +6,46 @@ import ar.edu.unq.eperdemic.modelo.Patogeno
 import ar.edu.unq.eperdemic.modelo.exceptions.NingunVectorAInfectarEnLaUbicacionDada
 import ar.edu.unq.eperdemic.modelo.exceptions.NoExisteElid
 import ar.edu.unq.eperdemic.persistencia.dao.PatogenoDAO
-import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateEspecieDAO
-import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateUbicacionDAO
-import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateVectorDAO
 import ar.edu.unq.eperdemic.services.PatogenoService
-import ar.edu.unq.eperdemic.services.runner.TransactionRunner.runTrx
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.repository.findByIdOrNull
+import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
+@Service
+@Transactional
+class PatogenoServiceImpl() : PatogenoService {
 
-class PatogenoServiceImpl(val patogenoDAO: PatogenoDAO) : PatogenoService {
-
-    private val ubicacionDAO = HibernateUbicacionDAO()
-    private val vectorDAO = HibernateVectorDAO()
-    private val especieDAO = HibernateEspecieDAO()
+    @Autowired private lateinit var patogenoDAO: PatogenoDAO
     private val diosito = Random
-    private val vectorServiceImpl = VectorServiceImpl(vectorDAO)
-    private val ubicacionServiceImpl = UbicacionServiceImpl(ubicacionDAO)
+
 
     override fun crearPatogeno(patogeno: Patogeno): Patogeno {
-        return runTrx { patogenoDAO.crear(patogeno) }
+        return  patogenoDAO.save(patogeno)
     }
 
     override fun recuperarPatogeno(id: Long): Patogeno {
-        return runTrx {
-            patogenoDAO.recuperarPatogeno(id)?: throw NoExisteElid("el id buscado no existe en la base de datos") }
-    }
+        return patogenoDAO.findByIdOrNull(id)?: throw NoExisteElid("el id buscado no existe en la base de datos") }
 
     override fun recuperarATodosLosPatogenos(): List<Patogeno> {
-        return runTrx { patogenoDAO.recuperarATodos() }
+        return patogenoDAO.findAll().toList()
     }
 
     override fun agregarEspecie(id: Long, nombre: String, ubicacionId: Long): Especie {
+        TODO("Not yet implemented")
+    }
+
+    override fun esPandemia(especieId: Long): Boolean {
+        TODO("Not yet implemented")
+    }
+
+    override fun especiesDePatogeno(patogenoId: Long): List<Especie> {
+        TODO("Not yet implemented")
+    }
+}
+
+
+    /*override fun agregarEspecie(id: Long, nombre: String, ubicacionId: Long): Especie {
         val ubicacion = try{
             ubicacionServiceImpl.recuperar(ubicacionId)
         } catch (e: NoExisteElid){
@@ -68,4 +78,4 @@ class PatogenoServiceImpl(val patogenoDAO: PatogenoDAO) : PatogenoService {
     override fun especiesDePatogeno(patogenoId: Long ): List<Especie> {
         return runTrx { patogenoDAO.especiesDePatogeno(patogenoId) }
     }
-}
+}*/
