@@ -51,6 +51,10 @@ class VectorServiceImpl(): VectorService {
     override fun recuperarTodos(): List<Vector> {
         TODO("Not yet implemented")
     }
+
+    override fun findAllByUbicacionId(ubicacionId: Long): List<Vector> {
+        return vectorDAO.findAllByUbicacionId(ubicacionId)
+    }
     /*val hibernateUbicacionDAO = HibernateUbicacionDAO()
     val especieDAO = HibernateEspecieDAO()
 
