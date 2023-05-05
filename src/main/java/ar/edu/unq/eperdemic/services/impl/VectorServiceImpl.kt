@@ -65,6 +65,10 @@ class VectorServiceImpl(): VectorService {
         return vectorDAO.findAll().toList()
     }
 
+    override fun findAllByUbicacionId(ubicacionId: Long): List<Vector> {
+        return vectorDAO.findAllByUbicacionId(ubicacionId)
+    }
+
     /*val hibernateUbicacionDAO = HibernateUbicacionDAO()
     val especieDAO = HibernateEspecieDAO()
 
