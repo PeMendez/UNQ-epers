@@ -1,9 +1,13 @@
 package ar.edu.unq.eperdemic.persistencia.dao
 
 import ar.edu.unq.eperdemic.modelo.*
+import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.CrudRepository
 
 interface VectorDAO: CrudRepository<Vector, Long> {
+    @Query("select e from Vector v inner join v.especies e where v.id = :vectorId")
+    fun findEnfermedades(vectorId: Long): List<Especie>
+
     /*fun enfermedades(vectorID: Long) : List<Especie>
     fun crearVector(vector: Vector): Vector
     fun recuperarVector(vectorId: Long): Vector
