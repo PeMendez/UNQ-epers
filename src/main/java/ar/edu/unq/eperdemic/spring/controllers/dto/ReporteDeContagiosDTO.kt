@@ -1,12 +1,21 @@
 package ar.edu.unq.eperdemic.spring.controllers.dto
 
+import ar.edu.unq.eperdemic.modelo.ReporteDeContagios
+
 class ReporteDeContagiosDTO(val vectoresPresentes:Int,
                             val vectoresInfecatods:Int,
                             val nombreDeEspecieMasInfecciosa: String,
                             val nombreDeUbicacion: String,
                             val nombreDelEquipo: String) {
-// TODO: Implementar desdeModelo
-//    companion object {
-//        fun desdeModelo(reporte: ReporteDeContagios, nombreDeUbicacion: String, nombreDelEquipo: String) = null
-//     }
+
+    companion object {
+       fun desdeModelo(reporte: ReporteDeContagios, nombreDeUbicacion: String, nombreDelEquipo: String) =
+           ReporteDeContagiosDTO(
+               vectoresPresentes = reporte.vectoresPresentes,
+               vectoresInfecatods = reporte.vectoresInfectados,
+               nombreDeEspecieMasInfecciosa = reporte.nombreDeEspecieMasInfecciosa,
+               nombreDeUbicacion = nombreDeUbicacion,
+               nombreDelEquipo = nombreDelEquipo
+           )
+     }
 }
