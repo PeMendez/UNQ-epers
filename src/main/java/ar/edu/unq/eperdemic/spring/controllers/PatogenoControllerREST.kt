@@ -30,5 +30,10 @@ class PatogenoControllerREST(private val patogenoService: PatogenoService) {
   @GetMapping
   fun getAll() = patogenoService.recuperarATodosLosPatogenos().map{ PatogenoDTO.desdeModelo(it)}
 
+  @GetMapping("/especies/{id}")
+  fun especiesDePatogeno(@PathVariable id: Long) = patogenoService.especiesDePatogeno(id).map { EspecieDTO.desdeModelo(it) }
+
+  @GetMapping("/esPandemia/{id}")
+  fun esPandemia(@PathVariable id: Long) = patogenoService.esPandemia(id)
 
 }

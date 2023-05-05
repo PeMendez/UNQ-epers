@@ -58,39 +58,3 @@ class PatogenoServiceImpl : PatogenoService {
         return patogenoDAO.findAllEspeciesById(patogenoId)
     }
 }
-
-
-    /*override fun agregarEspecie(id: Long, nombre: String, ubicacionId: Long): Especie {
-        val ubicacion = try{
-            ubicacionServiceImpl.recuperar(ubicacionId)
-        } catch (e: NoExisteElid){
-            throw NoExisteElid("La ubicacion no existe en la base de datos")
-        }
-        runTrx { patogenoDAO.recuperarPatogeno(id)?: throw NoExisteElid("El Patogeno con el ID dado no existe en la base de datos") }
-        val vectores = ubicacionServiceImpl.recuperarVectores(ubicacionId)
-        val vectorAInfectar = try{
-            vectores[diosito.decidir(vectores.size)-1]
-        } catch (e: Exception){
-            throw NingunVectorAInfectarEnLaUbicacionDada("No hay ningún vector en la ubicación dada")
-        }
-        val especie = runTrx {
-            val patogeno = patogenoDAO.recuperarPatogeno(id)
-            val especieGenerada = patogeno.crearEspecie(nombre, ubicacion.nombre)
-            especieDAO.guardar(especieGenerada)
-            especieGenerada
-        }
-
-        vectorServiceImpl.infectar(vectorAInfectar, especie)
-        return especie
-    }
-
-    override fun esPandemia(especieId: Long): Boolean {
-        return runTrx {
-            patogenoDAO.esPandemia(especieId)
-        }
-    }
-
-    override fun especiesDePatogeno(patogenoId: Long ): List<Especie> {
-        return runTrx { patogenoDAO.especiesDePatogeno(patogenoId) }
-    }
-}*/
