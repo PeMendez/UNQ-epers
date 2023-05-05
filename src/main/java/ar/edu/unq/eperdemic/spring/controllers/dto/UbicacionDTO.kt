@@ -1,14 +1,18 @@
 package ar.edu.unq.eperdemic.spring.controllers.dto
 
+import ar.edu.unq.eperdemic.modelo.Ubicacion
+
 class UbicacionDTO(val nombreDeLaUbicacion: String) {
 
-//    TODO: implementar aModelo
-//    fun aModelo() : Vector {
-//        return null
-//    }
 
-//    TODO: implementar desdeModelo
-//    companion object {
-//        fun desdeModelo(ubicacion:Ubicacion) = null
-//    }
+    fun aModelo() : Ubicacion {
+        return Ubicacion(this.nombreDeLaUbicacion)
+    }
+
+    companion object {
+        fun desdeModelo(ubicacion:Ubicacion) =
+            UbicacionDTO(
+                nombreDeLaUbicacion = ubicacion.nombre
+            )
+    }
 }
