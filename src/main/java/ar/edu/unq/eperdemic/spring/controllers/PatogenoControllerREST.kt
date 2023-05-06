@@ -6,9 +6,8 @@ import ar.edu.unq.eperdemic.spring.controllers.dto.EspecieDTO
 import ar.edu.unq.eperdemic.spring.controllers.dto.PatogenoDTO
 import org.springframework.web.bind.annotation.*
 
-@RestController
 @CrossOrigin
-//@ServiceREST
+@ServiceREST
 @RequestMapping("/patogeno")
 class PatogenoControllerREST(private val patogenoService: PatogenoService) {
 

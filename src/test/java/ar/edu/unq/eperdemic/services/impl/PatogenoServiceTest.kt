@@ -4,19 +4,34 @@ import ar.edu.unq.eperdemic.modelo.*
 import ar.edu.unq.eperdemic.modelo.exceptions.NingunVectorAInfectarEnLaUbicacionDada
 import ar.edu.unq.eperdemic.modelo.exceptions.NoExisteElid
 import ar.edu.unq.eperdemic.modelo.exceptions.NoPuedeEstarVacioOContenerCaracteresEspeciales
-import ar.edu.unq.eperdemic.persistencia.dao.hibernate.*
-import ar.edu.unq.eperdemic.utils.DataServiceHibernate
+import ar.edu.unq.eperdemic.persistencia.dao.PatogenoDAO
+import ar.edu.unq.eperdemic.persistencia.dao.UbicacionDAO
+import ar.edu.unq.eperdemic.persistencia.dao.VectorDAO
+import ar.edu.unq.eperdemic.services.PatogenoService
+import ar.edu.unq.eperdemic.services.UbicacionService
 import org.junit.jupiter.api.*
+import org.junit.jupiter.api.extension.ExtendWith
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.test.context.junit.jupiter.SpringExtension
 
+@ExtendWith(SpringExtension::class)
+@SpringBootTest
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class PatogenoServiceTest {
 
-    private val hibernatePatogenoDAO = HibernatePatogenoDAO()
-    private val patogenoService = PatogenoServiceImpl(hibernatePatogenoDAO)
-    private var dataService = DataServiceHibernate()
-    private val hibernateVectorDAO = HibernateVectorDAO()
-    private val vectorServiceImpl = VectorServiceImpl(hibernateVectorDAO)
-    private val ubicacionDAO = HibernateUbicacionDAO()
-    private val ubicacionService = UbicacionServiceImpl(ubicacionDAO)
+    @Autowired
+    lateinit var patogenoDAO: PatogenoDAO
+    @Autowired
+    lateinit var ubicacionDAO: UbicacionDAO
+    @Autowired
+    lateinit var vectorDAO: VectorDAO
+    @Autowired
+    lateinit var patogenoService: PatogenoService
+    @Autowired
+    lateinit var ubicacionService: UbicacionService
+    @Autowired
+    lateinit var vectorServiceImpl: VectorServiceImpl
     private var patogenoVirusCruciartus = Patogeno("VirusCruciartus")
     private lateinit var patogenoMalDeDragon: Patogeno
     private lateinit var ubicacionPrivateDrive: Ubicacion
@@ -28,7 +43,7 @@ class PatogenoServiceTest {
     @BeforeEach
     fun setUp() {
         Random.switchModo(false)
-        dataService.crearSetDeDatosIniciales()
+        //dataService.crearSetDeDatosIniciales()
         patogenoMalDeDragon = patogenoService.crearPatogeno(Patogeno("MalDeDragon"))
         ubicacionPrivateDrive = ubicacionService.crearUbicacion("PrivateDrive")
         vectorHarryPotter = vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionPrivateDrive.id!!)
@@ -121,7 +136,7 @@ class PatogenoServiceTest {
 
     @Test
     fun noSePuedeCrearUnaEspecieConUnPatogenoConIdInvalido() {
-        dataService.eliminarTodo()
+        //dataService.eliminarTodo()
 
         val ubicacionHogsmeade = ubicacionService.crearUbicacion("ubicacionHogsmeade")
         vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionHogsmeade.id!!)
@@ -140,7 +155,7 @@ class PatogenoServiceTest {
 
     @Test
     fun esPandemiaAfirmativo(){
-        dataService.eliminarTodo()
+        //dataService.eliminarTodo()
         patogenoMalDeDragon = patogenoService.crearPatogeno(Patogeno("MalDeDragon"))
         ubicacionPrivateDrive = ubicacionService.crearUbicacion("PrivateDrive")
         vectorHarryPotter = vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionPrivateDrive.id!!)
@@ -163,7 +178,7 @@ class PatogenoServiceTest {
 
     @Test
     fun seRecuperanTodosLosPatogenosExistentes() {
-        dataService.eliminarTodo()
+        //dataService.eliminarTodo()
         patogenoMalDeDragon = patogenoService.crearPatogeno(Patogeno("MalDeDragon"))
         patogenoVirusCruciartus = patogenoService.crearPatogeno(Patogeno("VirusCruciartus"))
         var patogenoAvadaKedavra = patogenoService.crearPatogeno(Patogeno("AvadaKedavra"))
@@ -180,7 +195,7 @@ class PatogenoServiceTest {
 
     @Test
     fun siSeIntentanRecuperarTodosLosPatogenosPeroNoHayPatogenosExistentesDevuelveUnaListaVacia() {
-        dataService.eliminarTodo()
+        //dataService.eliminarTodo()
 
         Assertions.assertTrue(patogenoService.recuperarATodosLosPatogenos().isEmpty())
     }
@@ -231,7 +246,7 @@ class PatogenoServiceTest {
 
     @AfterEach
     fun eliminarModelo() {
-        dataService.eliminarTodo()
+        //dataService.eliminarTodo()
     }
 
 }
