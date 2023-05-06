@@ -1,5 +1,5 @@
 package ar.edu.unq.eperdemic.services.impl
-
+/*
 import ar.edu.unq.eperdemic.modelo.Random
 import ar.edu.unq.eperdemic.modelo.Especie
 import ar.edu.unq.eperdemic.modelo.Patogeno
@@ -57,4 +57,8 @@ class PatogenoServiceImpl : PatogenoService {
     override fun especiesDePatogeno(patogenoId: Long): List<Especie> {
         return patogenoDAO.findAllEspeciesById(patogenoId)
     }
+
+
 }
+
+ */

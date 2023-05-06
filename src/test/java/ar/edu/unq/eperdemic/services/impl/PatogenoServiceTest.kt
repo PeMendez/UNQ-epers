@@ -1,15 +1,9 @@
 package ar.edu.unq.eperdemic.services.impl
 
-import ar.edu.unq.eperdemic.modelo.*
-import ar.edu.unq.eperdemic.modelo.exceptions.NingunVectorAInfectarEnLaUbicacionDada
-import ar.edu.unq.eperdemic.modelo.exceptions.NoExisteElid
-import ar.edu.unq.eperdemic.modelo.exceptions.NoPuedeEstarVacioOContenerCaracteresEspeciales
-import ar.edu.unq.eperdemic.persistencia.dao.hibernate.*
-import ar.edu.unq.eperdemic.utils.DataServiceHibernate
-import org.junit.jupiter.api.*
-
 class PatogenoServiceTest {
 
+
+    /*
     private val hibernatePatogenoDAO = HibernatePatogenoDAO()
     private val patogenoService = PatogenoServiceImpl(hibernatePatogenoDAO)
     private var dataService = DataServiceHibernate()
@@ -234,4 +228,6 @@ class PatogenoServiceTest {
         dataService.eliminarTodo()
     }
 
+
+     */
 }

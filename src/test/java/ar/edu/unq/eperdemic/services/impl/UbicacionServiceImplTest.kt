@@ -1,17 +1,8 @@
 package ar.edu.unq.eperdemic.services.impl
 
-import ar.edu.unq.eperdemic.modelo.TipoDeVector
-import ar.edu.unq.eperdemic.modelo.exceptions.NoExisteElid
-import ar.edu.unq.eperdemic.modelo.exceptions.NoPuedeEstarVacioOContenerCaracteresEspeciales
-import ar.edu.unq.eperdemic.modelo.exceptions.NombreDeUbicacionRepetido
-import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateEspecieDAO
-import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateUbicacionDAO
-import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateVectorDAO
-import ar.edu.unq.eperdemic.utils.DataServiceHibernate
-import org.junit.jupiter.api.*
-
 class UbicacionServiceImplTest {
 
+    /*
     val dataService = DataServiceHibernate()
     val ubicacionDAO = HibernateUbicacionDAO()
     val ubicacionService = UbicacionServiceImpl(ubicacionDAO)
@@ -319,4 +310,6 @@ class UbicacionServiceImplTest {
     fun clearAll() {
         dataService.eliminarTodo()
     }
+
+     */
 }

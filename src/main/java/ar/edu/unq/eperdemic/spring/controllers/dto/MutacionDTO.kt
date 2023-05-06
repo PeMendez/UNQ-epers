@@ -1,5 +1,5 @@
 package ar.edu.unq.eperdemic.spring.controllers.dto
-
+/*
 import ar.edu.unq.eperdemic.modelo.Especie
 import ar.edu.unq.eperdemic.modelo.Mutacion
 import ar.edu.unq.eperdemic.modelo.TipoDeMutacion
@@ -33,3 +33,5 @@ class MutacionDTO(
     }
 
 }
+
+ */

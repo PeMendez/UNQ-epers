@@ -2,6 +2,7 @@ package ar.edu.unq.eperdemic.modelo
 
 import javax.persistence.*
 
+
 @Entity
 class Mutacion() {
 
@@ -17,5 +18,6 @@ class Mutacion() {
 
 enum class TipoDeMutacion {
     Supresion_Biomecanica, Bioalteracion_Genetica,
+
 }
 

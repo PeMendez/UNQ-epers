@@ -1,5 +1,5 @@
 package ar.edu.unq.eperdemic.services.impl
-
+/*
 import ar.edu.unq.eperdemic.services.MutacionService
 import ar.edu.unq.eperdemic.modelo.Mutacion
 
@@ -10,3 +10,5 @@ class MutacionServiceImpl: MutacionService {
     }
 
 }
+
+ */

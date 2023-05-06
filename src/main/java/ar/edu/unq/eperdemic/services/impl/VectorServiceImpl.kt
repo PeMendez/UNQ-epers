@@ -1,5 +1,5 @@
 package ar.edu.unq.eperdemic.services.impl
-
+/*
 import ar.edu.unq.eperdemic.modelo.Especie
 import ar.edu.unq.eperdemic.modelo.TipoDeVector
 import ar.edu.unq.eperdemic.modelo.Vector
@@ -138,3 +138,5 @@ class VectorServiceImpl(): VectorService {
         return runTrx { vectorDAO.recuperarTodos() }
     }*/
 }
+
+ */

@@ -8,4 +8,5 @@ interface EspecieService {
     fun recuperarTodas(): List<Especie>
     fun especieLider(): Especie
     fun lideres(): List<Especie>
+
 }

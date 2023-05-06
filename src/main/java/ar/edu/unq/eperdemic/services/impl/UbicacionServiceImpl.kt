@@ -2,7 +2,7 @@ package ar.edu.unq.eperdemic.services.impl
 
 import ar.edu.unq.eperdemic.modelo.Random
 import ar.edu.unq.eperdemic.modelo.Ubicacion
-import ar.edu.unq.eperdemic.modelo.Vector
+//import ar.edu.unq.eperdemic.modelo.Vector
 import ar.edu.unq.eperdemic.modelo.exceptions.NoExisteElid
 import ar.edu.unq.eperdemic.modelo.exceptions.NombreDeUbicacionRepetido
 import ar.edu.unq.eperdemic.persistencia.dao.UbicacionDAO

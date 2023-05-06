@@ -1,9 +1,6 @@
 package ar.edu.unq.eperdemic.persistencia.dao
 
-import ar.edu.unq.eperdemic.modelo.*
-import org.springframework.data.jpa.repository.Query
-import org.springframework.data.repository.CrudRepository
-
+/*
 interface VectorDAO: CrudRepository<Vector, Long> {
 
     @Query(
@@ -21,4 +18,4 @@ interface VectorDAO: CrudRepository<Vector, Long> {
     fun guardar(entity : Vector)
     fun actualizar(vector: Vector)
     fun borrar(vector: Vector)*/
-}
+}*/

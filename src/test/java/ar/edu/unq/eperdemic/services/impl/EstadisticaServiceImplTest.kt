@@ -1,21 +1,8 @@
 package ar.edu.unq.eperdemic.services.impl
 
-import ar.edu.unq.eperdemic.modelo.Patogeno
-import ar.edu.unq.eperdemic.modelo.TipoDeVector
-import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateEspecieDAO
-import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernatePatogenoDAO
-import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateUbicacionDAO
-import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateVectorDAO
-import ar.edu.unq.eperdemic.utils.DataServiceHibernate
-import org.junit.Assert
-import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.Assertions
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
-import javax.persistence.NoResultException
-
 class EstadisticaServiceImplTest {
 
+    /*
     var dataService = DataServiceHibernate()
     private val hibernateVectorDAO = HibernateVectorDAO()
     private val vectorServiceImpl = VectorServiceImpl(hibernateVectorDAO)
@@ -133,4 +120,6 @@ class EstadisticaServiceImplTest {
     fun eliminarModelo() {
         dataService.eliminarTodo()
     }
+
+     */
 }

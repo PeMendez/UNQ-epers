@@ -1,17 +1,8 @@
 package ar.edu.unq.eperdemic.utils
 
-import ar.edu.unq.eperdemic.modelo.*
-import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateDataDAO
-import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernatePatogenoDAO
-import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateUbicacionDAO
-import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateVectorDAO
-import ar.edu.unq.eperdemic.services.impl.PatogenoServiceImpl
-import ar.edu.unq.eperdemic.services.impl.UbicacionServiceImpl
-import ar.edu.unq.eperdemic.services.impl.VectorServiceImpl
-import ar.edu.unq.eperdemic.services.runner.TransactionRunner.runTrx
-
 class DataServiceHibernate : DataService {
 
+    /*
     val hibernateDao = HibernateDataDAO()
 
     val patogenoDAO = HibernatePatogenoDAO()
@@ -104,5 +95,7 @@ class DataServiceHibernate : DataService {
             hibernateDao.clear()
         }
     }
+
+    */
 
 }

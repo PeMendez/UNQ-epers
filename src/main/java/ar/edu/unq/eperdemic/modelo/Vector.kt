@@ -2,6 +2,7 @@ package ar.edu.unq.eperdemic.modelo
 
 import javax.persistence.*
 
+
 @Entity
 class Vector(var tipo: TipoDeVector,
              @ManyToOne
@@ -14,20 +15,22 @@ class Vector(var tipo: TipoDeVector,
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null
-
-    fun intentarInfectar(vectorInfectado: Vector, especie: Especie) {
-        if (esContagioExitoso(vectorInfectado,especie)) {
-            vectorInfectado.mutar(especie)
-            this.infectarCon(especie)
+    /*
+        fun intentarInfectar(vectorInfectado: Vector, especie: Especie) {
+            if (esContagioExitoso(vectorInfectado,especie)) {
+                vectorInfectado.mutar(especie)
+                this.infectarCon(especie)
+            }
         }
-    }
 
-    private fun mutar(especie: Especie) : Boolean {
-        if (esMutacionExitosa(especie)){
-            mutaciones.add()
+        private fun mutar(especie: Especie) : Boolean {
+            if (esMutacionExitosa(especie)){
+                mutaciones.add()
+            }
+            return Random.decidir(100) < especie.capacidadDeBiomecanizacion()
         }
-        return Random.decidir(100) < especie.capacidadDeBiomecanizacion()
-    }
+
+     */
 
     private fun esMutacionExitosa(especie: Especie): Boolean {
         return Random.decidir(100) < especie.capacidadDeBiomecanizacion()
@@ -81,4 +84,6 @@ enum class TipoDeVector {
         }
     };
     abstract fun puedeSerInfectado(vector: TipoDeVector): Boolean
+
+
 }
