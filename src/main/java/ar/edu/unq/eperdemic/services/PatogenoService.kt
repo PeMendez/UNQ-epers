@@ -2,6 +2,7 @@ package ar.edu.unq.eperdemic.services
 
 import ar.edu.unq.eperdemic.modelo.Especie
 import ar.edu.unq.eperdemic.modelo.Patogeno
+import org.springframework.stereotype.Service
 
 interface PatogenoService {
     fun crearPatogeno(patogeno: Patogeno): Patogeno

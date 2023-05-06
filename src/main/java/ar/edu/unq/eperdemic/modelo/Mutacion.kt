@@ -2,6 +2,7 @@ package ar.edu.unq.eperdemic.modelo
 
 import javax.persistence.*
 
+@Entity
 class Mutacion() {
 
     @Id
@@ -9,7 +10,7 @@ class Mutacion() {
     val id : Long? = null
     lateinit var tipoDeMutacion: TipoDeMutacion
     @ManyToOne
-    var especieId: Long? = null
+    lateinit var especie: Especie
     lateinit var tipoDeVector : TipoDeVector
     var poderDeMutacion: Int =  Random.decidir(100)
 }
