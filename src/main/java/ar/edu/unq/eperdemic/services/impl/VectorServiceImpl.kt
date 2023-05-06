@@ -24,6 +24,7 @@ class VectorServiceImpl(): VectorService {
     private lateinit var vectorDAO: VectorDAO
     @Autowired
     private lateinit var ubicacionDAO: UbicacionDAO
+
     override fun contagiar(vectorInfectado: Vector, vectores: List<Vector>) {
         vectores.forEach { v ->
             intentarInfectarConEspeciesDeVector(v,vectorInfectado)
