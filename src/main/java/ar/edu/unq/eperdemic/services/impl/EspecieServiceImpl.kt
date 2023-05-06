@@ -7,6 +7,7 @@ import ar.edu.unq.eperdemic.persistencia.dao.EspecieDAO
 import ar.edu.unq.eperdemic.services.EspecieService
 import ar.edu.unq.eperdemic.services.runner.TransactionRunner.runTrx
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.util.NoSuchElementException
@@ -18,7 +19,7 @@ class EspecieServiceImpl() : EspecieService {
     @Autowired
     private lateinit var especieDAO: EspecieDAO
     override fun recuperarEspecie(id: Long): Especie {
-        TODO("Not yet implemented")
+        return especieDAO.findByIdOrNull(id)?: throw NoExisteElid("el id buscado no existe en la base de datos")
     }
 
     override fun cantidadDeInfectados(especieId: Long): Int {

@@ -5,18 +5,27 @@ import ar.edu.unq.eperdemic.modelo.Patogeno
 import ar.edu.unq.eperdemic.modelo.TipoDeVector
 import ar.edu.unq.eperdemic.modelo.exceptions.NoExisteElid
 import ar.edu.unq.eperdemic.modelo.exceptions.NoExisteUnaEspecieLider
+/*
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateEspecieDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernatePatogenoDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateUbicacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateVectorDAO
-import ar.edu.unq.eperdemic.utils.DataServiceHibernate
-import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.Assertions
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
+*/
+import ar.edu.unq.eperdemic.utils.DataService
+import org.junit.jupiter.api.*
+//import ar.edu.unq.eperdemic.utils.DataServiceHibernate
+import org.junit.jupiter.api.extension.ExtendWith
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.test.context.junit.jupiter.SpringExtension
 
+
+@ExtendWith(SpringExtension::class)
+@SpringBootTest
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class EspecieServiceImplTest {
 
+    /*
     private val hibernateEspecieDAO = HibernateEspecieDAO()
     private val especieService = EspecieServiceImpl(hibernateEspecieDAO)
 
@@ -30,7 +39,10 @@ class EspecieServiceImplTest {
 
     private val vectorDAO = HibernateVectorDAO()
     private val vectorServiceImpl = VectorServiceImpl(vectorDAO)
+*/
 
+    @Autowired
+    private lateinit var dataService: DataService
 
     @BeforeEach
     fun crearModelo() {

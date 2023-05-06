@@ -5,6 +5,7 @@ import ar.edu.unq.eperdemic.modelo.Vector
 import ar.edu.unq.eperdemic.modelo.exceptions.NoExisteElid
 import ar.edu.unq.eperdemic.modelo.exceptions.NombreDeUbicacionRepetido
 import ar.edu.unq.eperdemic.persistencia.dao.UbicacionDAO
+import ar.edu.unq.eperdemic.persistencia.dao.VectorDAO
 import ar.edu.unq.eperdemic.services.UbicacionService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.dao.EmptyResultDataAccessException
@@ -18,8 +19,20 @@ import org.springframework.transaction.annotation.Transactional
 class UbicacionServiceImpl(): UbicacionService {
 
     @Autowired private lateinit var ubicacionDAO: UbicacionDAO
+    @Autowired private lateinit var vectorServiceImpl: VectorServiceImpl
+    @Autowired private lateinit var vectorDAO: VectorDAO
+
     override fun mover(vectorId: Long, ubicacionid: Long) {
-        TODO("Not yet implemented")
+        val vector = vectorServiceImpl.recuperarVector(vectorId)
+        if (vector.ubicacion.id!! != ubicacionid) {
+            val ubicacion = ubicacionDAO.findByIdOrNull(ubicacionid)?: throw NoExisteElid("el id buscado no existe en la base de datos")
+            vector.mover(ubicacion)
+            val vectoresEnUbicacion = ubicacionDAO.recuperarVectores(ubicacionid)
+            vectorDAO.save(vector)
+            if (!vector.estaSano()) {
+                vectorServiceImpl.contagiar(vector, vectoresEnUbicacion)
+            }
+        }
     }
 
     override fun expandir(ubicacionId: Long) {

@@ -1,6 +1,8 @@
 package ar.edu.unq.eperdemic.utils
 
+import ar.edu.unq.eperdemic.modelo.Random
 import ar.edu.unq.eperdemic.persistencia.dao.UbicacionDAO
+import ar.edu.unq.eperdemic.persistencia.dao.VectorDAO
 /*
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateDataDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernatePatogenoDAO
@@ -20,6 +22,9 @@ class DataServiceSpring : DataService {
 
     @Autowired
     lateinit var ubicacionDAO: UbicacionDAO
+
+    @Autowired
+    lateinit var vectorDAO: VectorDAO
 
     /*
     val hibernateDao = HibernateDataDAO()
@@ -43,6 +48,7 @@ class DataServiceSpring : DataService {
 
     */
     override fun crearSetDeDatosIniciales() {
+        Random.switchModo(false)
     /*
         runTrx {
             Random.switchModo(false)
@@ -118,6 +124,7 @@ class DataServiceSpring : DataService {
     @Transactional
     override fun eliminarTodo() {
         ubicacionDAO.deleteAll()
+        vectorDAO.deleteAll()
     }
 
 }
