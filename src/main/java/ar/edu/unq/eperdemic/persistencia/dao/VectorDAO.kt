@@ -7,9 +7,13 @@ import org.springframework.data.repository.CrudRepository
 interface VectorDAO: CrudRepository<Vector, Long> {
 
     @Query(
-         "from Vector v where v.ubicacion.id = :ubicacionId "
+        "from Vector v where v.ubicacion.id = :ubicacionId "
     )
     fun findAllByUbicacionId(ubicacionId: Long): List<Vector>
+
+    @Query("select e from Vector v inner join v.especies e where v.id = :vectorId")
+    fun findEnfermedades(vectorId: Long): List<Especie>
+
     /*fun enfermedades(vectorID: Long) : List<Especie>
     fun crearVector(vector: Vector): Vector
     fun recuperarVector(vectorId: Long): Vector
