@@ -1,4 +1,4 @@
-package ar.edu.unq.eperdemic.spring
+package ar.edu.unq.eperdemic
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication

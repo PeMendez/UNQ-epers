@@ -4,7 +4,6 @@ import ar.edu.unq.eperdemic.modelo.Especie
 import ar.edu.unq.eperdemic.modelo.exceptions.NoExisteElid
 import ar.edu.unq.eperdemic.modelo.exceptions.NoExisteUnaEspecieLider
 import ar.edu.unq.eperdemic.persistencia.dao.EspecieDAO
-import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateEspecieDAO
 import ar.edu.unq.eperdemic.services.EspecieService
 import ar.edu.unq.eperdemic.services.runner.TransactionRunner.runTrx
 import org.springframework.beans.factory.annotation.Autowired
