@@ -2,14 +2,12 @@ package ar.edu.unq.eperdemic.services.impl
 
 import ar.edu.unq.eperdemic.modelo.Especie
 import ar.edu.unq.eperdemic.modelo.ReporteDeContagios
-import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateEspecieDAO
-import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateUbicacionDAO
 import ar.edu.unq.eperdemic.services.EstadisticaService
 import ar.edu.unq.eperdemic.services.runner.TransactionRunner.runTrx
 
 class EstadisticaServiceImpl : EstadisticaService {
 
-    val especieDAO = HibernateEspecieDAO()
+    /*val especieDAO = HibernateEspecieDAO()
     val ubicacionDAO = HibernateUbicacionDAO()
 
     override fun especieLider(): Especie {
@@ -29,6 +27,17 @@ class EstadisticaServiceImpl : EstadisticaService {
             val reporte = ReporteDeContagios(cantidadVectores, cantidadInfectados, especieLider.nombre)
             reporte
         }
+    }*/
+    override fun especieLider(): Especie {
+        TODO("Not yet implemented")
+    }
+
+    override fun lideres(): List<Especie> {
+        TODO("Not yet implemented")
+    }
+
+    override fun reporteDeContagios(nombreDeLaUbicacion: String): ReporteDeContagios {
+        TODO("Not yet implemented")
     }
 
 }

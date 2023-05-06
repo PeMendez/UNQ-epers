@@ -3,14 +3,40 @@ package ar.edu.unq.eperdemic.services.impl
 import ar.edu.unq.eperdemic.modelo.Especie
 import ar.edu.unq.eperdemic.modelo.exceptions.NoExisteElid
 import ar.edu.unq.eperdemic.modelo.exceptions.NoExisteUnaEspecieLider
-import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateEspecieDAO
+import ar.edu.unq.eperdemic.persistencia.dao.EspecieDAO
 import ar.edu.unq.eperdemic.services.EspecieService
 import ar.edu.unq.eperdemic.services.runner.TransactionRunner.runTrx
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import java.util.NoSuchElementException
 
-class EspecieServiceImpl(val hibernateEspecieDAO: HibernateEspecieDAO) : EspecieService {
+@Service
+@Transactional
+class EspecieServiceImpl() : EspecieService {
 
+    @Autowired
+    private lateinit var especieDAO: EspecieDAO
     override fun recuperarEspecie(id: Long): Especie {
+        TODO("Not yet implemented")
+    }
+
+    override fun cantidadDeInfectados(especieId: Long): Int {
+        TODO("Not yet implemented")
+    }
+
+    override fun recuperarTodas(): List<Especie> {
+        TODO("Not yet implemented")
+    }
+
+    override fun especieLider(): Especie {
+        TODO("Not yet implemented")
+    }
+
+    override fun lideres(): List<Especie> {
+        TODO("Not yet implemented")
+    }
+    /*override fun recuperarEspecie(id: Long): Especie {
         return runTrx { hibernateEspecieDAO.recuperar(id)?: throw NoExisteElid("el id buscado no existe en la base de datos") }
     }
 
@@ -37,6 +63,6 @@ class EspecieServiceImpl(val hibernateEspecieDAO: HibernateEspecieDAO) : Especie
 
     override fun lideres(): List<Especie> {
         return runTrx { hibernateEspecieDAO.lideres() }
-    }
+    }*/
 
 }

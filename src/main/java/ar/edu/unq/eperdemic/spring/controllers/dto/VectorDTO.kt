@@ -1,22 +1,27 @@
 package ar.edu.unq.eperdemic.spring.controllers.dto
 
+import ar.edu.unq.eperdemic.modelo.TipoDeVector
 import ar.edu.unq.eperdemic.modelo.Ubicacion
+import ar.edu.unq.eperdemic.modelo.Vector
 
-class VectorDTO(val tipoDeVector : TipoDeVector,
-                        val ubicacion: Ubicacion) {
+class VectorDTO(
+    val tipoDeVector : TipoDeVector,
+    val ubicacion: Ubicacion) {
 
-    enum class TipoDeVector {
-        Persona, Insecto, Animal
+
+    fun aModelo() : Vector {
+        return Vector(this.tipoDeVector, this.ubicacion)
     }
 
-//    TODO: implementar aModelo
-//    fun aModelo() : Vector {
-//        return null
-//    }
 
-//    TODO: implementar desdeModelo
-//    companion object {
-//        fun desdeModelo(Vector:vector) = null
-//    }
+    companion object {
+        fun desdeModelo(vector: Vector) =
+            VectorDTO(
+                tipoDeVector = vector.tipo,
+                ubicacion = vector.ubicacion
+            )
+   }
+
+
 
 }

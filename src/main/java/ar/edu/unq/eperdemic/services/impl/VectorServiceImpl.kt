@@ -4,15 +4,56 @@ import ar.edu.unq.eperdemic.modelo.Especie
 import ar.edu.unq.eperdemic.modelo.TipoDeVector
 import ar.edu.unq.eperdemic.modelo.Vector
 import ar.edu.unq.eperdemic.modelo.exceptions.NoExisteElid
+import ar.edu.unq.eperdemic.persistencia.dao.PatogenoDAO
 import ar.edu.unq.eperdemic.persistencia.dao.VectorDAO
-import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateEspecieDAO
-import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateUbicacionDAO
 import ar.edu.unq.eperdemic.services.VectorService
 import ar.edu.unq.eperdemic.services.runner.TransactionRunner.runTrx
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
-class VectorServiceImpl(private val vectorDAO: VectorDAO): VectorService {
+@Service
+@Transactional
+class VectorServiceImpl(): VectorService {
 
-    val hibernateUbicacionDAO = HibernateUbicacionDAO()
+    @Autowired
+    private lateinit var vectorDAO: VectorDAO
+    override fun contagiar(vectorInfectado: Vector, vectores: List<Vector>) {
+        TODO("Not yet implemented")
+    }
+
+    override fun intentarInfectarConEspeciesDeVector(vectorAInfectar: Vector, vectorInfectado: Vector) {
+        TODO("Not yet implemented")
+    }
+
+    override fun infectar(vector: Vector, especie: Especie) {
+        TODO("Not yet implemented")
+    }
+
+    override fun enfermedades(vectorId: Long): List<Especie> {
+        TODO("Not yet implemented")
+    }
+
+    override fun crearVector(tipo: TipoDeVector, ubicacionId: Long): Vector {
+        TODO("Not yet implemented")
+    }
+
+    override fun recuperarVector(vectorId: Long): Vector {
+        TODO("Not yet implemented")
+    }
+
+    override fun borrarVector(vectorId: Long) {
+        TODO("Not yet implemented")
+    }
+
+    override fun recuperarTodos(): List<Vector> {
+        TODO("Not yet implemented")
+    }
+
+    override fun findAllByUbicacionId(ubicacionId: Long): List<Vector> {
+        return vectorDAO.findAllByUbicacionId(ubicacionId)
+    }
+    /*val hibernateUbicacionDAO = HibernateUbicacionDAO()
     val especieDAO = HibernateEspecieDAO()
 
     override fun contagiar(vectorInfectado: Vector, vectores: List<Vector>) {
@@ -80,5 +121,5 @@ class VectorServiceImpl(private val vectorDAO: VectorDAO): VectorService {
 
     override fun recuperarTodos(): List<Vector> {
         return runTrx { vectorDAO.recuperarTodos() }
-    }
+    }*/
 }
