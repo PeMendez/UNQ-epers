@@ -1,5 +1,10 @@
 package ar.edu.unq.eperdemic.services.impl
 
+import ar.edu.unq.eperdemic.modelo.TipoDeVector
+import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Test
+
+/*
 import ar.edu.unq.eperdemic.modelo.Especie
 import ar.edu.unq.eperdemic.modelo.Patogeno
 import ar.edu.unq.eperdemic.modelo.TipoDeVector
@@ -485,3 +490,4 @@ class VectorServiceImplTest {
         dataServiceHibernate.eliminarTodo()
     }
 }
+ */

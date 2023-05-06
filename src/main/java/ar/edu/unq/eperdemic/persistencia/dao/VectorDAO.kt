@@ -5,6 +5,11 @@ import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.CrudRepository
 
 interface VectorDAO: CrudRepository<Vector, Long> {
+<<<<<<<<< Temporary merge branch 1
+    @Query("select e from Vector v inner join v.especies e where v.id = :vectorId")
+    fun findEnfermedades(vectorId: Long): List<Especie>
+
+=========
 
     @Query(
         "from Vector v where v.ubicacion.id = :ubicacionId "
