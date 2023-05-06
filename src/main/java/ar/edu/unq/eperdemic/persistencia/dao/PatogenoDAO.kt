@@ -1,5 +1,5 @@
 package ar.edu.unq.eperdemic.persistencia.dao
-
+/*
 import ar.edu.unq.eperdemic.modelo.Especie
 import ar.edu.unq.eperdemic.modelo.Patogeno
 import org.springframework.data.jpa.repository.Query
@@ -13,3 +13,5 @@ interface PatogenoDAO: CrudRepository<Patogeno, Long> {
      @Query("select countdistinct(v.ubicacion) > ((select count(*) from Ubicacion ub) / 2) from Vector v join v.especies e  where e.id = :idBuscado")
      fun esPandemia(especieId: Long): Boolean
 }
+
+ */

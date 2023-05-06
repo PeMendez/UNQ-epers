@@ -1,6 +1,7 @@
 package ar.edu.unq.eperdemic.utils
 
-import ar.edu.unq.eperdemic.modelo.*
+import ar.edu.unq.eperdemic.persistencia.dao.UbicacionDAO
+/*
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateDataDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernatePatogenoDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateUbicacionDAO
@@ -8,10 +9,19 @@ import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateVectorDAO
 import ar.edu.unq.eperdemic.services.impl.PatogenoServiceImpl
 import ar.edu.unq.eperdemic.services.impl.UbicacionServiceImpl
 import ar.edu.unq.eperdemic.services.impl.VectorServiceImpl
-import ar.edu.unq.eperdemic.services.runner.TransactionRunner.runTrx
+*/
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
-class DataServiceHibernate : DataService {
+@Service
+@Transactional
+class DataServiceSpring : DataService {
 
+    @Autowired
+    lateinit var ubicacionDAO: UbicacionDAO
+
+    /*
     val hibernateDao = HibernateDataDAO()
 
     val patogenoDAO = HibernatePatogenoDAO()
@@ -31,7 +41,9 @@ class DataServiceHibernate : DataService {
 
 
 
+    */
     override fun crearSetDeDatosIniciales() {
+    /*
         runTrx {
             Random.switchModo(false)
             val listaPatogenosCreados = crearPatogenos()
@@ -39,7 +51,10 @@ class DataServiceHibernate : DataService {
             crearVectores(listaDeUbicacionesCreadas)
 
             crearEspecies(listaPatogenosCreados, listaDeUbicacionesCreadas)
+            */
         }
+
+        /*
     }
     private fun crearPatogenos(): List<Patogeno> {
         val patogeno1Creado = patogenoService.crearPatogeno(patogeno1)
@@ -97,12 +112,12 @@ class DataServiceHibernate : DataService {
         patogenoService.agregarEspecie(listaDePatogenos[1].id!!, "especie11", listaDeUbicaciones[2].id!!)
 
     }
+    */
 
 
+    @Transactional
     override fun eliminarTodo() {
-        runTrx {
-            hibernateDao.clear()
-        }
+        ubicacionDAO.deleteAll()
     }
 
 }

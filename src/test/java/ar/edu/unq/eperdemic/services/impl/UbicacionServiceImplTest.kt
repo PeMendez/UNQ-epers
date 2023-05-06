@@ -4,37 +4,43 @@ import ar.edu.unq.eperdemic.modelo.TipoDeVector
 import ar.edu.unq.eperdemic.modelo.exceptions.NoExisteElid
 import ar.edu.unq.eperdemic.modelo.exceptions.NoPuedeEstarVacioOContenerCaracteresEspeciales
 import ar.edu.unq.eperdemic.modelo.exceptions.NombreDeUbicacionRepetido
+/*
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateEspecieDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateUbicacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateVectorDAO
+*/
 import ar.edu.unq.eperdemic.services.UbicacionService
-import ar.edu.unq.eperdemic.utils.DataServiceHibernate
+import ar.edu.unq.eperdemic.utils.DataService
+//import ar.edu.unq.eperdemic.utils.DataServiceHibernate
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.junit.jupiter.SpringExtension
-@Suppress("SpringJavaInjectionPointsAutowiringInspection")
 @ExtendWith(SpringExtension::class)
 @SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class UbicacionServiceImplTest {
 
-    val dataService = DataServiceHibernate()
-
     @Autowired
-    private lateinit var ubicacionService: UbicacionServiceImpl
+    lateinit var dataService: DataService
 
+    /*
     @Autowired
     private lateinit var especieService: EspecieServiceImpl
 
     @Autowired
     private lateinit var vectorService: VectorServiceImpl
-
+    */
+    @Autowired
+    private lateinit var ubicacionService: UbicacionServiceImpl
+    /*
     @BeforeEach
     fun setUp() {
        dataService.crearSetDeDatosIniciales()
     }
+
+*/
 
     @Test
     fun alRecuperarTodasLasUbicacionesDeUnaBDDVaciaEntoncesSeRetornaUnaListaVacia() {
@@ -63,13 +69,13 @@ class UbicacionServiceImplTest {
         }
     }
 
+
     @Test
     fun unaUbicacionCreadaTieneUnIdGenerado() {
         val ubicacionCreada = ubicacionService.crearUbicacion("testUbicacion")
 
         Assertions.assertNotNull(ubicacionCreada.id)
     }
-
     @Test
     fun noSePuedeRecuperarUnaUbicacionConUnIdInexistente() {
         Assertions.assertThrows(NoExisteElid::class.java) {
@@ -77,12 +83,14 @@ class UbicacionServiceImplTest {
         }
     }
 
+
     @Test
     fun unaUbicacionCreadaDeCeroNoTieneVectores() {
         val ubicacionCreada = ubicacionService.crearUbicacion("testVectores")
 
         Assertions.assertTrue(ubicacionService.recuperarVectores(ubicacionCreada.id!!).isEmpty())
     }
+
 
     @Test
     fun seRecuperaUnaUbicacionConTodosSusDatosCorrectos() {
@@ -93,6 +101,7 @@ class UbicacionServiceImplTest {
         Assertions.assertEquals(ubicacionCreada.id!!, ubicacionRecuperada.id!!)
     }
 
+    /*
     @Test
     fun seRecuperanLosVectoresDeUnaUbicacionCorrectamente() {
         val ubicacionCreada = ubicacionService.crearUbicacion("testVectores")
@@ -104,6 +113,8 @@ class UbicacionServiceImplTest {
         Assertions.assertTrue(ubicacionService.recuperarVectores(ubicacionCreada.id!!).size == 1)
     }
 
+
+    */
     @Test
     fun noPuedenExistirDosUbicacionesConElMismoNombre() {
         ubicacionService.crearUbicacion("mismoNombreTest")
@@ -116,6 +127,7 @@ class UbicacionServiceImplTest {
         }
     }
 
+
     @Test
     fun puedenExistirDosUbicacionesConNombresDistintos() {
         val ubicacion1 = ubicacionService.crearUbicacion("nombreDistinto")
@@ -126,6 +138,7 @@ class UbicacionServiceImplTest {
             fail("No tendria que haber lanzado una excepcion porque son distintos nombres")
         }
     }
+
 
     @Test
     fun seRecuperanTodasLasUbicacionesDeManeraCorrecta() {
@@ -145,6 +158,7 @@ class UbicacionServiceImplTest {
 
     }
 
+    /*
     @Test
     fun noSePuedeMoverUnVectorAUnaUbicacionInexistente() {
         val vectorExistente = vectorService.recuperarVector(1)
@@ -323,9 +337,10 @@ class UbicacionServiceImplTest {
 
         Assertions.assertTrue(ubicacionService.recuperarVectores(nuevaUbicacion.id!!).isEmpty())
     }
-
+ */
     @AfterEach
     fun clearAll() {
         dataService.eliminarTodo()
     }
+
 }

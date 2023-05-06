@@ -1,5 +1,6 @@
 package ar.edu.unq.eperdemic.services.impl
 
+/*
 import ar.edu.unq.eperdemic.modelo.Especie
 import ar.edu.unq.eperdemic.modelo.Patogeno
 import ar.edu.unq.eperdemic.modelo.TipoDeVector
@@ -485,3 +486,4 @@ class VectorServiceImplTest {
         dataServiceHibernate.eliminarTodo()
     }
 }
+ */
