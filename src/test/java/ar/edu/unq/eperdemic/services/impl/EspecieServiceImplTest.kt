@@ -1,6 +1,7 @@
 package ar.edu.unq.eperdemic.services.impl
 
 import ar.edu.unq.eperdemic.modelo.exceptions.NoExisteElid
+import ar.edu.unq.eperdemic.modelo.exceptions.NoExisteUnaEspecieLider
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -68,18 +69,7 @@ class EspecieServiceImplTest {
         }
     }
 
-
-}
-
-
-
-
-
-
-    /*
-
-
-@Test
+    @Test
     fun alNoHaberEspeciesEnLaBDDEntoncesNoHayEspecieLider() {
         Assertions.assertThrows(NoExisteUnaEspecieLider::class.java) {
             especieService.especieLider()
@@ -87,9 +77,12 @@ class EspecieServiceImplTest {
     }
 
 
+}
 
 
-     */
+
+
+
 
 /*
 @Test
