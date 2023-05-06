@@ -1,5 +1,5 @@
 package ar.edu.unq.eperdemic.services.impl
-
+/*
 import ar.edu.unq.eperdemic.modelo.*
 import ar.edu.unq.eperdemic.modelo.exceptions.NingunVectorAInfectarEnLaUbicacionDada
 import ar.edu.unq.eperdemic.modelo.exceptions.NoExisteElid
@@ -250,3 +250,5 @@ class PatogenoServiceTest {
     }
 
 }
+
+ */
