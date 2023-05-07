@@ -21,7 +21,7 @@ class EspecieServiceImplTest {
     private val hibernateEspecieDAO = HibernateEspecieDAO()
     private val especieService = EspecieServiceImpl(hibernateEspecieDAO)
 
-
+    private var dataService = DataServiceHibernate()
 
     private val patogenoDAO = HibernatePatogenoDAO()
     private val patogenoService = PatogenoServiceImpl(patogenoDAO)

@@ -13,8 +13,8 @@ class Especie() {
     lateinit var patogeno: Patogeno
     lateinit var nombre: String
     lateinit var paisDeOrigen: String
-    //@OneToMany(mappedBy = "especie", cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
-    //var mutaciones: MutableSet<Mutacion> = HashSet()
+    @OneToMany(mappedBy = "especie", cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
+    var mutaciones: MutableSet<Mutacion> = HashSet()
 
 
     constructor(pathogen: Patogeno, name: String, pais: String ): this() {
@@ -29,12 +29,11 @@ class Especie() {
         }
     }
 
-    fun capacidadDeContagio(): Int{
-        return patogeno.capacidadDeContagio
+    fun capacidadDeBiomecanizacion(): Int {
+        return this.patogeno.getCapacidadDeBiomecanizacion()
     }
-
-    fun capacidadDeBiomecanizacion(): Int{
-        return patogeno.capacidadDeBiomecanizacion
+    fun capacidadDeDefensa(): Int {
+        return this.patogeno.getCapacidadDeDefensa()
     }
 
 }

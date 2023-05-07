@@ -5,6 +5,7 @@ import ar.edu.unq.eperdemic.modelo.Especie
 import ar.edu.unq.eperdemic.modelo.Patogeno
 import ar.edu.unq.eperdemic.modelo.exceptions.NingunVectorAInfectarEnLaUbicacionDada
 import ar.edu.unq.eperdemic.modelo.exceptions.NoExisteElid
+import ar.edu.unq.eperdemic.persistencia.dao.EspecieDAO
 import ar.edu.unq.eperdemic.persistencia.dao.PatogenoDAO
 import ar.edu.unq.eperdemic.persistencia.dao.UbicacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.VectorDAO
@@ -22,7 +23,8 @@ class PatogenoServiceImpl : PatogenoService {
     private val diosito = Random
     @Autowired private lateinit var ubicacionDAO: UbicacionDAO
     @Autowired private lateinit var vectorDAO: VectorDAO
-    private var vectorServiceImpl = VectorServiceImpl()
+    @Autowired private lateinit var vectorService: VectorServiceImpl
+    @Autowired private lateinit var especieDAO: EspecieDAO
 
 
     override fun crearPatogeno(patogeno: Patogeno): Patogeno {
@@ -46,7 +48,8 @@ class PatogenoServiceImpl : PatogenoService {
             throw NingunVectorAInfectarEnLaUbicacionDada("No hay ningún vector en la ubicación dada")
         }
         val especie = patogeno.crearEspecie(nombre, ubicacion.nombre)
-        vectorServiceImpl.infectar(vectorAInfectar, especie)
+        especieDAO.save(especie)
+        vectorService.infectar(vectorAInfectar, especie)
         return especie
     }
 

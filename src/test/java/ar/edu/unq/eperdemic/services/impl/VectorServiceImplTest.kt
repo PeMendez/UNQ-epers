@@ -1,8 +1,25 @@
 package ar.edu.unq.eperdemic.services.impl
 
+import ar.edu.unq.eperdemic.modelo.TipoDeVector
+import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Test
+
+/*
+import ar.edu.unq.eperdemic.modelo.Especie
+import ar.edu.unq.eperdemic.modelo.Patogeno
+import ar.edu.unq.eperdemic.modelo.TipoDeVector
+import ar.edu.unq.eperdemic.modelo.Vector
+import ar.edu.unq.eperdemic.modelo.exceptions.NoExisteElid
+import ar.edu.unq.eperdemic.modelo.exceptions.NoPuedeEstarVacioOContenerCaracteresEspeciales
+import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateEspecieDAO
+import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernatePatogenoDAO
+import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateUbicacionDAO
+import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateVectorDAO
+import ar.edu.unq.eperdemic.utils.DataServiceHibernate
+import org.junit.jupiter.api.*
+
 class VectorServiceImplTest {
 
-    /*
     private val hibernateVectorDAO = HibernateVectorDAO()
     private val hibernateUbicacionDAO = HibernateUbicacionDAO()
     private val hibernateEspecieDAO = HibernateEspecieDAO()
@@ -472,6 +489,5 @@ class VectorServiceImplTest {
     fun eliminarModelo() {
         dataServiceHibernate.eliminarTodo()
     }
-
-     */
 }
+ */

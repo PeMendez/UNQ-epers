@@ -12,6 +12,15 @@ object Random {
                 }
     }
 
+    fun decidirTipo(limiteFinal: Int): TipoDeVector{
+        val tipos = TipoDeVector.values()
+        return if (esRandom){
+            tipos.get((1..limiteFinal).random())
+        } else {
+            tipos.get(limiteFinal)
+        }
+    }
+
     fun switchModo(esRandom: Boolean) {
          this.esRandom = esRandom
     }
