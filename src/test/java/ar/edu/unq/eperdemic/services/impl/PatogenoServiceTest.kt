@@ -1,22 +1,30 @@
 package ar.edu.unq.eperdemic.services.impl
-/*
+
 import ar.edu.unq.eperdemic.modelo.*
 import ar.edu.unq.eperdemic.modelo.exceptions.NingunVectorAInfectarEnLaUbicacionDada
 import ar.edu.unq.eperdemic.modelo.exceptions.NoExisteElid
 import ar.edu.unq.eperdemic.modelo.exceptions.NoPuedeEstarVacioOContenerCaracteresEspeciales
-import ar.edu.unq.eperdemic.persistencia.dao.hibernate.*
-import ar.edu.unq.eperdemic.utils.DataServiceHibernate
+import ar.edu.unq.eperdemic.utils.DataService
 import org.junit.jupiter.api.*
+import org.junit.jupiter.api.extension.ExtendWith
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.test.context.junit.jupiter.SpringExtension
 
+@ExtendWith(SpringExtension::class)
+@SpringBootTest
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class PatogenoServiceTest {
 
-    private val hibernatePatogenoDAO = HibernatePatogenoDAO()
-    private val patogenoService = PatogenoServiceImpl(hibernatePatogenoDAO)
-    private var dataService = DataServiceHibernate()
-    private val hibernateVectorDAO = HibernateVectorDAO()
-    private val vectorServiceImpl = VectorServiceImpl(hibernateVectorDAO)
-    private val ubicacionDAO = HibernateUbicacionDAO()
-    private val ubicacionService = UbicacionServiceImpl(ubicacionDAO)
+
+    @Autowired
+    private lateinit var dataService: DataService
+    @Autowired
+    private lateinit var vectorService: VectorServiceImpl
+    @Autowired
+    private lateinit var ubicacionService: UbicacionServiceImpl
+    @Autowired
+    private lateinit var patogenoService: PatogenoServiceImpl
     private var patogenoVirusCruciartus = Patogeno("VirusCruciartus")
     private lateinit var patogenoMalDeDragon: Patogeno
     private lateinit var ubicacionPrivateDrive: Ubicacion
@@ -31,7 +39,7 @@ class PatogenoServiceTest {
         dataService.crearSetDeDatosIniciales()
         patogenoMalDeDragon = patogenoService.crearPatogeno(Patogeno("MalDeDragon"))
         ubicacionPrivateDrive = ubicacionService.crearUbicacion("PrivateDrive")
-        vectorHarryPotter = vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionPrivateDrive.id!!)
+        vectorHarryPotter = vectorService.crearVector(TipoDeVector.Persona, ubicacionPrivateDrive.id!!)
         ubicacionLaMadriguera = ubicacionService.crearUbicacion("ubicacionLaMadriguera")
 
     }
@@ -60,7 +68,7 @@ class PatogenoServiceTest {
     @Test
     fun seIntentaRecuperarUnPatogenoInexistente(){
 
-        val ex = assertThrows<NoExisteElid> { patogenoService.recuperarPatogeno(10)  }
+        val ex = assertThrows<NoExisteElid> { patogenoService.recuperarPatogeno(-10)  }
 
         Assertions.assertEquals("el id buscado no existe en la base de datos", ex.message)
     }
@@ -88,7 +96,7 @@ class PatogenoServiceTest {
 
         val ex = assertThrows<NoExisteElid> { patogenoService.agregarEspecie(patogenoMalDeDragon.id!!,"EspecieImperius", 400)  }
 
-        Assertions.assertEquals("La ubicacion no existe en la base de datos", ex.message)
+        Assertions.assertEquals("No existe la ubicacion", ex.message)
     }
 
     @Test
@@ -124,10 +132,10 @@ class PatogenoServiceTest {
         dataService.eliminarTodo()
 
         val ubicacionHogsmeade = ubicacionService.crearUbicacion("ubicacionHogsmeade")
-        vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionHogsmeade.id!!)
+        vectorService.crearVector(TipoDeVector.Persona, ubicacionHogsmeade.id!!)
 
         Assertions.assertThrows(NoExisteElid::class.java) {
-            patogenoService.agregarEspecie(patogenoMalDeDragon.id!!, "unNombreEspecie", ubicacionHogsmeade.id!!)
+            patogenoService.agregarEspecie(-10, "unNombreEspecie", ubicacionHogsmeade.id!!)
         }
     }
 
@@ -143,12 +151,12 @@ class PatogenoServiceTest {
         dataService.eliminarTodo()
         patogenoMalDeDragon = patogenoService.crearPatogeno(Patogeno("MalDeDragon"))
         ubicacionPrivateDrive = ubicacionService.crearUbicacion("PrivateDrive")
-        vectorHarryPotter = vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionPrivateDrive.id!!)
+        vectorHarryPotter = vectorService.crearVector(TipoDeVector.Persona, ubicacionPrivateDrive.id!!)
         ubicacionLaMadriguera = ubicacionService.crearUbicacion("ubicacionLaMadriguera")
-        vectorRonWeasley = vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionLaMadriguera.id!!)
+        vectorRonWeasley = vectorService.crearVector(TipoDeVector.Persona, ubicacionLaMadriguera.id!!)
         val especieImperius = patogenoService.agregarEspecie(patogenoMalDeDragon.id!!, "EspecieImperius", ubicacionPrivateDrive.id!!)
 
-        vectorServiceImpl.infectar(vectorRonWeasley, especieImperius)
+        vectorService.infectar(vectorRonWeasley, especieImperius)
 
         Assertions.assertTrue(patogenoService.esPandemia((especieImperius.id!!)))
 
@@ -214,7 +222,7 @@ class PatogenoServiceTest {
 
         val especieImperius = patogenoService.agregarEspecie(patogenoMalDeDragon.id!!, "Imperius", ubicacionPrivateDrive.id!!)
 
-        val vectorHarryPotterEnfermo = vectorServiceImpl.recuperarVector(vectorHarryPotter.id!!)
+        val vectorHarryPotterEnfermo = vectorService.recuperarVector(vectorHarryPotter.id!!)
 
         Assertions.assertTrue(vectorHarryPotterEnfermo.tieneEfermedad(especieImperius.id!!))
     }
@@ -236,4 +244,3 @@ class PatogenoServiceTest {
 
 }
 
- */

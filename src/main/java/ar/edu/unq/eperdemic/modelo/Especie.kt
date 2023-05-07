@@ -29,12 +29,11 @@ class Especie() {
         }
     }
 
-    fun capacidadDeContagio(): Int{
-        return patogeno.capacidadDeContagio
+    fun capacidadDeBiomecanizacion(): Int {
+        return this.patogeno.getCapacidadDeBiomecanizacion()
     }
-
-    fun capacidadDeBiomecanizacion(): Int{
-        return patogeno.capacidadDeBiomecanizacion
+    fun capacidadDeDefensa(): Int {
+        return this.patogeno.getCapacidadDeDefensa()
     }
 
 }

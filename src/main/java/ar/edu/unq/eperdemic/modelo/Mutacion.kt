@@ -11,11 +11,16 @@ class Mutacion() {
     lateinit var tipoDeMutacion: TipoDeMutacion
     @ManyToOne
     lateinit var especie: Especie
-    lateinit var tipoDeVector : TipoDeVector
-    var poderDeMutacion: Int =  Random.decidir(100)
+    var tipoDeVector : TipoDeVector? = null
+    var poderDeMutacion: Int? = null
 }
 
 enum class TipoDeMutacion {
-    Supresion_Biomecanica, Bioalteracion_Genetica,
+    Supresion_Biomecanica{
+        val potenciaDeMutacion: Int = Random.decidir(100)
+                         },
+    Bioalteracion_Genetica{
+        val tipoDeVector: TipoDeVector = Random.decidirTipo(3)
+    }
 }
 

@@ -4,12 +4,12 @@ import ar.edu.unq.eperdemic.modelo.Especie
 import ar.edu.unq.eperdemic.modelo.Patogeno
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.CrudRepository
-
+import org.springframework.stereotype.Repository
+@Repository
 interface PatogenoDAO: CrudRepository<Patogeno, Long> {
+
     @Query("select p.especies from Patogeno p where p.id = :patogenoId")
      fun findAllEspeciesById(patogenoId: Long): List<Especie>
-     /*
-     @Query("select countdistinct(v.ubicacion) > ((select count(*) from Ubicacion ub) / 2) from Vector v join v.especies e  where e.id = :idBuscado")
+     @Query("select count(distinct v.ubicacion) > ((select count(*) from Ubicacion ub) / 2) from Vector v join v.especies e  where e.id = :especieId")
      fun esPandemia(especieId: Long): Boolean
-     */
 }
