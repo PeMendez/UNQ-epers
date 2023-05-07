@@ -19,3 +19,4 @@ interface VectorService {
     fun findAllByUbicacionId(ubicacionId: Long): List<Vector>
 
 }
+

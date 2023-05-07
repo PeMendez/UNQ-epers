@@ -11,11 +11,15 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.junit.jupiter.SpringExtension
 
+
 @ExtendWith(SpringExtension::class)
 @SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class PatogenoServiceTest {
 
+
+    @Autowired
+    private lateinit var vectorServiceImpl: VectorServiceImpl
 
     @Autowired
     private lateinit var dataService: DataService
@@ -36,7 +40,7 @@ class PatogenoServiceTest {
     @BeforeEach
     fun setUp() {
         Random.switchModo(false)
-        dataService.crearSetDeDatosIniciales()
+        //dataService.crearSetDeDatosIniciales()
         patogenoMalDeDragon = patogenoService.crearPatogeno(Patogeno("MalDeDragon"))
         ubicacionPrivateDrive = ubicacionService.crearUbicacion("PrivateDrive")
         vectorHarryPotter = vectorService.crearVector(TipoDeVector.Persona, ubicacionPrivateDrive.id!!)
@@ -153,10 +157,10 @@ class PatogenoServiceTest {
         ubicacionPrivateDrive = ubicacionService.crearUbicacion("PrivateDrive")
         vectorHarryPotter = vectorService.crearVector(TipoDeVector.Persona, ubicacionPrivateDrive.id!!)
         ubicacionLaMadriguera = ubicacionService.crearUbicacion("ubicacionLaMadriguera")
-        vectorRonWeasley = vectorService.crearVector(TipoDeVector.Persona, ubicacionLaMadriguera.id!!)
+        vectorRonWeasley = vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionLaMadriguera.id!!)
         val especieImperius = patogenoService.agregarEspecie(patogenoMalDeDragon.id!!, "EspecieImperius", ubicacionPrivateDrive.id!!)
 
-        vectorService.infectar(vectorRonWeasley, especieImperius)
+        vectorServiceImpl.infectar(vectorRonWeasley, especieImperius)
 
         Assertions.assertTrue(patogenoService.esPandemia((especieImperius.id!!)))
 
@@ -222,7 +226,7 @@ class PatogenoServiceTest {
 
         val especieImperius = patogenoService.agregarEspecie(patogenoMalDeDragon.id!!, "Imperius", ubicacionPrivateDrive.id!!)
 
-        val vectorHarryPotterEnfermo = vectorService.recuperarVector(vectorHarryPotter.id!!)
+        val vectorHarryPotterEnfermo = vectorServiceImpl.recuperarVector(vectorHarryPotter.id!!)
 
         Assertions.assertTrue(vectorHarryPotterEnfermo.tieneEfermedad(especieImperius.id!!))
     }

@@ -137,3 +137,4 @@ class VectorServiceImpl(): VectorService {
         return runTrx { vectorDAO.recuperarTodos() }
     }*/
 }
+
