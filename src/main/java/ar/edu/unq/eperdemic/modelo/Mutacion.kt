@@ -1,6 +1,8 @@
 package ar.edu.unq.eperdemic.modelo
 
+
 import javax.persistence.*
+
 
 @Entity
 class Mutacion() {
@@ -23,4 +25,6 @@ enum class TipoDeMutacion {
         val tipoDeVector: TipoDeVector = Random.decidirTipo(3)
     }
 }
+
+
 

@@ -15,22 +15,22 @@ class Vector(var tipo: TipoDeVector,
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null
-    /*
+
         fun intentarInfectar(vectorInfectado: Vector, especie: Especie) {
             if (esContagioExitoso(vectorInfectado,especie)) {
-                vectorInfectado.mutar(especie)
+                //vectorInfectado.mutar(especie)
                 this.infectarCon(especie)
             }
         }
 
         private fun mutar(especie: Especie) : Boolean {
             if (esMutacionExitosa(especie)){
-                mutaciones.add()
+                //mutaciones.add()
             }
             return Random.decidir(100) < especie.capacidadDeBiomecanizacion()
         }
 
-     */
+
 
     private fun esMutacionExitosa(especie: Especie): Boolean {
         return Random.decidir(100) < especie.capacidadDeBiomecanizacion()
@@ -39,6 +39,8 @@ class Vector(var tipo: TipoDeVector,
     fun porcentajeDeContagioExitoso(especie:Especie): Int{
         return Random.decidir(10) + especie.capacidadDeContagio()
     }
+
+
 
     fun infectarCon(especie: Especie) {
         especies.add(especie)

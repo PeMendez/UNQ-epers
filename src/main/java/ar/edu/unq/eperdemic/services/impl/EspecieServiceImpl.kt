@@ -36,12 +36,8 @@ class EspecieServiceImpl() : EspecieService {
 
     }
 
-    override fun especieLider(): Especie {
-        return try {
-            especieDAO.especieLider().first()
-        } catch (e: NoSuchElementException) {
-            throw NoExisteUnaEspecieLider("No hay una especie lider actualmente.")
-            }
+    override fun especieLider(): Especie? {
+        return especieDAO.especieLider()?:throw NoExisteUnaEspecieLider("No hay una especie lider actualmente.")
     }
 
 
