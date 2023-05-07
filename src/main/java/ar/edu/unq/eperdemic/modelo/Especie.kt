@@ -29,6 +29,13 @@ class Especie() {
         }
     }
 
+    fun capacidadDeBiomecanizacion(): Int {
+        return this.patogeno.getCapacidadDeBiomecanizacion()
+    }
+    fun capacidadDeDefensa(): Int {
+        return this.patogeno.getCapacidadDeDefensa()
+    }
+
 }
 
 
