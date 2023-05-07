@@ -39,11 +39,15 @@ class Patogeno() : Serializable{
         return especie
     }
 
-    fun getCapacidadDeBiomecanizacion() : Int {
+    fun capacidadDeBiomecanizacion() : Int {
         return this.capacidadDeBiomecanizacion
     }
 
-    fun getCapacidadDeDefensa(): Int{
+    fun capacidadDeDefensa(): Int{
         return this.capacidadDeDefensa
+    }
+
+    fun capacidadDeContagio(): Int {
+        return this.capacidadDeContagio
     }
 }
