@@ -54,8 +54,7 @@ class PatogenoServiceImpl : PatogenoService {
     }
 
     override fun esPandemia(especieId: Long): Boolean {
-       // return patogenoDAO.esPandemia(especieId)
-        TODO("falla")
+        return patogenoDAO.esPandemia(especieId)
     }
 
     override fun especiesDePatogeno(patogenoId: Long): List<Especie> {

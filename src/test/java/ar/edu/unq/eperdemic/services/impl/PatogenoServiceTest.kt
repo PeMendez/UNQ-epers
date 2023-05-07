@@ -146,7 +146,7 @@ class PatogenoServiceTest {
         }
     }
 
-    //@Test
+    @Test
     fun esPandemiaAfirmativo(){
         dataService.eliminarTodo()
         patogenoMalDeDragon = patogenoService.crearPatogeno(Patogeno("MalDeDragon"))
@@ -162,7 +162,7 @@ class PatogenoServiceTest {
 
     }
 
-    //@Test
+    @Test
     fun esPandemiaNegativo(){
         val especieImperius = patogenoService.agregarEspecie(patogenoMalDeDragon.id!!, "EspecieImperius", ubicacionPrivateDrive.id!!)
         Assertions.assertFalse(patogenoService.esPandemia(especieImperius.id!!))
