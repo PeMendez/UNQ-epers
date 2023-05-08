@@ -4,7 +4,6 @@ import ar.edu.unq.eperdemic.modelo.TipoDeVector
 import ar.edu.unq.eperdemic.services.PatogenoService
 import ar.edu.unq.eperdemic.services.VectorService
 import ar.edu.unq.eperdemic.spring.controllers.dto.EspecieDTO
-import ar.edu.unq.eperdemic.spring.controllers.dto.PatogenoDTO
 import ar.edu.unq.eperdemic.spring.controllers.dto.VectorDTO
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
