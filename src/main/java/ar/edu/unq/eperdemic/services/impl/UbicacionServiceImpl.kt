@@ -1,5 +1,6 @@
 package ar.edu.unq.eperdemic.services.impl
 
+import ar.edu.unq.eperdemic.modelo.Random
 import ar.edu.unq.eperdemic.modelo.Ubicacion
 import ar.edu.unq.eperdemic.modelo.Vector
 import ar.edu.unq.eperdemic.modelo.exceptions.NoExisteElid
@@ -36,7 +37,13 @@ class UbicacionServiceImpl(): UbicacionService {
     }
 
     override fun expandir(ubicacionId: Long) {
-        TODO("Not yet implemented")
+        val ubicacion = ubicacionDAO.findByIdOrNull(ubicacionId)?: throw NoExisteElid("el id buscado no existe en la base de datos")
+        val vectores = ubicacionDAO.recuperarVectores(ubicacion.id!!)
+        val vectoresInfectados = vectores.filter {  v -> !v.estaSano() }
+        if (vectoresInfectados.isNotEmpty()) {
+            val vectorAlAzar = vectoresInfectados[Random.decidir(vectoresInfectados.size)-1]
+            vectorServiceImpl.contagiar(vectorAlAzar, vectores)
+        }
     }
 
     override fun crearUbicacion(nombreUbicacion: String): Ubicacion {
