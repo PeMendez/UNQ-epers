@@ -10,7 +10,6 @@ class VectorDTO(
     val tipoDeVector : TipoDeVector,
     val ubicacion: Ubicacion) {
 
-    //CONSULTAR. agregamos id por si ya estaba en la base
     fun aModelo() : Vector {
         val vector = Vector(this.tipoDeVector, this.ubicacion)
         vector.id = vectorID

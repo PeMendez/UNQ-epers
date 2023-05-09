@@ -1,6 +1,5 @@
 package ar.edu.unq.eperdemic.spring.controllers
 
-import ar.edu.unq.eperdemic.modelo.TipoDeVector
 import ar.edu.unq.eperdemic.services.PatogenoService
 import ar.edu.unq.eperdemic.services.VectorService
 import ar.edu.unq.eperdemic.spring.controllers.dto.EspecieDTO
@@ -17,9 +16,9 @@ class VectorControllerREST(private val vectorService: VectorService) {
     lateinit var patogenoService: PatogenoService
 
     @PostMapping
-    fun create(@RequestBody tipo: TipoDeVector, ubicacionId: Long): VectorDTO {
-        val vector = vectorService.crearVector(tipo,ubicacionId)
-        return VectorDTO.desdeModelo(vector)
+    fun create(@RequestBody vector: VectorDTO): VectorDTO {
+        val vectorCreado = vectorService.crearVector(vector.tipoDeVector, vector.ubicacion.id!!)
+        return VectorDTO.desdeModelo(vectorCreado)
     }
 
     @GetMapping("/{id}")
