@@ -26,19 +26,8 @@ class UbicacionControllerREST(private val ubicacionService: UbicacionService) {
     @GetMapping("/allVectoresInUbicacion/{ubicacionId}")
     fun recuperarVectores(@PathVariable ubicacionId: Long) = ubicacionService.recuperarVectores(ubicacionId).map { vector -> VectorDTO.desdeModelo(vector) }
 
-
-
     @PostMapping
-    fun create(@RequestBody ubicacion: Ubicacion): UbicacionDTO {
-        val ubicacionCreada = ubicacionService.crearUbicacion(ubicacion.nombre)
-        return UbicacionDTO.desdeModelo(ubicacionCreada)
-    }
-
-
-    /*
-    @PostMapping
-    fun guardarUbicacion(@RequestBody ubicacionDTO: UbicacionDTO) = ubicacionService.guardar(ubicacionDTO.aModelo())*/
-
+    fun guardarUbicacion(@RequestBody ubicacionDTO: UbicacionDTO) = ubicacionService.guardar(ubicacionDTO.aModelo())
 
     @PutMapping("/mover/{vectorId}/{ubicacionId}")
     fun mover(@PathVariable vectorId: Long, @PathVariable ubicacionId: Long) = ubicacionService.mover(vectorId, ubicacionId)
