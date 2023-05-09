@@ -6,7 +6,8 @@ interface EspecieService {
     fun recuperarEspecie(id: Long): Especie
     fun cantidadDeInfectados(especieId: Long ): Int
     fun recuperarTodas(): List<Especie>
-    fun especieLider(): Especie?
+    fun especieLider(): Especie
     fun lideres(): List<Especie>
+    fun especieLiderDeUbicacion(ubicacionId: Long) : Especie
 
 }

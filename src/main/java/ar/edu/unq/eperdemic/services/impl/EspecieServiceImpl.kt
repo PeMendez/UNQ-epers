@@ -18,6 +18,7 @@ class EspecieServiceImpl() : EspecieService {
     private lateinit var especieDAO: EspecieDAO
 
 
+
     override fun recuperarEspecie(id: Long): Especie {
         return especieDAO.findByIdOrNull(id) ?: throw NoExisteElid("el id buscado no existe en la base de datos")
     }
@@ -36,10 +37,17 @@ class EspecieServiceImpl() : EspecieService {
 
     }
 
-    override fun especieLider(): Especie? {
-        return especieDAO.especieLider()?:throw NoExisteUnaEspecieLider("No hay una especie lider actualmente.")
+    override fun especieLider(): Especie {
+        try{
+            return especieDAO.especieLider().first()
+        }catch (e:NoSuchElementException) {
+            throw NoExisteUnaEspecieLider("No hay una especie lider actualmente.")
+        }
     }
 
+    override fun especieLiderDeUbicacion(ubicacionId: Long) : Especie {
+        return especieDAO.especieLiderDeUbicacion(ubicacionId).first()
+    }
 
 }
 

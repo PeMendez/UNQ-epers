@@ -14,15 +14,9 @@ interface EspecieDAO : CrudRepository<Especie, Long>  {
     fun cantidadDeInfectados(especieId: Long ): Int
 
     @Query("select e from Vector v join v.especies e where v.tipo in (ar.edu.unq.eperdemic.modelo.TipoDeVector.Persona) group by e order by count(v) desc")
-    fun especieLider(): Especie?
+    fun especieLider(): List<Especie>
 
+    @Query("select e from Vector v join v.especies e where v.ubicacion.id = :ubicacionId group by e order by count(v) desc")
+    fun especieLiderDeUbicacion(ubicacionId: Long) : List<Especie>
 
-
-    /*
-
-
-    fun especieLiderDeUbicacion(ubicacionId: Long) : Especie
-
-
-     */
 }
