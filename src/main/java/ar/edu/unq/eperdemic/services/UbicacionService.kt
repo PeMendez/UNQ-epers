@@ -13,4 +13,5 @@ interface UbicacionService {
     fun recuperarTodos(): List<Ubicacion>
     fun recuperar(ubicacionId: Long): Ubicacion
     fun recuperarVectores(ubicacionId: Long): List<Vector>
+    fun guardar(ubicacion: Ubicacion)
 }

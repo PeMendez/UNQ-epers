@@ -1,5 +1,6 @@
 package ar.edu.unq.eperdemic.services.impl
 
+import ar.edu.unq.eperdemic.modelo.Random
 import ar.edu.unq.eperdemic.modelo.Ubicacion
 import ar.edu.unq.eperdemic.modelo.Vector
 import ar.edu.unq.eperdemic.modelo.exceptions.NoExisteElid
@@ -8,6 +9,7 @@ import ar.edu.unq.eperdemic.persistencia.dao.UbicacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.VectorDAO
 import ar.edu.unq.eperdemic.services.UbicacionService
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
@@ -36,7 +38,13 @@ class UbicacionServiceImpl(): UbicacionService {
     }
 
     override fun expandir(ubicacionId: Long) {
-        TODO("Not yet implemented")
+        val ubicacion = ubicacionDAO.findByIdOrNull(ubicacionId)?: throw NoExisteElid("el id buscado no existe en la base de datos")
+        val vectores = ubicacionDAO.recuperarVectores(ubicacion.id!!)
+        val vectoresInfectados = vectores.filter {  v -> !v.estaSano() }
+        if (vectoresInfectados.isNotEmpty()) {
+            val vectorAlAzar = vectoresInfectados[Random.decidir(vectoresInfectados.size)-1]
+            vectorServiceImpl.contagiar(vectorAlAzar, vectores)
+        }
     }
 
     override fun crearUbicacion(nombreUbicacion: String): Ubicacion {
@@ -60,6 +68,21 @@ class UbicacionServiceImpl(): UbicacionService {
     override fun recuperarVectores(ubicacionId: Long): List<Vector> {
         return ubicacionDAO.recuperarVectores(ubicacionId)
     }
+
+    override fun guardar(ubicacion: Ubicacion) {
+        var flag = true
+        try {
+            ubicacionDAO.recuperarUbicacionPorNombre(ubicacion.nombre)
+        } catch (e: EmptyResultDataAccessException) {
+            flag = false
+            ubicacionDAO.save(ubicacion)
+        }
+        if (flag) {
+            throw NombreDeUbicacionRepetido("Ya existe una ubicacion con ese nombre.")
+        }
+    }
+
+
 
     /*override fun mover(vectorId: Long, ubicacionid: Long) {
 

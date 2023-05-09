@@ -2,7 +2,7 @@ package ar.edu.unq.eperdemic.spring.controllers.dto
 
 import ar.edu.unq.eperdemic.modelo.Ubicacion
 
-class UbicacionDTO(val nombreDeLaUbicacion: String) {
+class UbicacionDTO(var nombreDeLaUbicacion: String) {
 
 
     fun aModelo() : Ubicacion {
