@@ -17,22 +17,22 @@ class PatogenoControllerREST(private val patogenoService: PatogenoService) {
     return PatogenoDTO.desdeModelo(patogeno)
   }
 
-  @PostMapping("/{id}")
-  fun agregarEspecie(@PathVariable id: Long, @RequestBody especieDTO: EspecieDTO): EspecieDTO {
-    val especie = patogenoService.agregarEspecie(id, especieDTO.nombre, id)
+  @PostMapping("/addEspecie/{ubicacionId}")
+  fun agregarEspecie(@PathVariable ubicacionId: Long, @RequestBody especieDTO: EspecieDTO): EspecieDTO {
+    val especie = patogenoService.agregarEspecie(especieDTO.patogenoId!!, especieDTO.nombre, ubicacionId)
     return EspecieDTO.desdeModelo(especie)
   }
 
   @GetMapping("/{id}")
   fun findById(@PathVariable id: Long) = PatogenoDTO.desdeModelo(patogenoService.recuperarPatogeno(id))
 
-  @GetMapping
+  @GetMapping("/patogenos")
   fun getAll() = patogenoService.recuperarATodosLosPatogenos().map{ PatogenoDTO.desdeModelo(it)}
 
   @GetMapping("/especies/{id}")
   fun especiesDePatogeno(@PathVariable id: Long) = patogenoService.especiesDePatogeno(id).map { EspecieDTO.desdeModelo(it) }
 
-  @GetMapping("/esPandemia/{id}")
-  fun esPandemia(@PathVariable id: Long) = patogenoService.esPandemia(id)
+  @GetMapping("/esPandemia/{especieId}")
+  fun esPandemia(@PathVariable especieId: Long) = patogenoService.esPandemia(especieId)
 
 }
