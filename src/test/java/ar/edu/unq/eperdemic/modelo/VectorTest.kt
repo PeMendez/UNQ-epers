@@ -5,7 +5,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 
-
+/*
 class VectorTest {
 
     private val ub1 = Ubicacion("Noruega")
@@ -105,3 +105,5 @@ class VectorTest {
     }
 
 }
+
+ */

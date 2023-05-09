@@ -117,3 +117,4 @@ class UbicacionServiceImpl(): UbicacionService {
         return runTrx { ubicacionDAO.recuperarVectores(ubicacionId) }
     }*/
 }
+

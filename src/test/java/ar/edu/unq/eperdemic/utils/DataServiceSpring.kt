@@ -1,9 +1,12 @@
 package ar.edu.unq.eperdemic.utils
 
-import ar.edu.unq.eperdemic.modelo.Random
 import ar.edu.unq.eperdemic.persistencia.dao.PatogenoDAO
 import ar.edu.unq.eperdemic.persistencia.dao.UbicacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.VectorDAO
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
+
 /*
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateDataDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernatePatogenoDAO
@@ -13,9 +16,7 @@ import ar.edu.unq.eperdemic.services.impl.PatogenoServiceImpl
 import ar.edu.unq.eperdemic.services.impl.UbicacionServiceImpl
 import ar.edu.unq.eperdemic.services.impl.VectorServiceImpl
 */
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.stereotype.Service
-import org.springframework.transaction.annotation.Transactional
+
 
 @Service
 @Transactional
@@ -29,6 +30,8 @@ class DataServiceSpring : DataService {
 
     @Autowired
     lateinit var patogenoDAO: PatogenoDAO
+
+
 
     /*
     val hibernateDao = HibernateDataDAO()
@@ -51,18 +54,21 @@ class DataServiceSpring : DataService {
 
 
     */
-    override fun crearSetDeDatosIniciales() {
-        Random.switchModo(false)
     /*
-        runTrx {
-            Random.switchModo(false)
-            val listaPatogenosCreados = crearPatogenos()
-            val listaDeUbicacionesCreadas = crearUbicaciones()
-            crearVectores(listaDeUbicacionesCreadas)
+   override fun crearSetDeDatosIniciales() {
+       Random.switchModo(false)
 
-            crearEspecies(listaPatogenosCreados, listaDeUbicacionesCreadas)
-            */
+       runTrx {
+           Random.switchModo(false)
+           val listaPatogenosCreados = crearPatogenos()
+           val listaDeUbicacionesCreadas = crearUbicaciones()
+           crearVectores(listaDeUbicacionesCreadas)
+
+           crearEspecies(listaPatogenosCreados, listaDeUbicacionesCreadas)
+
         }
+
+     */
 
         /*
     }
@@ -133,3 +139,4 @@ class DataServiceSpring : DataService {
     }
 
 }
+
