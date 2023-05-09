@@ -26,14 +26,8 @@ class VectorServiceImpl(): VectorService {
 
     override fun contagiar(vectorInfectado: Vector, vectores: List<Vector>) {
         vectores.forEach { v ->
-            intentarInfectarConEspeciesDeVector(v,vectorInfectado)
+            vectorInfectado.intentarInfectarConEspeciesDeVector(v)
             vectorDAO.save(v)
-        }
-    }
-
-    override fun intentarInfectarConEspeciesDeVector(vectorAInfectar: Vector, vectorInfectado: Vector) {
-        vectorInfectado.especies.forEach { e ->
-            vectorAInfectar.intentarInfectar(vectorInfectado, e)
         }
     }
 

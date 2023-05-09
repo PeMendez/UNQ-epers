@@ -2,35 +2,33 @@ package ar.edu.unq.eperdemic.modelo
 
 import javax.persistence.*
 
-
 @Entity
 class Vector(var tipo: TipoDeVector,
              @ManyToOne
              var ubicacion: Ubicacion,
              @ManyToMany(fetch = FetchType.EAGER)
-             var especies : MutableSet<Especie> = mutableSetOf(),
-             @ManyToMany(fetch = FetchType.EAGER)
-             var mutaciones : MutableSet<Mutacion> = mutableSetOf()) {
+             var especies : MutableSet<Especie> = mutableSetOf())
+             //@ManyToMany(fetch = FetchType.EAGER)
+             //var mutaciones : MutableSet<Mutacion> = mutableSetOf())
+             {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null
 
-        fun intentarInfectar(vectorInfectado: Vector, especie: Especie) {
-            if (esContagioExitoso(vectorInfectado,especie)) {
-                //vectorInfectado.mutar(especie)
-                this.infectarCon(especie)
-            }
+    fun intentarInfectar(vectorAInfectar: Vector, especie: Especie) {
+        if (esContagioExitoso(vectorAInfectar,especie)) {
+            //vectorInfectado.mutar(especie)
+            vectorAInfectar.infectarCon(especie)
         }
+    }
 
-        private fun mutar(especie: Especie) : Boolean {
-            if (esMutacionExitosa(especie)){
-                //mutaciones.add()
-            }
-            return Random.decidir(100) < especie.capacidadDeBiomecanizacion()
+    private fun mutar(especie: Especie) : Boolean {
+        if (esMutacionExitosa(especie)){
+            //mutaciones.add()
         }
-
-
+        return Random.decidir(100) < especie.capacidadDeBiomecanizacion()
+    }
 
     private fun esMutacionExitosa(especie: Especie): Boolean {
         return Random.decidir(100) < especie.capacidadDeBiomecanizacion()
@@ -40,15 +38,13 @@ class Vector(var tipo: TipoDeVector,
         return Random.decidir(10) + especie.capacidadDeContagio()
     }
 
-
-
     fun infectarCon(especie: Especie) {
         especies.add(especie)
     }
 
-    fun esContagioExitoso(vectorInfectado: Vector, especie: Especie): Boolean {
-        return ubicacion.nombre == vectorInfectado.ubicacion.nombre
-                && tipo.puedeSerInfectado(vectorInfectado.tipo)
+    fun esContagioExitoso(vectorAInfectar: Vector, especie: Especie): Boolean {
+        return ubicacion.nombre == vectorAInfectar.ubicacion.nombre
+                && vectorAInfectar.tipo.puedeSerInfectado(tipo)
                 && Random.decidir(100) < porcentajeDeContagioExitoso(especie)
     }
 
@@ -65,8 +61,11 @@ class Vector(var tipo: TipoDeVector,
         this.ubicacion = ubicacion
 
     }
-
-
+    fun intentarInfectarConEspeciesDeVector(vectorAInfectar:Vector) {
+        this.especies.forEach { e ->
+            vectorAInfectar.intentarInfectar(vectorAInfectar, e)
+        }
+    }
 }
 
 enum class TipoDeVector {
@@ -86,6 +85,4 @@ enum class TipoDeVector {
         }
     };
     abstract fun puedeSerInfectado(vector: TipoDeVector): Boolean
-
-
 }
