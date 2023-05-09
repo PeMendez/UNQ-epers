@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.*
 class PatogenoControllerREST(private val patogenoService: PatogenoService) {
 
   @PostMapping
-  fun create(@RequestBody patogeno: Patogeno): PatogenoDTO {
-    val patogeno = patogenoService.crearPatogeno(patogeno)
-    return PatogenoDTO.desdeModelo(patogeno)
+  fun create(@RequestBody patogeno: PatogenoDTO): PatogenoDTO {
+    val patogenoCreado = patogenoService.crearPatogeno(patogeno.aModelo())
+    return PatogenoDTO.desdeModelo(patogenoCreado)
   }
 
   @PostMapping("/addEspecie/{ubicacionId}")
