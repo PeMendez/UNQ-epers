@@ -16,7 +16,7 @@ interface VectorService {
     fun recuperarVector(vectorId: Long): Vector
     fun borrarVector(vectorId: Long)
     fun recuperarTodos() : List<Vector>
-    fun findAllByUbicacionId(ubicacionId: Long): List<Vector>
+    fun vectoresEnUbicacionID(ubicacionId: Long): List<Vector>
 
 }
 

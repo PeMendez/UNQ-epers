@@ -32,7 +32,7 @@ class VectorControllerREST(private val vectorService: VectorService) {
     fun getAll() = vectorService.recuperarTodos().map{VectorDTO.desdeModelo(it)}
 
     @GetMapping("/vectores/{id}")
-    fun vectoresEnUbicacion(@PathVariable id: Long) = vectorService.findAllByUbicacionId(id).map { VectorDTO.desdeModelo(it) }
+    fun vectoresEnUbicacion(@PathVariable id: Long) = vectorService.vectoresEnUbicacionID(id).map { VectorDTO.desdeModelo(it) }
 
     @PostMapping("/contagiar")
     fun contagiar(@RequestBody vectorDTO: VectorDTO, vectoresDTO:List<VectorDTO>){
