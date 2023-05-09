@@ -1,5 +1,6 @@
 package ar.edu.unq.eperdemic.utils
 
+import ar.edu.unq.eperdemic.modelo.Random
 import ar.edu.unq.eperdemic.persistencia.dao.PatogenoDAO
 import ar.edu.unq.eperdemic.persistencia.dao.UbicacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.VectorDAO
@@ -54,10 +55,10 @@ class DataServiceSpring : DataService {
 
 
     */
-    /*
+
    override fun crearSetDeDatosIniciales() {
        Random.switchModo(false)
-
+/*
        runTrx {
            Random.switchModo(false)
            val listaPatogenosCreados = crearPatogenos()
@@ -66,9 +67,10 @@ class DataServiceSpring : DataService {
 
            crearEspecies(listaPatogenosCreados, listaDeUbicacionesCreadas)
 
-        }
+ */
+   }
 
-     */
+
 
         /*
     }
