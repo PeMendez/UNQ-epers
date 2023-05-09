@@ -6,7 +6,7 @@ import ar.edu.unq.eperdemic.modelo.Ubicacion
 import ar.edu.unq.eperdemic.modelo.Vector
 
 class VectorDTO(
-    val vectorID : Long,
+    val vectorID : Long?,
     val tipoDeVector : TipoDeVector,
     val ubicacion: Ubicacion) {
 
