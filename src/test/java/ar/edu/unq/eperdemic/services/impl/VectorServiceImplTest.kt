@@ -56,7 +56,6 @@ class VectorServiceImplTest {
 
     @BeforeEach
     fun setUp() {
-
         Random.switchModo(false)
 
         dataServiceSpring.eliminarTodo()
@@ -86,8 +85,6 @@ class VectorServiceImplTest {
         //insecto
         vectorInsecto1 = vectorServiceImpl.crearVector(TipoDeVector.Insecto,ubicacion2.id!!)
         vectorInsecto2 = vectorServiceImpl.crearVector(TipoDeVector.Insecto,ubicacion2.id!!)
-
-
         //dataServiceSpring.crearSetDeDatosIniciales()
     }
 
@@ -189,9 +186,8 @@ class VectorServiceImplTest {
         Assertions.assertTrue(vectorPersonaCreado1.tieneEfermedad(especie2.id!!))
         Assertions.assertTrue(vectorPersonaCreado1.tieneEfermedad(especie3.id!!))
     }
-    //@Test
+    @Test
     fun losVectoresPersonaSePuedenContagiarDeCualquierVector() {
-
         //contagio tres vectores diferentes con tres especies diferentes
         //persona con especie1
         assertTrue(vectorPersona1.estaSano())
@@ -212,13 +208,17 @@ class VectorServiceImplTest {
 
         //contagio un vector persona sano con los tres vectores infectados
         vectorServiceImpl.contagiar(vectorPersona1, listOf(vectorPersona2))
-        vectorServiceImpl.contagiar(vectorAnimal1, listOf(vectorPersona2))
-        vectorServiceImpl.contagiar(vectorInsecto1, listOf(vectorPersona2))
+
+        val vectorCon1Especie = vectorServiceImpl.recuperarVector(vectorPersona2.id!!)
+        vectorServiceImpl.contagiar(vectorAnimal1, listOf(vectorCon1Especie))
+
+        val vectorCon2Especies = vectorServiceImpl.recuperarVector(vectorPersona2.id!!)
+        vectorServiceImpl.contagiar(vectorInsecto1, listOf(vectorCon2Especies))
 
         //verifico que el vector persona se haya infectado con las tres especies
-        assertTrue(vectorPersona2.tieneEfermedad(especie1.id!!))
-        assertTrue(vectorPersona2.tieneEfermedad(especie2.id!!))
-        assertTrue(vectorPersona2.tieneEfermedad(especie3.id!!))
+        assertTrue(vectorCon2Especies.tieneEfermedad(especie1.id!!))
+        assertTrue(vectorCon2Especies.tieneEfermedad(especie2.id!!))
+        assertTrue(vectorCon2Especies.tieneEfermedad(especie3.id!!))
     }
 
     @Test
