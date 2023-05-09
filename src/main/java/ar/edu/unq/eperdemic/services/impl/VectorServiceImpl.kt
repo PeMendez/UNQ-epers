@@ -26,13 +26,13 @@ class VectorServiceImpl(): VectorService {
 
     override fun contagiar(vectorInfectado: Vector, vectores: List<Vector>) {
         vectores.forEach { v ->
-            vectorInfectado.intentarInfectarConEspeciesDeVector(v)
+            vectorInfectado.intentarInfectarConEspecies(v)
             vectorDAO.save(v)
         }
+        //vectorDAO.saveAll(vectores)
     }
-
     override fun infectar(vector: Vector, especie: Especie) {
-        especie.let { e ->  vector.infectarCon(e)}
+        especie.let { e ->  vector.serInfectadoCon(e)}
         vector.let { v -> vectorDAO.save(v) }
     }
 
@@ -52,19 +52,16 @@ class VectorServiceImpl(): VectorService {
     }
 
     override fun borrarVector(vectorId: Long) {
-        /*
         val vectorABorrar = recuperarVector(vectorId)
         return vectorDAO.delete(vectorABorrar)
-         */
     }
 
     override fun recuperarTodos(): List<Vector> {
-        //return vectorDAO.findAll().toList()
-        TODO("falla")
+        return vectorDAO.findAll()
     }
 
-    override fun findAllByUbicacionId(ubicacionId: Long): List<Vector> {
-        TODO("Not yet implemented")
+    override fun vectoresEnUbicacionID(ubicacionId: Long): List<Vector> {
+        return vectorDAO.findAllByUbicacionId(ubicacionId)
     }
 
     /*val hibernateUbicacionDAO = HibernateUbicacionDAO()
