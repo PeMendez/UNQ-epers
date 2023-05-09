@@ -40,7 +40,7 @@ class PatogenoServiceTest {
     @BeforeEach
     fun setUp() {
         Random.switchModo(false)
-        //dataService.crearSetDeDatosIniciales()
+        dataService.crearSetDeDatosIniciales()
         patogenoMalDeDragon = patogenoService.crearPatogeno(Patogeno("MalDeDragon"))
         ubicacionPrivateDrive = ubicacionService.crearUbicacion("PrivateDrive")
         vectorHarryPotter = vectorService.crearVector(TipoDeVector.Persona, ubicacionPrivateDrive.id!!)
