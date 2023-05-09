@@ -2,9 +2,11 @@ package ar.edu.unq.eperdemic.services.impl
 
 import ar.edu.unq.eperdemic.modelo.Patogeno
 import ar.edu.unq.eperdemic.modelo.TipoDeVector
+import ar.edu.unq.eperdemic.modelo.Ubicacion
 import ar.edu.unq.eperdemic.modelo.exceptions.NoExisteElid
 import ar.edu.unq.eperdemic.modelo.exceptions.NoPuedeEstarVacioOContenerCaracteresEspeciales
 import ar.edu.unq.eperdemic.modelo.exceptions.NombreDeUbicacionRepetido
+import ar.edu.unq.eperdemic.persistencia.dao.UbicacionDAO
 import ar.edu.unq.eperdemic.utils.DataService
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.extension.ExtendWith
@@ -25,10 +27,32 @@ class UbicacionServiceImplTest {
     private lateinit var ubicacionService: UbicacionServiceImpl
     @Autowired
     private lateinit var patogenoService: PatogenoServiceImpl
+    @Autowired
+    private lateinit var ubicacionDAO: UbicacionDAO
 
     @BeforeEach
     fun setUp() {
        dataService.crearSetDeDatosIniciales()
+    }
+
+    @Test
+    fun seGuardaUnaUbicacionCorrectamente() {
+        val ubicacionAGuardar = Ubicacion("testGuardarUbi")
+        ubicacionService.guardar(ubicacionAGuardar)
+
+        val ubicacionRecuperada = ubicacionDAO.recuperarUbicacionPorNombre(ubicacionAGuardar.nombre)
+
+        Assertions.assertNotNull(ubicacionRecuperada.id)
+    }
+
+    @Test
+    fun noSePuedeGuardarUnaUbicacionConUnNombreYaExistenteEnLaBDD() {
+        val ubicacionCreada = ubicacionService.crearUbicacion("nombreIgual")
+        val ubicacionAGuardar = Ubicacion(ubicacionCreada.nombre)
+
+        Assertions.assertThrows(NombreDeUbicacionRepetido::class.java) {
+            ubicacionService.guardar(ubicacionAGuardar)
+        }
     }
 
     @Test
