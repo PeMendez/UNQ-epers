@@ -93,19 +93,6 @@ class VectorServiceImplTest {
         }
     }
 
-    //@Test lanza otro error
-    fun siSeIntentanContagiarVectoresConUnVectorInvalidoEntoncesFalla() {
-        val ubicacionCreada2 = ubicacionServiceImpl.crearUbicacion("enfermedadesTest2")
-        val vector2 = vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada2.id!!)
-        val vector1 = Vector(TipoDeVector.Persona, ubicacionCreada2)
-
-        val vectores = listOf(vector2)
-
-        assertThrows(NoExisteElid::class.java) {
-            vectorServiceImpl.contagiar(vector1, vectores)
-        }
-    }
-
     @Test
     fun siSeIntentaContagiarAUnaListaDeVectoresVaciaEntoncesNoSeHaceNada() {
         vectorServiceImpl.infectar(vectorPersona1,especie1)
@@ -306,30 +293,6 @@ class VectorServiceImplTest {
 
         assertThrows(NoExisteElid::class.java) {
             vectorServiceImpl.infectar(vectorCreado, especieRecuperada)
-        }
-    }
-
-    //@Test lanza otro error
-    fun noSeLePuedePasarAInfectarUnObjetoVectorSinID() {
-        val ubicacionCreada1 = ubicacionServiceImpl.crearUbicacion("ubicacionTestEspecie")
-        val vector = Vector(TipoDeVector.Persona, ubicacionCreada1)
-        val especieRecuperada = especieServiceImpl.recuperarEspecie(especie1.id!!)
-
-        assertThrows(NoExisteElid::class.java) {
-            vectorServiceImpl.infectar(vector, especieRecuperada)
-        }
-    }
-
-    //@Test lanza otro error
-    fun noSeLePuedePasarAInfectarUnObjetoEspecieSinID() {
-        val ubicacionCreada1 = ubicacionServiceImpl.crearUbicacion("ubicacionTestEspecie")
-        val vectorCreado = vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada1.id!!)
-        val patogeno = Patogeno("testEspecie")
-        val patogenoCreado = patogenoService.crearPatogeno(patogeno)
-        val especie = Especie(patogenoCreado, "testEspecie", "unPaisCualquiera")
-
-        assertThrows(NoExisteElid::class.java) {
-            vectorServiceImpl.infectar(vectorCreado, especie)
         }
     }
 
