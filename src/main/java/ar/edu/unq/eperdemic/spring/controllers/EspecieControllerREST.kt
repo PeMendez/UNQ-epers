@@ -1,6 +1,7 @@
 package ar.edu.unq.eperdemic.spring.controllers
 
 import ar.edu.unq.eperdemic.modelo.exceptions.NoExisteElid
+import ar.edu.unq.eperdemic.modelo.exceptions.NoExisteUnaEspecieLider
 import ar.edu.unq.eperdemic.services.EspecieService
 import ar.edu.unq.eperdemic.services.PatogenoService
 import ar.edu.unq.eperdemic.spring.controllers.dto.EspecieDTO
@@ -40,6 +41,11 @@ class EspecieControllerREST(private val especieService: EspecieService){
 
     @ExceptionHandler(NoExisteElid::class)
     fun handleNotFoundException(ex: NoExisteElid): ResponseEntity<String> {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.message)
+    }
+
+    @ExceptionHandler(NoExisteUnaEspecieLider::class)
+    fun handleNotFoundException(ex: NoExisteUnaEspecieLider): ResponseEntity<String> {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.message)
     }
 

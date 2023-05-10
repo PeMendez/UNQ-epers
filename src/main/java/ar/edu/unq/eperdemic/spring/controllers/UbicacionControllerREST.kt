@@ -1,7 +1,9 @@
 package ar.edu.unq.eperdemic.spring.controllers
 
 import ar.edu.unq.eperdemic.modelo.Ubicacion
+import ar.edu.unq.eperdemic.modelo.exceptions.NoExisteElNombreDeLaUbicacion
 import ar.edu.unq.eperdemic.modelo.exceptions.NoExisteElid
+import ar.edu.unq.eperdemic.modelo.exceptions.NombreDeUbicacionRepetido
 import ar.edu.unq.eperdemic.services.UbicacionService
 import ar.edu.unq.eperdemic.spring.controllers.dto.UbicacionDTO
 import ar.edu.unq.eperdemic.spring.controllers.dto.VectorDTO
@@ -34,6 +36,16 @@ class UbicacionControllerREST(private val ubicacionService: UbicacionService) {
 
     @ExceptionHandler(NoExisteElid::class)
     fun handleNotFoundException(ex: NoExisteElid): ResponseEntity<String> {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.message)
+    }
+
+    @ExceptionHandler(NoExisteElNombreDeLaUbicacion::class)
+    fun handleNotFoundException(ex: NoExisteElNombreDeLaUbicacion): ResponseEntity<String> {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.message)
+    }
+
+    @ExceptionHandler(NombreDeUbicacionRepetido::class)
+    fun handleNotFoundException(ex: NombreDeUbicacionRepetido): ResponseEntity<String> {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.message)
     }
 

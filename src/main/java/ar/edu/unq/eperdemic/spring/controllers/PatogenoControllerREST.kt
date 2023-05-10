@@ -1,6 +1,7 @@
 package ar.edu.unq.eperdemic.spring.controllers
 
 import ar.edu.unq.eperdemic.modelo.Patogeno
+import ar.edu.unq.eperdemic.modelo.exceptions.NingunVectorAInfectarEnLaUbicacionDada
 import ar.edu.unq.eperdemic.modelo.exceptions.NoExisteElid
 import ar.edu.unq.eperdemic.services.PatogenoService
 import ar.edu.unq.eperdemic.spring.controllers.dto.EspecieDTO
@@ -40,6 +41,11 @@ class PatogenoControllerREST(private val patogenoService: PatogenoService) {
 
   @ExceptionHandler(NoExisteElid::class)
   fun handleNotFoundException(ex: NoExisteElid): ResponseEntity<String> {
+    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.message)
+  }
+
+  @ExceptionHandler(NingunVectorAInfectarEnLaUbicacionDada::class)
+  fun handleNotFoundException(ex: NingunVectorAInfectarEnLaUbicacionDada): ResponseEntity<String> {
     return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.message)
   }
 
