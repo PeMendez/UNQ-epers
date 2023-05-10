@@ -13,6 +13,9 @@ class Especie() {
     lateinit var patogeno: Patogeno
     lateinit var nombre: String
     lateinit var paisDeOrigen: String
+    @OneToMany(mappedBy = "especie", cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
+    var mutaciones: MutableSet<Mutacion> = HashSet()
+
 
     constructor(pathogen: Patogeno, name: String, pais: String ): this() {
         if (Check.validar(name) && Check.validar(pais)){
@@ -24,6 +27,23 @@ class Especie() {
             throw NoPuedeEstarVacioOContenerCaracteresEspeciales("El nombre o el pais no puede ser vacíos o contener caracteres especiales")
 
         }
+    }
+
+    fun agregarMutacion(mutacion: Mutacion) : Mutacion {
+        mutacion.addEspecie(this)
+        mutaciones.add(mutacion)
+        return mutacion
+    }
+
+    fun capacidadDeBiomecanizacion(): Int {
+        return this.patogeno.capacidadDeBiomecanizacion()
+    }
+    fun capacidadDeDefensa(): Int {
+        return this.patogeno.capacidadDeDefensa()
+    }
+
+    fun capacidadDeContagio(): Int {
+        return this.patogeno.capacidadDeContagio()
     }
 
 }
