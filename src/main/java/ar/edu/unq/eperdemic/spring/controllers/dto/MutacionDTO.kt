@@ -1,5 +1,5 @@
 package ar.edu.unq.eperdemic.spring.controllers.dto
-/*
+
 import ar.edu.unq.eperdemic.modelo.Especie
 import ar.edu.unq.eperdemic.modelo.Mutacion
 import ar.edu.unq.eperdemic.modelo.TipoDeMutacion
@@ -7,15 +7,14 @@ import ar.edu.unq.eperdemic.modelo.TipoDeVector
 
 class MutacionDTO(
     val tipoDeMutacion: TipoDeMutacion,
-    val especieId: Long,
+    val especieId: Long?,
     val tipoDeVector : TipoDeVector?,
     val poderDeMutacion: Int?
 ) {
 
-    fun aModelo(especie:Especie) : Mutacion {
+    fun aModelo() : Mutacion {
         var mutacion = Mutacion()
         mutacion.tipoDeMutacion = this.tipoDeMutacion
-        mutacion.especie = especie
         mutacion.tipoDeVector = this.tipoDeVector!!
         mutacion.poderDeMutacion = this.poderDeMutacion!!
         return mutacion
@@ -34,4 +33,3 @@ class MutacionDTO(
 
 }
 
- */

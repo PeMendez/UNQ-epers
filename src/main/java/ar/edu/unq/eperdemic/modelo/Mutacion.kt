@@ -16,6 +16,7 @@ class Mutacion() {
     var tipoDeVector : TipoDeVector? = null
     var poderDeMutacion: Int? = null
 
+
     fun addEspecie(especie: Especie) {
         this.especie = especie
     }
