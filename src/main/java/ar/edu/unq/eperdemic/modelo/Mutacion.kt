@@ -10,13 +10,13 @@ class Mutacion() {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id : Long? = null
-    lateinit var tipoDeMutacion: TipoDeMutacion
+    //lateinit var tipoDeMutacion: TipoDeMutacion
     @ManyToOne
     lateinit var especie: Especie
     var tipoDeVector : TipoDeVector? = null
     var poderDeMutacion: Int? = null
 }
-
+/*
 enum class TipoDeMutacion {
     Supresion_Biomecanica{
         val potenciaDeMutacion: Int = Random.decidir(100)
@@ -24,7 +24,8 @@ enum class TipoDeMutacion {
     Bioalteracion_Genetica{
         val tipoDeVector: TipoDeVector = Random.decidirTipo(3)
     }
-}
+    */
+
 
 
 

@@ -11,7 +11,7 @@ object Random {
                     limiteFinal
                 }
     }
-
+/*
     fun decidirTipo(limiteFinal: Int): TipoDeVector{
         val tipos = TipoDeVector.values()
         return if (esRandom){
@@ -20,6 +20,7 @@ object Random {
             tipos.get(limiteFinal)
         }
     }
+    */
 
     fun switchModo(esRandom: Boolean) {
          this.esRandom = esRandom

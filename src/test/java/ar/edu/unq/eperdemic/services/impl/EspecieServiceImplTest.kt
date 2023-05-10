@@ -279,7 +279,7 @@ class EspecieServiceImplTest {
 
     @AfterEach
     fun eliminarModelo() {
-        dataService.eliminarTodo()
+        //dataService.eliminarTodo()
     }
 
 }
