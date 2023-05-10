@@ -5,7 +5,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 
-/*
+
 class VectorTest {
 
     private val ub1 = Ubicacion("Noruega")
@@ -27,21 +27,20 @@ class VectorTest {
     @Test
     fun alInfectarUnVectorConUnaEspecieEstaSeGuarda() {
 
-        vectorPersonaEnfermo.infectarCon(especie1)
+        vectorPersonaEnfermo.serInfectadoCon(especie1)
 
         assertTrue(vectorPersonaEnfermo.especies.contains(especie1))
         assertEquals(1, vectorPersonaEnfermo.especies.size)
-
     }
 
     @Test
     fun alIntentarInfectarUnVectorConUnaEspecieQueYaEstaInfectadoNoSeDuplica() {
     //que rompa cuando se repite la misma enfermedad
-        vectorPersonaEnfermo.infectarCon(especie1)
+        vectorPersonaEnfermo.serInfectadoCon(especie1)
 
         assertEquals(1, vectorPersonaEnfermo.especies.size)
 
-        vectorPersonaEnfermo.infectarCon(especie1)
+        vectorPersonaEnfermo.serInfectadoCon(especie1)
 
         assertEquals(1, vectorPersonaEnfermo.especies.size)
 
@@ -89,7 +88,7 @@ class VectorTest {
     @Test
     fun estaSanoFalse() {
         assertTrue(vectorPersonaSano.estaSano())
-        vectorPersonaSano.infectarCon(especie1)
+        vectorPersonaSano.serInfectadoCon(especie1)
         assertFalse(vectorPersonaSano.estaSano())
     }
 
@@ -105,5 +104,3 @@ class VectorTest {
     }
 
 }
-
- */

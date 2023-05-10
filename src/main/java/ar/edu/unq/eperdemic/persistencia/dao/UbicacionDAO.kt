@@ -21,10 +21,5 @@ interface UbicacionDAO: CrudRepository<Ubicacion, Long> {
         """
     )
     fun recuperarUbicacionPorNombre(nombreDeUbicacion: String): Ubicacion
-    /* Operaciones CRUD
-    fun crearUbicacion(ubicacion: Ubicacion): Ubicacion
-    fun recuperarTodos(): List<Ubicacion>
-    fun recuperarVectores(ubicacionId: Long) : List<Vector>
-    fun recuperarUbicacionPorNombre(nombreUbicacion: String) : Ubicacion*/
 
 }
