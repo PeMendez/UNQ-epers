@@ -1,11 +1,14 @@
 package ar.edu.unq.eperdemic.spring.controllers
 
+import ar.edu.unq.eperdemic.modelo.exceptions.NoExisteElid
 import ar.edu.unq.eperdemic.services.PatogenoService
 import ar.edu.unq.eperdemic.services.EspecieService
 import ar.edu.unq.eperdemic.services.VectorService
 import ar.edu.unq.eperdemic.spring.controllers.dto.EspecieDTO
 import ar.edu.unq.eperdemic.spring.controllers.dto.VectorDTO
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 @CrossOrigin
@@ -52,4 +55,9 @@ class VectorControllerREST(private val vectorService: VectorService) {
 
     @GetMapping("/enfermedades/{id}")
     fun enfermedades(@PathVariable id: Long) = vectorService.enfermedades(id).map { EspecieDTO.desdeModelo(it) }
+
+    @ExceptionHandler(NoExisteElid::class)
+    fun handleNotFoundException(ex: NoExisteElid): ResponseEntity<String> {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.message)
+    }
 }

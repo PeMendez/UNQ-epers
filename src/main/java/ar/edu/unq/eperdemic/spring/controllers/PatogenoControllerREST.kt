@@ -1,9 +1,12 @@
 package ar.edu.unq.eperdemic.spring.controllers
 
 import ar.edu.unq.eperdemic.modelo.Patogeno
+import ar.edu.unq.eperdemic.modelo.exceptions.NoExisteElid
 import ar.edu.unq.eperdemic.services.PatogenoService
 import ar.edu.unq.eperdemic.spring.controllers.dto.EspecieDTO
 import ar.edu.unq.eperdemic.spring.controllers.dto.PatogenoDTO
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 @CrossOrigin
@@ -34,5 +37,10 @@ class PatogenoControllerREST(private val patogenoService: PatogenoService) {
 
   @GetMapping("/esPandemia/{especieId}")
   fun esPandemia(@PathVariable especieId: Long) = patogenoService.esPandemia(especieId)
+
+  @ExceptionHandler(NoExisteElid::class)
+  fun handleNotFoundException(ex: NoExisteElid): ResponseEntity<String> {
+    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.message)
+  }
 
 }
