@@ -7,13 +7,13 @@ import ar.edu.unq.eperdemic.modelo.TipoDeVector
 
 class MutacionDTO(
     val tipoDeMutacion: TipoDeMutacion,
-    val especieId: Long?,
+    val especieId: Long,
     val tipoDeVector : TipoDeVector?,
     val poderDeMutacion: Int?
 ) {
 
     fun aModelo() : Mutacion {
-        var mutacion = Mutacion()
+        val mutacion = Mutacion()
         mutacion.tipoDeMutacion = this.tipoDeMutacion
         mutacion.tipoDeVector = this.tipoDeVector!!
         mutacion.poderDeMutacion = this.poderDeMutacion!!

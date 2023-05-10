@@ -10,7 +10,7 @@ class Mutacion() {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id : Long? = null
-    var tipoDeMutacion: TipoDeMutacion = Random.decidirTipoMutacion(1)
+    lateinit var tipoDeMutacion: TipoDeMutacion
     @ManyToOne
     lateinit var especie: Especie
     var tipoDeVector : TipoDeVector? = null
