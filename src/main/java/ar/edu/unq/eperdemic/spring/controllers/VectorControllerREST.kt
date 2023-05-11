@@ -28,7 +28,7 @@ class VectorControllerREST(private val vectorService: VectorService) {
     @GetMapping("/{id}")
     fun findById(@PathVariable id: Long) = VectorDTO.desdeModelo(vectorService.recuperarVector(id))
 
-    @DeleteMapping("/{id}")//anda pero tira error
+    @DeleteMapping("/{id}")
     fun delete(@PathVariable id: Long) = vectorService.borrarVector(id)
 
     @GetMapping("/vectores")//falta paginado
@@ -37,15 +37,15 @@ class VectorControllerREST(private val vectorService: VectorService) {
     @GetMapping("/vectores/{id}")//falta paginado
     fun vectoresEnUbicacion(@PathVariable id: Long) = vectorService.vectoresEnUbicacionID(id).map { VectorDTO.desdeModelo(it) }
 
-    @PutMapping("/contagiar")
-    fun contagiar(@RequestBody vectorDTO: VectorDTO, vectoresDTO:List<VectorDTO>){
-        val vector = vectorDTO.aModelo()
+    @PutMapping("/contagiar/{vectorId}")
+    fun contagiar(@PathVariable vectorId: Long, @RequestBody vectoresDTO:List<VectorDTO>){
+        val vector = vectorService.recuperarVector(vectorId)
         val vectores = vectoresDTO.map{it.aModelo()}
 
         vectorService.contagiar(vector,vectores)
     }
 
-    @PutMapping("/infectar/{vectorId}/{especieId}") //tira error pero anda
+    @PutMapping("/infectar/{vectorId}/{especieId}")
     fun infectar(@PathVariable vectorId: Long, @PathVariable especieId: Long){
         val especie = especieService.recuperarEspecie(especieId)
         val vector = vectorService.recuperarVector(vectorId)
