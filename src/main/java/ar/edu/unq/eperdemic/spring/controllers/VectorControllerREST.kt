@@ -14,13 +14,11 @@ import org.springframework.web.bind.annotation.*
 class VectorControllerREST(private val vectorService: VectorService) {
 
     @Autowired
-    lateinit var patogenoService: PatogenoService
-    @Autowired
     lateinit var especieService: EspecieService
 
-    @PostMapping("/crear/{ubicacionID}")//algun temita con ubicacion
-    fun create(@PathVariable ubicacionID: Long, @RequestBody vector: VectorDTO): VectorDTO {
-        val vectorCreado = vectorService.crearVector(vector.tipoDeVector, ubicacionID)
+    @PostMapping("/crear")
+    fun create(@RequestBody vector: VectorDTO): VectorDTO {
+        val vectorCreado = vectorService.crearVector(vector.tipoDeVector, vector.ubicacion.ubicacionId!!)
         return VectorDTO.desdeModelo(vectorCreado)
     }
 
