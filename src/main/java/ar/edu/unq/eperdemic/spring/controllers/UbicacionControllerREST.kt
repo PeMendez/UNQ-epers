@@ -1,16 +1,15 @@
 package ar.edu.unq.eperdemic.spring.controllers
 
 import ar.edu.unq.eperdemic.modelo.Ubicacion
+import ar.edu.unq.eperdemic.modelo.exceptions.NoExisteElNombreDeLaUbicacion
+import ar.edu.unq.eperdemic.modelo.exceptions.NoExisteElid
+import ar.edu.unq.eperdemic.modelo.exceptions.NombreDeUbicacionRepetido
 import ar.edu.unq.eperdemic.services.UbicacionService
 import ar.edu.unq.eperdemic.spring.controllers.dto.UbicacionDTO
 import ar.edu.unq.eperdemic.spring.controllers.dto.VectorDTO
-import org.springframework.web.bind.annotation.CrossOrigin
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.PutMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.*
 
 @CrossOrigin
 @ServiceREST
@@ -34,5 +33,20 @@ class UbicacionControllerREST(private val ubicacionService: UbicacionService) {
 
     @PutMapping("/expandir/{ubicacionId}")
     fun expandir(@PathVariable ubicacionId: Long) = ubicacionService.expandir(ubicacionId)
+
+    @ExceptionHandler(NoExisteElid::class)
+    fun handleNotFoundException(ex: NoExisteElid): ResponseEntity<String> {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.message)
+    }
+
+    @ExceptionHandler(NoExisteElNombreDeLaUbicacion::class)
+    fun handleNotFoundException(ex: NoExisteElNombreDeLaUbicacion): ResponseEntity<String> {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.message)
+    }
+
+    @ExceptionHandler(NombreDeUbicacionRepetido::class)
+    fun handleNotFoundException(ex: NombreDeUbicacionRepetido): ResponseEntity<String> {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.message)
+    }
 
 }

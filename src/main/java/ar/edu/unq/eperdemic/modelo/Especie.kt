@@ -29,6 +29,12 @@ class Especie() {
         }
     }
 
+    fun agregarMutacion(mutacion: Mutacion) : Mutacion {
+        mutacion.addEspecie(this)
+        mutaciones.add(mutacion)
+        return mutacion
+    }
+
     fun capacidadDeBiomecanizacion(): Int {
         return this.patogeno.capacidadDeBiomecanizacion()
     }

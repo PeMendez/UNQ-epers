@@ -1,14 +1,29 @@
 package ar.edu.unq.eperdemic.services.impl
-/*
+
 import ar.edu.unq.eperdemic.services.MutacionService
 import ar.edu.unq.eperdemic.modelo.Mutacion
+import ar.edu.unq.eperdemic.modelo.exceptions.NoExisteElid
+import ar.edu.unq.eperdemic.persistencia.dao.EspecieDAO
+import ar.edu.unq.eperdemic.persistencia.dao.MutacionDAO
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.repository.findByIdOrNull
+import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
+@Service
+@Transactional
 class MutacionServiceImpl: MutacionService {
 
+    @Autowired
+    private lateinit var especieDAO: EspecieDAO
+    @Autowired private lateinit var mutacionDAO: MutacionDAO
+
     override fun agregarMutacion(especieId: Long, mutacion: Mutacion): Mutacion {
-        TODO("Not yet implemented")
+        val especie = especieDAO.findByIdOrNull(especieId)?: throw NoExisteElid("el id buscado no existe en la base de datos")
+        val mutacionConEspecie = especie.agregarMutacion(mutacion)
+        mutacionDAO.save(mutacionConEspecie)
+        return mutacionConEspecie
     }
 
 }
 
- */
