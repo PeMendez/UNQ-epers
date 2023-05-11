@@ -1,9 +1,7 @@
 package ar.edu.unq.eperdemic.utils
 
 import ar.edu.unq.eperdemic.modelo.Random
-import ar.edu.unq.eperdemic.persistencia.dao.PatogenoDAO
-import ar.edu.unq.eperdemic.persistencia.dao.UbicacionDAO
-import ar.edu.unq.eperdemic.persistencia.dao.VectorDAO
+import ar.edu.unq.eperdemic.persistencia.dao.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -31,6 +29,12 @@ class DataServiceSpring : DataService {
 
     @Autowired
     lateinit var patogenoDAO: PatogenoDAO
+
+    @Autowired
+    lateinit var especieDAO: EspecieDAO
+
+    @Autowired
+    lateinit var mutacionDAO: MutacionDAO
 
 
 
@@ -138,6 +142,8 @@ class DataServiceSpring : DataService {
         ubicacionDAO.deleteAll()
         vectorDAO.deleteAll()
         patogenoDAO.deleteAll()
+        especieDAO.deleteAll()
+        mutacionDAO.deleteAll()
     }
 
 }

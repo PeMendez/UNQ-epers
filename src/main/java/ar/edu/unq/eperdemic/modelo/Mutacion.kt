@@ -19,7 +19,7 @@ class Mutacion() {
     final var potenciaDeMutacion: Int? = null
 
     init {
-        tipoDeMutacion = Random.decidirTipoMutacion(1)
+        tipoDeMutacion = Random.decidirTipoMutacion(0)
         if(tipoDeMutacion == TipoDeMutacion.SupresionBiomecanica) {
             potenciaDeMutacion = Random.decidir(100)
         } else {
@@ -27,21 +27,14 @@ class Mutacion() {
         }
     }
 
-    /*
     fun addEspecie(especie: Especie) {
         this.especie = especie
     }
-     */
 
 }
 
 enum class TipoDeMutacion {
-    SupresionBiomecanica {
-        val potenciaDeMutacion: Int = Random.decidir(100)
-    },
-    BioalteracionGenetica {
-        val tipoDeVector: TipoDeVector = Random.decidirTipoVector(2)
-    }
+    SupresionBiomecanica, BioalteracionGenetica
 }
 
 
