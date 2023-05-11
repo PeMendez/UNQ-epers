@@ -7,26 +7,35 @@ class Vector(var tipo: TipoDeVector,
              @ManyToOne
              var ubicacion: Ubicacion,
              @ManyToMany(fetch = FetchType.EAGER)
-             var especies : MutableSet<Especie> = mutableSetOf())
-            //@ManyToMany(fetch = FetchType.EAGER)
-//          var mutaciones : MutableSet<Mutacion> = mutableSetOf())
-{
+             var especies : MutableSet<Especie> = mutableSetOf()) {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null
+    @ManyToMany(fetch = FetchType.EAGER)
+    var mutaciones : MutableSet<Mutacion> = mutableSetOf()
 
     fun intentarInfectarConEspecies(vectorAInfectar:Vector) {
         this.especies.forEach { e ->
             this.intentarInfectar(vectorAInfectar, e)
         }
     }
+
     fun intentarInfectar(vectorAInfectar: Vector, especie: Especie) {
         if (esContagioExitoso(vectorAInfectar,especie)) {
             //vectorInfectado.mutar(especie)
             vectorAInfectar.serInfectadoCon(especie)
         }
     }
+
+
+    fun intentarMutar(especie: Especie) {
+        if (especie.mutacionExitosa()){
+            mutaciones.add(especie.mutar())
+        }
+    }
+
+
     fun esContagioExitoso(vectorAInfectar: Vector, especie: Especie): Boolean {
         return ubicacion.nombre == vectorAInfectar.ubicacion.nombre
                 && vectorAInfectar.tipo.puedeSerInfectado(tipo)

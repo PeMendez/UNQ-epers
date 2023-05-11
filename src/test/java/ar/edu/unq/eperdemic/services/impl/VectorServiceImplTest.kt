@@ -390,7 +390,7 @@ class VectorServiceImplTest {
         assertTrue(vectoresRecuperados.isEmpty())
     }
 
-    //@AfterEach
+    @AfterEach
     fun eliminarModelo() {
         dataServiceSpring.eliminarTodo()
     }

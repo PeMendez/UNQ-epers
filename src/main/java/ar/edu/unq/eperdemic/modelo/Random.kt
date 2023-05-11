@@ -23,9 +23,9 @@ object Random {
     fun decidirTipoMutacion(limiteFinal: Int): TipoDeMutacion{
         val tipos = TipoDeMutacion.values()
         return if (esRandom){
-            tipos.get((0..limiteFinal).random())
+            tipos[(0..limiteFinal).random()]
         } else {
-            tipos.get(limiteFinal)
+            tipos[limiteFinal]
         }
     }
 

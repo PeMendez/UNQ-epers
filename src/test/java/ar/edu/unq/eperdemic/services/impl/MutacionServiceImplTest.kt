@@ -28,13 +28,12 @@ class MutacionServiceImplTest {
     fun setUp() {
         Random.switchModo(false)
         dataService.crearSetDeDatosIniciales()
-        mutacionTest.tipoDeMutacion = TipoDeMutacion.BioalteracionGenetica
+        mutacionTest.tipoDeMutacion = TipoDeMutacion.BioalteracionGenetica // se deberia inicializar mutacion con un tipo
     }
 
     @Test
     fun SeAgregaUnaMutacionAUnaEspecie() {
     }
-
     @Test
     fun seIntentaAgregarUnaMutacionAUnaEspecieInexistenteYRompe() {
         assertThrows(NoExisteElid::class.java) {

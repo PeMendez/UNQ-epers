@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*
 @ServiceREST
 @RequestMapping("/mutacion")
 class MutacionControllerREST(private val mutacionService: MutacionService) {
-
+/*
     @PostMapping("/agregarMutacion")
     fun agregarMutacion(@RequestBody mutacionDTO: MutacionDTO): MutacionDTO {
         val mutacion = mutacionService.agregarMutacion(mutacionDTO.especieId,mutacionDTO.aModelo())
@@ -22,4 +22,5 @@ class MutacionControllerREST(private val mutacionService: MutacionService) {
     fun handleNotFoundException(ex: NoExisteElid): ResponseEntity<String> {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.message)
     }
+ */
 }
