@@ -6,6 +6,8 @@ import ar.edu.unq.eperdemic.modelo.exceptions.NoExisteElid
 import ar.edu.unq.eperdemic.persistencia.dao.EspecieDAO
 import ar.edu.unq.eperdemic.persistencia.dao.MutacionDAO
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -32,6 +34,10 @@ class MutacionServiceImpl: MutacionService {
 
     override fun recuperarTodas(): List<Mutacion> {
         return mutacionDAO.findAll().toList()
+    }
+
+    override fun recuperarTodas(page: Pageable): Page<Mutacion> {
+        return mutacionDAO.findAll(page)
     }
 
 }

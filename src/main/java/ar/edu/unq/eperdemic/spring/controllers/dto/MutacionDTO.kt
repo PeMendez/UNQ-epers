@@ -4,6 +4,7 @@ import ar.edu.unq.eperdemic.modelo.Mutacion
 import ar.edu.unq.eperdemic.modelo.Random
 import ar.edu.unq.eperdemic.modelo.TipoDeMutacion
 import ar.edu.unq.eperdemic.modelo.TipoDeVector
+import ar.edu.unq.eperdemic.modelo.exceptions.ConvinacionDeDatosIncorrecta
 
 class MutacionDTO(
     val tipoDeMutacion: TipoDeMutacion,
@@ -14,6 +15,17 @@ class MutacionDTO(
 
     fun aModelo() : Mutacion {
         val mutacion = Mutacion(this.tipoDeMutacion)
+        if (tipoDeMutacion == TipoDeMutacion.SupresionBiomecanica && poderDeMutacion != null){
+            mutacion.potenciaDeMutacion = poderDeMutacion
+        }else if (tipoDeMutacion == TipoDeMutacion.BioalteracionGenetica && tipoDeVector != null){
+            mutacion.tipoDeVector = tipoDeVector
+        }
+        if (tipoDeMutacion ==TipoDeMutacion.SupresionBiomecanica && tipoDeVector != null){
+            throw ConvinacionDeDatosIncorrecta("el tipo supresion biomecanica no tiene un tipo de vector")
+        }
+        if (tipoDeMutacion == TipoDeMutacion.BioalteracionGenetica && poderDeMutacion != null){
+            throw ConvinacionDeDatosIncorrecta("el tipo bioalteracion genetica no tiene un poder de mutación")
+        }
 
         return mutacion
     }
