@@ -52,7 +52,12 @@ class EspecieServiceImpl() : EspecieService {
     }
 
     override fun especieLiderDeUbicacion(ubicacionId: Long) : Especie {
-        return especieDAO.especieLiderDeUbicacion(ubicacionId).first()
+        try{
+            return especieDAO.especieLiderDeUbicacion(ubicacionId).first()
+        }catch (e:NoSuchElementException) {
+            throw NoExisteUnaEspecieLider("No hay una especie lider actualmente en la ubicación dada.")
+        }
+
     }
 
 }
