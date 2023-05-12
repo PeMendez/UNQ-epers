@@ -10,6 +10,8 @@ import ar.edu.unq.eperdemic.persistencia.dao.VectorDAO
 import ar.edu.unq.eperdemic.services.UbicacionService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.dao.EmptyResultDataAccessException
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -59,6 +61,11 @@ class UbicacionServiceImpl(): UbicacionService {
     override fun recuperarTodos(): List<Ubicacion> {
         return ubicacionDAO.findAll().toList()
     }
+
+    override fun recuperarTodos(page: Pageable): Page<Ubicacion> {
+        return ubicacionDAO.findAll(page)
+    }
+
 
     override fun recuperar(ubicacionId: Long) : Ubicacion {
         return ubicacionDAO.findByIdOrNull(ubicacionId)?: throw NoExisteElid("el id buscado no existe en la base de datos")

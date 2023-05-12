@@ -9,6 +9,8 @@ import ar.edu.unq.eperdemic.persistencia.dao.UbicacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.VectorDAO
 import ar.edu.unq.eperdemic.services.VectorService
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -64,6 +66,11 @@ class VectorServiceImpl(): VectorService {
     override fun recuperarTodos(): List<Vector> {
         return vectorDAO.findAll()
     }
+
+    override fun recuperarTodos(page: Pageable): Page<Vector> {
+        return vectorDAO.findAll(page)
+    }
+
 
     override fun vectoresEnUbicacionID(ubicacionId: Long): List<Vector> {
         return vectorDAO.findAllByUbicacionId(ubicacionId)
