@@ -43,8 +43,6 @@ class VectorTest {
         vectorPersonaEnfermo.serInfectadoCon(especie1)
 
         assertEquals(1, vectorPersonaEnfermo.especies.size)
-
-
     }
 
     @Test
