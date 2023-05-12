@@ -6,6 +6,7 @@ import ar.edu.unq.eperdemic.services.EspecieService
 import ar.edu.unq.eperdemic.services.VectorService
 import ar.edu.unq.eperdemic.spring.controllers.dto.EspecieDTO
 import ar.edu.unq.eperdemic.spring.controllers.dto.VectorDTO
+import com.fasterxml.jackson.databind.exc.InvalidFormatException
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
@@ -66,5 +67,12 @@ class VectorControllerREST(private val vectorService: VectorService) {
     @ExceptionHandler(NoExisteElid::class)
     fun handleNotFoundException(ex: NoExisteElid): ResponseEntity<String> {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.message)
+    }
+
+    @ExceptionHandler(InvalidFormatException::class)
+    fun handleInvalidFormatException(e: InvalidFormatException): ResponseEntity<String> {
+        val expectedValues = e.targetType.enumConstants.joinToString(", ")
+        val errorMessage = "Valor inválido para el campo 'tipoDeVector'. Se esperaba uno de los siguientes valores: $expectedValues."
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMessage)
     }
 }
