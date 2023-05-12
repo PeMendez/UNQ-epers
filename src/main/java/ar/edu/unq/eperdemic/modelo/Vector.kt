@@ -31,17 +31,19 @@ class Vector(var tipo: TipoDeVector,
 
 
     fun intentarMutar(especie: Especie) {
-        if (especie.mutacionExitosa()) {
+        if (especie.mutacionExitosa(this)) {
             val mutacionContraida = especie.mutar()
             this.agregarMutacion(mutacionContraida)
         }
     }
 
     private fun agregarMutacion(mutacion: Mutacion) {
-        if (mutacion.tipoDeMutacion == TipoDeMutacion.SupresionBiomecanica) {
-            mutacion.haceMagia(this)
+        if (!this.mutaciones.any { m -> m.id == mutacion.id && m.especie.id == mutacion.especie.id }) {
+            if (mutacion.tipoDeMutacion == TipoDeMutacion.SupresionBiomecanica) {
+                mutacion.activarSupresion(this)
+            }
+            mutaciones.add(mutacion)
         }
-        mutaciones.add(mutacion)
     }
 
     fun esContagioExitoso(vectorAInfectar: Vector, especie: Especie): Boolean {
@@ -53,12 +55,10 @@ class Vector(var tipo: TipoDeVector,
 
     fun hayContagioPorTipo(especie: Especie, vectorAInfectar: Vector): Boolean {
         var mutacion = this.mutaciones.find { m ->
-            m.tipoDeMutacion == TipoDeMutacion.BioalteracionGenetica
-            && m.especie.id == especie.id
+            m.tipoDeMutacion == TipoDeMutacion.BioalteracionGenetica && m.especie.id!! == especie.id!!
         }
         if (mutacion != null) {
-            return  mutacion.tipoDeVector == vectorAInfectar.tipo
-                    || vectorAInfectar.tipo.puedeSerInfectado(this.tipo)
+            return  mutacion.tipoDeVector == vectorAInfectar.tipo || vectorAInfectar.tipo.puedeSerInfectado(this.tipo)
         } else {
             return vectorAInfectar.tipo.puedeSerInfectado(this.tipo)
         }

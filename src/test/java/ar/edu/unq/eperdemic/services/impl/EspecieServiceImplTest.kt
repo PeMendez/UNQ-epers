@@ -1,5 +1,6 @@
 package ar.edu.unq.eperdemic.services.impl
 
+import ar.edu.unq.eperdemic.modelo.Mutacion
 import ar.edu.unq.eperdemic.modelo.Patogeno
 import ar.edu.unq.eperdemic.modelo.TipoDeVector
 import ar.edu.unq.eperdemic.modelo.exceptions.NoExisteElid
@@ -28,6 +29,9 @@ class EspecieServiceImplTest {
 
     @Autowired
     private lateinit var especieService: EspecieServiceImpl
+
+    @Autowired
+    private lateinit var mutacionService: MutacionServiceImpl
 
     @Autowired
     private lateinit var dataService: DataService
@@ -75,8 +79,6 @@ class EspecieServiceImplTest {
         }
     }
 
-
-
     @Test
     fun seRecuperaUnaEspecieConTodosSusDatosCorrectos() {
         dataService.eliminarTodo()
@@ -105,8 +107,35 @@ class EspecieServiceImplTest {
         val especieCreada = patogenoService.agregarEspecie(patogenoCreado.id!!, "cualquierNombre", ubicacionCreada.id!!)
 
         Assertions.assertEquals(1, especieService.cantidadDeInfectados(especieCreada.id!!))
-
     }
+
+    @Test
+    fun seRecuperaUnaEspecieConSusMutacionesCorrectamente() {
+        val patogeno = Patogeno("testEspecie")
+        val patogenoCreado = patogenoService.crearPatogeno(patogeno)
+        val ubicacionCreada = ubicacionService.crearUbicacion("ubicacionTestEspecie")
+        vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada.id!!)
+        val especieCreada = patogenoService.agregarEspecie(patogenoCreado.id!!, "cualquierNombre", ubicacionCreada.id!!)
+
+        val mutacionAAgregar1 = Mutacion()
+        val mutacion1 = mutacionService.agregarMutacion(especieCreada.id!!, mutacionAAgregar1)
+
+        val especieRecuperada = especieService.recuperarEspecie(especieCreada.id!!)
+
+        Assertions.assertNotNull(especieRecuperada.mutaciones.find { m -> m.id!! == mutacion1.id!! })
+    }
+
+    @Test
+    fun unaEspecieRecienCreadaNoTieneMutaciones() {
+        val patogeno = Patogeno("testEspecie")
+        val patogenoCreado = patogenoService.crearPatogeno(patogeno)
+        val ubicacionCreada = ubicacionService.crearUbicacion("ubicacionTestEspecie")
+        vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada.id!!)
+        val especieCreada = patogenoService.agregarEspecie(patogenoCreado.id!!, "cualquierNombre", ubicacionCreada.id!!)
+
+        Assertions.assertTrue(especieCreada.mutaciones.isEmpty())
+    }
+
 
     @Test
     fun seConoceLaEspecieLiderConMayorCantidadDePersonasInfectadasCorrectamente() {
@@ -279,7 +308,7 @@ class EspecieServiceImplTest {
 
     @AfterEach
     fun eliminarModelo() {
-        //dataService.eliminarTodo()
+        dataService.eliminarTodo()
     }
 
 }

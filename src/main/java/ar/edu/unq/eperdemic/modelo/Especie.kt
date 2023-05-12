@@ -27,8 +27,9 @@ class Especie() {
         }
     }
 
-    fun mutacionExitosa(): Boolean{
+    fun mutacionExitosa(vectorAMutar: Vector): Boolean{
         return Random.decidir(100) <= capacidadDeBiomecanizacion() && mutaciones.isNotEmpty()
+
     }
 
     fun mutar() : Mutacion{

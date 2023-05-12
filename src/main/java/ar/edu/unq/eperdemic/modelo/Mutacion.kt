@@ -31,7 +31,7 @@ class Mutacion() {
         this.especie = especie
     }
 
-    fun haceMagia(vector: Vector) {
+    fun activarSupresion(vector: Vector) {
         val especiesAEliminar = mutableListOf<Especie>()
         vector.especies.forEach { e ->
             if (e.capacidadDeDefensa() < this.potenciaDeMutacion!! && e.id!! != this.especie.id!!) {

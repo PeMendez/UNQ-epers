@@ -698,12 +698,7 @@ class VectorServiceImplTest {
     }
 
     @Test
-    fun unVectorNoPuedeContraerDosVecesUnaMismaMutacion() {
-
-    }
-
-    @Test
-    fun cuandoUnVectorContrajoBioalteracionGeneticaEntoncesPuedeContagiarACualquierVector() {
+    fun cuandoUnVectorInsectoContrajoBioalteracionGeneticaInsectoEntoncesPuedeContagiarAVectoresInsectoConLaEnfermedadDeLaMutacion() {
         val patogeno = Patogeno("testEspecie1")
         val patogenoCreado = patogenoService.crearPatogeno(patogeno)
         val ubicacionCreada1 = ubicacionServiceImpl.crearUbicacion("ubicacionTestEspecie1")
@@ -714,7 +709,73 @@ class VectorServiceImplTest {
         mutacionAAgregar1.tipoDeMutacion = TipoDeMutacion.BioalteracionGenetica
         mutacionAAgregar1.tipoDeVector = TipoDeVector.Insecto
         mutacionAAgregar1.potenciaDeMutacion = null
-        mutacionService.agregarMutacion(especieCreadaConMutacion.id!!, mutacionAAgregar1)
+        val mutacion1 = mutacionService.agregarMutacion(especieCreadaConMutacion.id!!, mutacionAAgregar1)
+
+        val vectorConBioalteracion = vectorServiceImpl.crearVector(TipoDeVector.Insecto, ubicacionCreada1.id!!)
+        vectorServiceImpl.infectar(vectorConBioalteracion, especieCreadaConMutacion)
+
+        val vectorConBioalteracionRecuperado = vectorServiceImpl.recuperarVector(vectorConBioalteracion.id!!)
+        val vectorAInfectar = vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada1.id!!)
+        val vectorAInfectarLista = listOf(vectorAInfectar)
+        vectorServiceImpl.contagiar(vectorConBioalteracionRecuperado, vectorAInfectarLista)
+
+        assertNotNull(vectorConBioalteracionRecuperado.mutaciones.find { m -> m.id!! == mutacion1.id!! })
+
+        val vectorAInfectar2 = vectorServiceImpl.crearVector(TipoDeVector.Insecto, ubicacionCreada1.id!!)
+        val vectorAInfectar2Lista = listOf(vectorAInfectar2)
+        vectorServiceImpl.contagiar(vectorConBioalteracionRecuperado, vectorAInfectar2Lista)
+
+        val vectorAInfectarRec = vectorServiceImpl.recuperarVector(vectorAInfectar2.id!!)
+
+       assertNotNull(vectorAInfectarRec.especies.find { e -> e.id!! == especieCreadaConMutacion.id!! })
+    }
+
+    @Test
+    fun cuandoUnVectorAnimalContrajoBioalteracionGeneticaAnimalEntoncesPuedeContagiarAVectoresAnimalConLaEnfermedadDeLaMutacion() {
+        val patogeno = Patogeno("testEspecie1")
+        val patogenoCreado = patogenoService.crearPatogeno(patogeno)
+        val ubicacionCreada1 = ubicacionServiceImpl.crearUbicacion("ubicacionTestEspecie1")
+        vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada1.id!!)
+        val especieCreadaConMutacion = patogenoService.agregarEspecie(patogenoCreado.id!!, "cualquierNombre1", ubicacionCreada1.id!!)
+
+        val mutacionAAgregar1 = Mutacion()
+        mutacionAAgregar1.tipoDeMutacion = TipoDeMutacion.BioalteracionGenetica
+        mutacionAAgregar1.tipoDeVector = TipoDeVector.Animal
+        mutacionAAgregar1.potenciaDeMutacion = null
+        val mutacion1 = mutacionService.agregarMutacion(especieCreadaConMutacion.id!!, mutacionAAgregar1)
+
+        val vectorConBioalteracion = vectorServiceImpl.crearVector(TipoDeVector.Animal, ubicacionCreada1.id!!)
+        vectorServiceImpl.infectar(vectorConBioalteracion, especieCreadaConMutacion)
+
+        val vectorConBioalteracionRecuperado = vectorServiceImpl.recuperarVector(vectorConBioalteracion.id!!)
+        val vectorAInfectar = vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada1.id!!)
+        val vectorAInfectarLista = listOf(vectorAInfectar)
+        vectorServiceImpl.contagiar(vectorConBioalteracionRecuperado, vectorAInfectarLista)
+
+        assertNotNull(vectorConBioalteracionRecuperado.mutaciones.find { m -> m.id!! == mutacion1.id!! })
+
+        val vectorAInfectar2 = vectorServiceImpl.crearVector(TipoDeVector.Animal, ubicacionCreada1.id!!)
+        val vectorAInfectar2Lista = listOf(vectorAInfectar2)
+        vectorServiceImpl.contagiar(vectorConBioalteracionRecuperado, vectorAInfectar2Lista)
+
+        val vectorAInfectarRec = vectorServiceImpl.recuperarVector(vectorAInfectar2.id!!)
+
+        assertNotNull(vectorAInfectarRec.especies.find { e -> e.id!! == especieCreadaConMutacion.id!! })
+    }
+
+    @Test
+    fun cuandoUnVectorPersonaContrajoBioalteracionGeneticaAnimalEntoncesPuedeContagiarAVectoresAnimalConLaEnfermedadDeLaMutacion() {
+        val patogeno = Patogeno("testEspecie1")
+        val patogenoCreado = patogenoService.crearPatogeno(patogeno)
+        val ubicacionCreada1 = ubicacionServiceImpl.crearUbicacion("ubicacionTestEspecie1")
+        vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada1.id!!)
+        val especieCreadaConMutacion = patogenoService.agregarEspecie(patogenoCreado.id!!, "cualquierNombre1", ubicacionCreada1.id!!)
+
+        val mutacionAAgregar1 = Mutacion()
+        mutacionAAgregar1.tipoDeMutacion = TipoDeMutacion.BioalteracionGenetica
+        mutacionAAgregar1.tipoDeVector = TipoDeVector.Animal
+        mutacionAAgregar1.potenciaDeMutacion = null
+        val mutacion1 = mutacionService.agregarMutacion(especieCreadaConMutacion.id!!, mutacionAAgregar1)
 
         val vectorConBioalteracion = vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada1.id!!)
         vectorServiceImpl.infectar(vectorConBioalteracion, especieCreadaConMutacion)
@@ -724,10 +785,11 @@ class VectorServiceImplTest {
         val vectorAInfectarLista = listOf(vectorAInfectar)
         vectorServiceImpl.contagiar(vectorConBioalteracionRecuperado, vectorAInfectarLista)
 
-        val vectorConBioalteracionFinal = vectorServiceImpl.recuperarVector(vectorConBioalteracion.id!!)
-        val vectorAInfectar2 = vectorServiceImpl.crearVector(TipoDeVector.Insecto, ubicacionCreada1.id!!)
+        assertNotNull(vectorConBioalteracionRecuperado.mutaciones.find { m -> m.id!! == mutacion1.id!! })
+
+        val vectorAInfectar2 = vectorServiceImpl.crearVector(TipoDeVector.Animal, ubicacionCreada1.id!!)
         val vectorAInfectar2Lista = listOf(vectorAInfectar2)
-        vectorServiceImpl.contagiar(vectorConBioalteracionFinal, vectorAInfectar2Lista)
+        vectorServiceImpl.contagiar(vectorConBioalteracionRecuperado, vectorAInfectar2Lista)
 
         val vectorAInfectarRec = vectorServiceImpl.recuperarVector(vectorAInfectar2.id!!)
 
@@ -735,7 +797,105 @@ class VectorServiceImplTest {
     }
 
     @Test
+    fun cuandoUnTipoDeVector1NoPuedeContagiarAOtroTipoDeVector2YMutaConBioalteracionGeneticaDistintaATipoDeVector2EntoncesSigueSinPoderContagiarlo() {
+        val patogeno = Patogeno("testEspecie1")
+        val patogenoCreado = patogenoService.crearPatogeno(patogeno)
+        val ubicacionCreada1 = ubicacionServiceImpl.crearUbicacion("ubicacionTestEspecie1")
+        vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada1.id!!)
+        val especieCreadaConMutacion = patogenoService.agregarEspecie(patogenoCreado.id!!, "cualquierNombre1", ubicacionCreada1.id!!)
 
+        val mutacionAAgregar1 = Mutacion()
+        mutacionAAgregar1.tipoDeMutacion = TipoDeMutacion.BioalteracionGenetica
+        mutacionAAgregar1.tipoDeVector = TipoDeVector.Persona
+        mutacionAAgregar1.potenciaDeMutacion = null
+        val mutacion1 = mutacionService.agregarMutacion(especieCreadaConMutacion.id!!, mutacionAAgregar1)
+
+        val vectorConBioalteracion = vectorServiceImpl.crearVector(TipoDeVector.Insecto, ubicacionCreada1.id!!)
+        vectorServiceImpl.infectar(vectorConBioalteracion, especieCreadaConMutacion)
+
+        val vectorConBioalteracionRecuperado = vectorServiceImpl.recuperarVector(vectorConBioalteracion.id!!)
+        val vectorAInfectar = vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada1.id!!)
+        val vectorAInfectarLista = listOf(vectorAInfectar)
+        vectorServiceImpl.contagiar(vectorConBioalteracionRecuperado, vectorAInfectarLista)
+
+        assertNotNull(vectorConBioalteracionRecuperado.mutaciones.find { m -> m.id!! == mutacion1.id!! })
+
+        val vectorAInfectar2 = vectorServiceImpl.crearVector(TipoDeVector.Insecto, ubicacionCreada1.id!!)
+        val vectorAInfectar2Lista = listOf(vectorAInfectar2)
+        vectorServiceImpl.contagiar(vectorConBioalteracionRecuperado, vectorAInfectar2Lista)
+
+        val vectorAInfectarRec = vectorServiceImpl.recuperarVector(vectorAInfectar2.id!!)
+
+        assertNull(vectorAInfectarRec.especies.find { e -> e.id!! == especieCreadaConMutacion.id!! })
+    }
+
+    @Test
+    fun cuandoUnTipoDeVector1NoPuedeContagiarAOtroTipoDeVector2YMutaConBioalteracionGeneticaATipoDeVector2EntoncesSoloPuedeContagiarloConLaEnfermedadDeLaMutacion() {
+        val patogeno = Patogeno("testEspecie1")
+        val patogenoCreado = patogenoService.crearPatogeno(patogeno)
+        val ubicacionCreada1 = ubicacionServiceImpl.crearUbicacion("ubicacionTestEspecie1")
+        vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada1.id!!)
+        val especieCreadaConMutacion = patogenoService.agregarEspecie(patogenoCreado.id!!, "cualquierNombre1", ubicacionCreada1.id!!)
+        val especieCreada2 = patogenoService.agregarEspecie(patogenoCreado.id!!, "cualquierNombre2", ubicacionCreada1.id!!)
+
+        val mutacionAAgregar1 = Mutacion()
+        mutacionAAgregar1.tipoDeMutacion = TipoDeMutacion.BioalteracionGenetica
+        mutacionAAgregar1.tipoDeVector = TipoDeVector.Insecto
+        mutacionAAgregar1.potenciaDeMutacion = null
+        val mutacion1 = mutacionService.agregarMutacion(especieCreadaConMutacion.id!!, mutacionAAgregar1)
+
+        val vectorConBioalteracion = vectorServiceImpl.crearVector(TipoDeVector.Insecto, ubicacionCreada1.id!!)
+        vectorServiceImpl.infectar(vectorConBioalteracion, especieCreadaConMutacion)
+        val vectorConBioalteracionRecuperado1 = vectorServiceImpl.recuperarVector(vectorConBioalteracion.id!!)
+        vectorServiceImpl.infectar(vectorConBioalteracionRecuperado1, especieCreada2)
+
+        val vectorConBioalteracionRecuperado2 = vectorServiceImpl.recuperarVector(vectorConBioalteracion.id!!)
+        val vectorAInfectar = vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada1.id!!)
+        val vectorAInfectarLista = listOf(vectorAInfectar)
+        vectorServiceImpl.contagiar(vectorConBioalteracionRecuperado2, vectorAInfectarLista)
+
+        assertNotNull(vectorConBioalteracionRecuperado2.mutaciones.find { m -> m.id!! == mutacion1.id!! })
+
+        val vectorAInfectar2 = vectorServiceImpl.crearVector(TipoDeVector.Insecto, ubicacionCreada1.id!!)
+        val vectorAInfectar2Lista = listOf(vectorAInfectar2)
+        vectorServiceImpl.contagiar(vectorConBioalteracionRecuperado2, vectorAInfectar2Lista)
+
+        assertTrue(vectorConBioalteracionRecuperado2.especies.size == 2)
+
+        val vectorAInfectarRec = vectorServiceImpl.recuperarVector(vectorAInfectar2.id!!)
+
+        assertNotNull(vectorAInfectarRec.especies.find { e -> e.id!! == especieCreadaConMutacion.id!! })
+        assertNull(vectorAInfectarRec.especies.find { e -> e.id!! == especieCreada2.id!! })
+    }
+
+    @Test
+    fun siSeIntentaContraerDosVecesUnaMismaMutacionDeUnaMismaEspecieAUnVectorEntoncesSeContraeSoloUnaVez() {
+        val patogeno = Patogeno("testEspecie1")
+        val patogenoCreado = patogenoService.crearPatogeno(patogeno)
+        val ubicacionCreada1 = ubicacionServiceImpl.crearUbicacion("ubicacionTestEspecie1")
+        vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada1.id!!)
+        val especieCreadaConMutacion = patogenoService.agregarEspecie(patogenoCreado.id!!, "cualquierNombre1", ubicacionCreada1.id!!)
+
+        val mutacionAAgregar1 = Mutacion()
+        val mutacion1 = mutacionService.agregarMutacion(especieCreadaConMutacion.id!!, mutacionAAgregar1)
+
+        val vectorConBioalteracion = vectorServiceImpl.crearVector(TipoDeVector.Insecto, ubicacionCreada1.id!!)
+        vectorServiceImpl.infectar(vectorConBioalteracion, especieCreadaConMutacion)
+
+        val vectorConBioalteracionRecuperado = vectorServiceImpl.recuperarVector(vectorConBioalteracion.id!!)
+        val vectorAInfectar = vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada1.id!!)
+        val vectorAInfectarLista = listOf(vectorAInfectar)
+        vectorServiceImpl.contagiar(vectorConBioalteracionRecuperado, vectorAInfectarLista)
+
+        assertNotNull(vectorConBioalteracionRecuperado.mutaciones.find { m -> m.id!! == mutacion1.id!! })
+        assertTrue(vectorConBioalteracionRecuperado.mutaciones.size == 1)
+
+        val vectorAInfectar2 = vectorServiceImpl.crearVector(TipoDeVector.Insecto, ubicacionCreada1.id!!)
+        val vectorAInfectar2Lista = listOf(vectorAInfectar2)
+        vectorServiceImpl.contagiar(vectorConBioalteracionRecuperado, vectorAInfectar2Lista)
+
+        assertTrue(vectorConBioalteracionRecuperado.mutaciones.size == 1)
+    }
 
     @AfterEach
     fun eliminarModelo() {
