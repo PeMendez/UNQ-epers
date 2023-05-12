@@ -18,11 +18,20 @@ class MutacionServiceImpl: MutacionService {
     private lateinit var especieDAO: EspecieDAO
     @Autowired private lateinit var mutacionDAO: MutacionDAO
 
+
     override fun agregarMutacion(especieId: Long, mutacion: Mutacion): Mutacion {
-        val especie = especieDAO.findByIdOrNull(especieId)?: throw NoExisteElid("el id buscado no existe en la base de datos")
-        val mutacionConEspecie = especie.agregarMutacion(mutacion)
-        mutacionDAO.save(mutacionConEspecie)
-        return mutacionConEspecie
+        val especie = especieDAO.findByIdOrNull(especieId) ?: throw NoExisteElid("el id buscado no existe en la base de datos")
+        mutacion.addEspecie(especie)
+        mutacionDAO.save(mutacion)
+        return mutacion
+    }
+
+    override fun recuperarMutacion(mutacionId: Long): Mutacion {
+        return mutacionDAO.findByIdOrNull(mutacionId)?: throw NoExisteElid("el id buscado no existe en la base de datos")
+    }
+
+    override fun recuperarTodas(): List<Mutacion> {
+        return mutacionDAO.findAll().toList()
     }
 
 }

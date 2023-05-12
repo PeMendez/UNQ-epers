@@ -28,7 +28,7 @@ class VectorServiceImpl(): VectorService {
     override fun contagiar(vectorInfectado: Vector, vectores: List<Vector>) {
         vectorDAO.findByIdOrNull(vectorInfectado.id)?: throw NoExisteElid("No existe el ID del vector")
         vectores.forEach { v ->
-            vectorInfectado.intentarInfectarConEspecies(v)
+            vectorInfectado.intentarInfectarConEspecies(vectorInfectado.especies.toList(), v)
             vectorDAO.save(v)
         }
     }

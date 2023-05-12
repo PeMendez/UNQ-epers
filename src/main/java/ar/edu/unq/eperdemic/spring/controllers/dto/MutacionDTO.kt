@@ -12,11 +12,12 @@ class MutacionDTO(
     val poderDeMutacion: Int?
 ) {
 
+/*
     fun aModelo() : Mutacion {
-        val mutacion = Mutacion()
-        mutacion.tipoDeMutacion = this.tipoDeMutacion
-        mutacion.tipoDeVector = this.tipoDeVector!!
-        mutacion.poderDeMutacion = this.poderDeMutacion!!
+        if(tipoDeMutacion == TipoDeMutacion.SupresionBiomecanica ) {
+            var mutacion = TipoDeMutacion.SupresionBiomecanica
+            mutacion.
+        }
         return mutacion
     }
 
@@ -30,6 +31,6 @@ class MutacionDTO(
 
             )
     }
-
+*/
 }
 
