@@ -47,9 +47,9 @@ class VectorControllerREST(private val vectorService: VectorService) {
     @PutMapping("/contagiar/{vectorId}")
     fun contagiar(@PathVariable vectorId: Long, @RequestBody vectoresDTO:List<VectorDTO>){
         val vector = vectorService.recuperarVector(vectorId)
-        val vectores = vectoresDTO.map{it.aModelo()}
+        val vectores2 = vectoresDTO.map { v ->  vectorService.recuperarVector(v.vectorID!!)}
 
-        vectorService.contagiar(vector,vectores)
+        vectorService.contagiar(vector,vectores2)
     }
 
     @PutMapping("/infectar/{vectorId}/{especieId}")
