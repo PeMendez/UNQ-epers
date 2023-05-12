@@ -54,7 +54,7 @@ class Vector(var tipo: TipoDeVector,
     }
 
     fun hayContagioPorTipo(especie: Especie, vectorAInfectar: Vector): Boolean {
-        var mutacion = this.mutaciones.find { m ->
+        val mutacion = this.mutaciones.find { m ->
             m.tipoDeMutacion == TipoDeMutacion.BioalteracionGenetica && m.especie.id!! == especie.id!!
         }
         if (mutacion != null) {

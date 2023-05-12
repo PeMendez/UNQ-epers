@@ -49,7 +49,7 @@ class MutacionControllerREST(private val mutacionService: MutacionService) {
     @ExceptionHandler(InvalidFormatException::class)
     fun handleInvalidFormatException(e: InvalidFormatException): ResponseEntity<String> {
         val expectedValues = e.targetType.enumConstants.joinToString(", ")
-        val errorMessage = "Valor inválido para el campo 'tipoDeMutacion'. Se esperaba uno de los siguientes valores: $expectedValues."
+        val errorMessage = "Valor inválido para el campo 'tipo'. Se esperaba uno de los siguientes valores: $expectedValues."
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMessage)
     }
 }

@@ -35,7 +35,6 @@ class VectorTest {
 
     @Test
     fun alIntentarInfectarUnVectorConUnaEspecieQueYaEstaInfectadoNoSeDuplica() {
-    //que rompa cuando se repite la misma enfermedad
         vectorPersonaEnfermo.serInfectadoCon(especie1)
 
         assertEquals(1, vectorPersonaEnfermo.especies.size)

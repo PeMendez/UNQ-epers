@@ -19,7 +19,8 @@ class PatogenoDTO (
         val patogeno = Patogeno()
         patogeno.id = this.id
         patogeno.tipo = this.tipo
-        patogeno.cantidadDeEspecies = this.cantidadDeEspecies!!
+        if (this.cantidadDeEspecies != null){
+        patogeno.cantidadDeEspecies = this.cantidadDeEspecies}
         return patogeno
     }
 }
