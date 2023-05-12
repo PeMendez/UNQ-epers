@@ -9,6 +9,7 @@ import org.junit.jupiter.api.*
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.data.domain.PageRequest
 import org.springframework.test.context.junit.jupiter.SpringExtension
 
 
@@ -240,6 +241,28 @@ class PatogenoServiceTest {
         Assertions.assertEquals("No hay ningún vector en la ubicación dada", ex.message)
 
     }
+
+    @Test
+    fun seRecuperanTodasLasEspeciesDeUnPatogenoConPaginaCeroYSizeUno() {
+        val especieImperius = patogenoService.agregarEspecie(patogenoMalDeDragon.id!!, "Imperius", ubicacionPrivateDrive.id!!)
+        val especieCruciartus = patogenoService.agregarEspecie(patogenoMalDeDragon.id!!, "Cruciartus", ubicacionPrivateDrive.id!!)
+
+        val listaDeEspeciesRecuperadas = patogenoService.especiesDePatogeno(patogenoMalDeDragon.id!!)
+
+
+        val pageable = PageRequest.of(0, 1)
+
+        val patogenosRecuperados = patogenoService.recuperarATodosLosPatogenos(pageable)
+
+
+        Assertions.assertNotNull(listaDeEspeciesRecuperadas.find { it.id == especieImperius.id })
+        Assertions.assertNotNull(listaDeEspeciesRecuperadas.find { it.id == especieCruciartus.id })
+        Assertions.assertTrue(listaDeEspeciesRecuperadas.size == 2)
+
+        Assertions.assertEquals(0, patogenosRecuperados.number)
+        Assertions.assertEquals(1, patogenosRecuperados.numberOfElements)
+    }
+
 
     @AfterEach
     fun eliminarModelo() {
