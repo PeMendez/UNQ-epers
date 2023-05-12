@@ -9,14 +9,16 @@ class MutacionDTO(
     val tipoDeMutacion: TipoDeMutacion,
     val especieId: Long,
     val tipoDeVector : TipoDeVector?,
-    val poderDeMutacion: Int?
-) {
+    val poderDeMutacion: Int?) {
 
 /*
     fun aModelo() : Mutacion {
-        if(tipoDeMutacion == TipoDeMutacion.SupresionBiomecanica ) {
-            var mutacion = TipoDeMutacion.SupresionBiomecanica
-            mutacion.
+        var mutacion = Mutacion()
+        mutacion.tipoDeMutacion = this.tipoDeMutacion
+        if (mutacion.tipoDeMutacion == TipoDeMutacion.SupresionBiomecanica) {
+            mutacion.potenciaDeMutacion = this.poderDeMutacion
+        } else {
+            mutacion.tipoDeVector = this.tipoDeVector
         }
         return mutacion
     }
@@ -27,8 +29,7 @@ class MutacionDTO(
                 tipoDeMutacion = mutacion.tipoDeMutacion,
                 especieId = mutacion.especie.id!!,
                 tipoDeVector = mutacion.tipoDeVector,
-                poderDeMutacion = mutacion.poderDeMutacion
-
+                poderDeMutacion = mutacion.potenciaDeMutacion
             )
     }
 */

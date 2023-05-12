@@ -31,6 +31,16 @@ class Mutacion() {
         this.especie = especie
     }
 
+    fun haceMagia(vector: Vector) {
+        val especiesAEliminar = mutableListOf<Especie>()
+        vector.especies.forEach { e ->
+            if (e.capacidadDeDefensa() < this.potenciaDeMutacion!! && e.id!! != this.especie.id!!) {
+                especiesAEliminar.add(e)
+            }
+        }
+        especiesAEliminar.forEach { e -> vector.especies.remove(e) }
+    }
+
 }
 
 enum class TipoDeMutacion {
