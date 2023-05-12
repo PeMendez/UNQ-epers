@@ -23,8 +23,8 @@ class Vector(var tipo: TipoDeVector,
 
     fun intentarInfectar(vectorAInfectar: Vector, especie: Especie) {
         if (esContagioExitoso(vectorAInfectar,especie)) {
-            //vectorInfectado.mutar(especie)
             vectorAInfectar.serInfectadoCon(especie)
+            this.intentarMutar(especie)
         }
     }
 
