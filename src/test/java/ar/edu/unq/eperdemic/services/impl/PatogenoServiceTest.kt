@@ -40,7 +40,6 @@ class PatogenoServiceTest {
 
     @BeforeEach
     fun setUp() {
-        Random.switchModo(false)
         dataService.crearSetDeDatosIniciales()
         patogenoMalDeDragon = patogenoService.crearPatogeno(Patogeno("MalDeDragon"))
         ubicacionPrivateDrive = ubicacionService.crearUbicacion("PrivateDrive")

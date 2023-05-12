@@ -32,7 +32,6 @@ class MutacionServiceImplTest {
 
     @BeforeEach
     fun setUp() {
-        Random.switchModo(false)
         dataService.crearSetDeDatosIniciales()
     }
 
