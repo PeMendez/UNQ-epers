@@ -28,7 +28,7 @@ class UbicacionServiceImpl(): UbicacionService {
     override fun mover(vectorId: Long, ubicacionid: Long) {
         val vector = vectorServiceImpl.recuperarVector(vectorId)
         if (vector.ubicacion.id!! != ubicacionid) {
-            val ubicacion = ubicacionDAO.findByIdOrNull(ubicacionid)?: throw NoExisteElid("el id buscado no existe en la base de datos")
+            val ubicacion = ubicacionDAO.findByIdOrNull(ubicacionid)?: throw NoExisteElid("el id de la ubiacion no existe en la base de datos")
             vector.mover(ubicacion)
             val vectoresEnUbicacion = ubicacionDAO.recuperarVectores(ubicacionid)
             vectorDAO.save(vector)
