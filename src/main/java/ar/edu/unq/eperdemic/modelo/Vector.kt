@@ -64,7 +64,7 @@ class Vector(var tipo: TipoDeVector,
         }
     }
 
-    private fun supresionNoExitosa(vectorAInfectar: Vector, especie: Especie): Boolean {
+    fun supresionNoExitosa(vectorAInfectar: Vector, especie: Especie): Boolean {
         var supresionNoExitosa = true
         vectorAInfectar.mutaciones.forEach { m ->
             if (m.tipoDeMutacion == TipoDeMutacion.SupresionBiomecanica) {
