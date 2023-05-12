@@ -11,6 +11,8 @@ import ar.edu.unq.eperdemic.persistencia.dao.UbicacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.VectorDAO
 import ar.edu.unq.eperdemic.services.PatogenoService
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -36,6 +38,10 @@ class PatogenoServiceImpl : PatogenoService {
 
     override fun recuperarATodosLosPatogenos(): List<Patogeno> {
         return patogenoDAO.findAll().toList()
+    }
+
+    override fun recuperarATodosLosPatogenos(page: Pageable): Page<Patogeno>{
+        return patogenoDAO.findAll(page)
     }
 
     override fun agregarEspecie(id: Long, nombre: String, ubicacionId: Long): Especie {

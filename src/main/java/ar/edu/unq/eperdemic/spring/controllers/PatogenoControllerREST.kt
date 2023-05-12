@@ -6,6 +6,9 @@ import ar.edu.unq.eperdemic.modelo.exceptions.NoExisteElid
 import ar.edu.unq.eperdemic.services.PatogenoService
 import ar.edu.unq.eperdemic.spring.controllers.dto.EspecieDTO
 import ar.edu.unq.eperdemic.spring.controllers.dto.PatogenoDTO
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Pageable
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -31,7 +34,13 @@ class PatogenoControllerREST(private val patogenoService: PatogenoService) {
   fun findById(@PathVariable id: Long) = PatogenoDTO.desdeModelo(patogenoService.recuperarPatogeno(id))
 
   @GetMapping("/patogenos")
-  fun getAll() = patogenoService.recuperarATodosLosPatogenos().map{ PatogenoDTO.desdeModelo(it)}
+  fun getAll(@RequestParam(defaultValue = "0") page: Int, @RequestParam(defaultValue = "10") size:Int) : List<PatogenoDTO> {
+
+    val pageable: Pageable = PageRequest.of(page, size)
+    val patogenosPage: Page<Patogeno> = patogenoService.recuperarATodosLosPatogenos(pageable)
+    return patogenosPage.map { PatogenoDTO.desdeModelo(it)}.toList()
+  }
+
 
   @GetMapping("/especies/{id}")
   fun especiesDePatogeno(@PathVariable id: Long) = patogenoService.especiesDePatogeno(id).map { EspecieDTO.desdeModelo(it) }
