@@ -2,30 +2,32 @@ package ar.edu.unq.eperdemic.services.impl
 
 import ar.edu.unq.eperdemic.modelo.Patogeno
 import ar.edu.unq.eperdemic.modelo.TipoDeVector
-import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateEspecieDAO
-import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernatePatogenoDAO
-import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateUbicacionDAO
-import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateVectorDAO
-import ar.edu.unq.eperdemic.utils.DataServiceHibernate
-import org.junit.Assert
-import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.Assertions
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
-import javax.persistence.NoResultException
+import ar.edu.unq.eperdemic.modelo.exceptions.NoExisteElNombreDeLaUbicacion
+import ar.edu.unq.eperdemic.utils.DataService
+import org.junit.jupiter.api.*
+import org.junit.jupiter.api.extension.ExtendWith
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.test.context.junit.jupiter.SpringExtension
 
+@ExtendWith(SpringExtension::class)
+@SpringBootTest
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class EstadisticaServiceImplTest {
 
-    var dataService = DataServiceHibernate()
-    private val hibernateVectorDAO = HibernateVectorDAO()
-    private val vectorServiceImpl = VectorServiceImpl(hibernateVectorDAO)
-    private val estadisticaService = EstadisticaServiceImpl()
-    private val patogenoDAO = HibernatePatogenoDAO()
-    private val patogenoService = PatogenoServiceImpl(patogenoDAO)
-    private val ubicacionDAO = HibernateUbicacionDAO()
-    private val ubicacionService = UbicacionServiceImpl(ubicacionDAO)
-    private val especieDAO = HibernateEspecieDAO()
-    private val especieService = EspecieServiceImpl(especieDAO)
+    @Autowired
+    private lateinit var dataService: DataService
+    @Autowired
+    private lateinit var vectorServiceImpl: VectorServiceImpl
+
+    @Autowired
+    private lateinit var ubicacionService: UbicacionServiceImpl
+
+    @Autowired
+    private lateinit var patogenoService: PatogenoServiceImpl
+
+    @Autowired
+    private lateinit var estadisticaService: EstadisticaServiceImpl
 
     @BeforeEach
     fun setUp() {
@@ -42,8 +44,8 @@ class EstadisticaServiceImplTest {
         val unVector = vectorServiceImpl.crearVector(TipoDeVector.Persona, paraguay.id!!)
         val especieQueMasInfecto =  patogenoService.agregarEspecie(patogeno.id!!, "enterovirus", paraguay.id!!)
 
-        Assert.assertEquals(unVector.tipo, TipoDeVector.Persona)
-        Assert.assertEquals(especieQueMasInfecto.id, estadisticaService.especieLider().id)
+        Assertions.assertEquals(unVector.tipo, TipoDeVector.Persona)
+        Assertions.assertEquals(especieQueMasInfecto.id, estadisticaService.especieLider().id)
     }
 
 
@@ -100,9 +102,9 @@ class EstadisticaServiceImplTest {
         vectorServiceImpl.infectar(mechaVectorPlus, especieCoxsackie)
         vectorServiceImpl.infectar(roboVectorAdvanced, especieCoxsackie)
 
-        Assert.assertEquals(estadisticaService.lideres().size, 10)
-        Assert.assertEquals(estadisticaService.lideres().first().id, especieCoxsackie.id)
-        Assert.assertEquals(estadisticaService.lideres().last().id, especieChina.id)
+        Assertions.assertEquals(estadisticaService.lideres().size, 10)
+        Assertions.assertEquals(estadisticaService.lideres().first().id, especieCoxsackie.id)
+        Assertions.assertEquals(estadisticaService.lideres().last().id, especieChina.id)
 
     }
 
@@ -115,15 +117,15 @@ class EstadisticaServiceImplTest {
         var especie = patogenoService.agregarEspecie(patogeno.id!!, "Coxsackie", ubicacion1.id!!)
 
         val reporte = estadisticaService.reporteDeContagios(ubicacion1.nombre)
-        Assert.assertEquals(reporte.vectoresInfectados, 1)
-        Assert.assertEquals(reporte.vectoresPresentes, 1)
-        Assert.assertEquals(reporte.nombreDeEspecieMasInfecciosa, especie.nombre)
+        Assertions.assertEquals(reporte.vectoresInfectados, 1)
+        Assertions.assertEquals(reporte.vectoresPresentes, 1)
+        Assertions.assertEquals(reporte.nombreDeEspecieMasInfecciosa, especie.nombre)
     }
 
 
     @Test
     fun reporteDeContagiosConUbicacionNoExistente() {
-        Assertions.assertThrows(NoResultException::class.java) {
+        Assertions.assertThrows(NoExisteElNombreDeLaUbicacion::class.java) {
             estadisticaService.reporteDeContagios("Ubicacion NO EXISTENTE")
         }
     }

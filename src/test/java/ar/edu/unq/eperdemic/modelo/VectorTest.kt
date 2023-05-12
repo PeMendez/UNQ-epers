@@ -27,25 +27,21 @@ class VectorTest {
     @Test
     fun alInfectarUnVectorConUnaEspecieEstaSeGuarda() {
 
-        vectorPersonaEnfermo.infectarCon(especie1)
+        vectorPersonaEnfermo.serInfectadoCon(especie1)
 
         assertTrue(vectorPersonaEnfermo.especies.contains(especie1))
         assertEquals(1, vectorPersonaEnfermo.especies.size)
-
     }
 
     @Test
     fun alIntentarInfectarUnVectorConUnaEspecieQueYaEstaInfectadoNoSeDuplica() {
-
-        vectorPersonaEnfermo.infectarCon(especie1)
-
-        assertEquals(1, vectorPersonaEnfermo.especies.size)
-
-        vectorPersonaEnfermo.infectarCon(especie1)
+        vectorPersonaEnfermo.serInfectadoCon(especie1)
 
         assertEquals(1, vectorPersonaEnfermo.especies.size)
 
+        vectorPersonaEnfermo.serInfectadoCon(especie1)
 
+        assertEquals(1, vectorPersonaEnfermo.especies.size)
     }
 
     @Test
@@ -89,7 +85,7 @@ class VectorTest {
     @Test
     fun estaSanoFalse() {
         assertTrue(vectorPersonaSano.estaSano())
-        vectorPersonaSano.infectarCon(especie1)
+        vectorPersonaSano.serInfectadoCon(especie1)
         assertFalse(vectorPersonaSano.estaSano())
     }
 
@@ -102,6 +98,49 @@ class VectorTest {
 
         assertEquals("Suiza", vectorPersonaSano.ubicacion.nombre)
 
+    }
+
+    @Test
+    fun esSupresionNoExitosaTrue(){
+        val ubicacion1 = Ubicacion("ubicacion1")
+        val patogeno1 = Patogeno("patogeno1")
+        val vector1 = Vector(TipoDeVector.Persona,ubicacion1)
+        val vector2 = Vector(TipoDeVector.Persona,ubicacion1)
+        val especie1 = Especie(patogeno1,"especie1","ubicacion1")
+        val especie2 = Especie(patogeno1,"especie2","ubicacion1")
+        val mutacion1 = Mutacion()
+
+        patogeno1.capacidadDeDefensa = 100
+
+        mutacion1.tipoDeMutacion = TipoDeMutacion.SupresionBiomecanica
+        mutacion1.potenciaDeMutacion = 50
+        mutacion1.tipoDeVector = null
+        mutacion1.especie = especie1
+
+        vector2.mutaciones.add(mutacion1)
+
+        assertTrue(vector1.supresionNoExitosa(vector2,especie2))
+    }
+    @Test
+    fun esSupresionNoExitosFalse(){
+        val ubicacion1 = Ubicacion("ubicacion1")
+        val patogeno1 = Patogeno("patogeno1")
+        val vector1 = Vector(TipoDeVector.Persona,ubicacion1)
+        val vector2 = Vector(TipoDeVector.Persona,ubicacion1)
+        val especie1 = Especie(patogeno1,"especie1","ubicacion1")
+        val especie2 = Especie(patogeno1,"especie2","ubicacion1")
+        val mutacion1 = Mutacion()
+
+        patogeno1.capacidadDeDefensa = 50
+
+        mutacion1.tipoDeMutacion = TipoDeMutacion.SupresionBiomecanica
+        mutacion1.potenciaDeMutacion = 100
+        mutacion1.tipoDeVector = null
+        mutacion1.especie = especie1
+
+        vector2.mutaciones.add(mutacion1)
+
+        assertFalse(vector1.supresionNoExitosa(vector2,especie2))
     }
 
 }

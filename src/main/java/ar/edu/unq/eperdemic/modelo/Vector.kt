@@ -13,42 +13,86 @@ class Vector(var tipo: TipoDeVector,
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null
 
+    @ManyToMany(fetch = FetchType.EAGER)
+    var mutaciones: MutableSet<Mutacion> = mutableSetOf()
 
-    fun intentarInfectar(vectorInfectado: Vector, especie: Especie) {
-        if (esContagioExitoso(vectorInfectado,especie)) {
-            this.infectarCon(especie)
+    fun intentarInfectarConEspecies(especies: List<Especie>, vectorAInfectar: Vector) {
+        especies.forEach { e ->
+            this.intentarInfectar(vectorAInfectar, e)
         }
     }
 
-    fun infectarCon(especie: Especie) {
+    fun intentarInfectar(vectorAInfectar: Vector, especie: Especie) {
+        if (esContagioExitoso(vectorAInfectar, especie)) {
+            vectorAInfectar.serInfectadoCon(especie)
+            this.intentarMutar(especie)
+        }
+    }
+
+
+    fun intentarMutar(especie: Especie) {
+        if (especie.mutacionExitosa(this)) {
+            val mutacionContraida = especie.mutar()
+            this.agregarMutacion(mutacionContraida)
+        }
+    }
+
+    private fun agregarMutacion(mutacion: Mutacion) {
+        if (!this.mutaciones.any { m -> m.id == mutacion.id && m.especie.id == mutacion.especie.id }) {
+            if (mutacion.tipoDeMutacion == TipoDeMutacion.SupresionBiomecanica) {
+                mutacion.activarSupresion(this)
+            }
+            mutaciones.add(mutacion)
+        }
+    }
+
+    fun esContagioExitoso(vectorAInfectar: Vector, especie: Especie): Boolean {
+        return  ubicacion.nombre == vectorAInfectar.ubicacion.nombre
+                && Random.decidir(100) < porcentajeDeContagioExitoso(especie)
+                && supresionNoExitosa(vectorAInfectar, especie)
+                && hayContagioPorTipo(especie, vectorAInfectar)
+    }
+
+    fun hayContagioPorTipo(especie: Especie, vectorAInfectar: Vector): Boolean {
+        val mutacion = this.mutaciones.find { m ->
+            m.tipoDeMutacion == TipoDeMutacion.BioalteracionGenetica && m.especie.id!! == especie.id!!
+        }
+        if (mutacion != null) {
+            return  mutacion.tipoDeVector == vectorAInfectar.tipo || vectorAInfectar.tipo.puedeSerInfectado(this.tipo)
+        } else {
+            return vectorAInfectar.tipo.puedeSerInfectado(this.tipo)
+        }
+    }
+
+    fun supresionNoExitosa(vectorAInfectar: Vector, especie: Especie): Boolean {
+        var supresionNoExitosa = true
+        vectorAInfectar.mutaciones.forEach { m ->
+            if (m.tipoDeMutacion == TipoDeMutacion.SupresionBiomecanica) {
+                supresionNoExitosa = supresionNoExitosa && m.potenciaDeMutacion!! < especie.capacidadDeDefensa()
+            }
+        }
+        return supresionNoExitosa
+    }
+
+    fun porcentajeDeContagioExitoso(especie: Especie): Int {
+        return Random.decidir(10) + especie.capacidadDeContagio()
+    }
+
+    fun serInfectadoCon(especie: Especie) {
         especies.add(especie)
     }
 
-    fun esContagioExitoso(vectorInfectado: Vector, especie: Especie): Boolean {
-        return ubicacion.nombre == vectorInfectado.ubicacion.nombre
-                && tipo.puedeSerInfectado(vectorInfectado.tipo)
-                && Random.decidir(100) < porcentajeDeContagioExitoso(especie)
-    }
-
-    fun porcentajeDeContagioExitoso(especie:Especie): Int{
-        return Random.decidir(10) + especie.patogeno.capacidadDeContagio
-    }
-
-    fun estaSano() : Boolean {
+    fun estaSano(): Boolean {
         return especies.isEmpty()
     }
 
-    fun tieneEfermedad(especieId : Long) : Boolean {
-
-        return especies.filter { e -> e.id == especieId}.isNotEmpty()
+    fun tieneEfermedad(especieId: Long): Boolean {
+        return especies.filter { e -> e.id == especieId }.isNotEmpty()
     }
 
-    fun mover(ubicacion: Ubicacion)  {
+    fun mover(ubicacion: Ubicacion) {
         this.ubicacion = ubicacion
-
     }
-
-
 }
 
 enum class TipoDeVector {
@@ -67,5 +111,14 @@ enum class TipoDeVector {
             return vector == Insecto
         }
     };
+    /*
+    fun esContagioExitoso(vectorAInfectar: Vector, especie: Especie): Boolean {
+        return ubicacion.nombre == vectorAInfectar.ubicacion.nombre
+                && vectorAInfectar.tipo.puedeSerInfectado(this)
+                && Random.decidir(100) < porcentajeDeContagioExitoso(especie)
+                && supresionNoExitosa(vectorAInfectar, especie)
+    }
+     */
+
     abstract fun puedeSerInfectado(vector: TipoDeVector): Boolean
 }

@@ -1,14 +1,26 @@
 package ar.edu.unq.eperdemic.spring.controllers.dto
 
-class PatogenoDTO (val id:Long?, val tipo : String, val cantidadDeEspecies:Int?){
+import ar.edu.unq.eperdemic.modelo.Patogeno
 
-// TODO: Implementar aModelo
-//        fun aModelo() : Patogeno {
-//        return null
-//   }
-
-// TODO: implementar desdeModelo
-//    companion object {
-//        fun desdeModelo(patogeno: Patogeno) = null
-//    }
+class PatogenoDTO (
+    val id:Long?,
+    val tipo : String,
+    val cantidadDeEspecies:Int?,
+){
+    companion object{
+        fun desdeModelo(patogeno: Patogeno) =
+            PatogenoDTO(
+                id = patogeno.id,
+                tipo = patogeno.tipo,
+                cantidadDeEspecies = patogeno.cantidadDeEspecies
+            )
+    }
+    fun aModelo(): Patogeno {
+        val patogeno = Patogeno()
+        patogeno.id = this.id
+        patogeno.tipo = this.tipo
+        if (this.cantidadDeEspecies != null){
+        patogeno.cantidadDeEspecies = this.cantidadDeEspecies}
+        return patogeno
+    }
 }
