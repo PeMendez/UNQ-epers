@@ -1,12 +1,15 @@
 package ar.edu.unq.eperdemic.services.impl
 
-import ar.edu.unq.eperdemic.modelo.Diosito
+import ar.edu.unq.eperdemic.modelo.Random
 import ar.edu.unq.eperdemic.modelo.Ubicacion
 import ar.edu.unq.eperdemic.modelo.Vector
+import ar.edu.unq.eperdemic.modelo.exceptions.NoExisteElid
+import ar.edu.unq.eperdemic.modelo.exceptions.NombreDeUbicacionRepetido
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateUbicacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateVectorDAO
 import ar.edu.unq.eperdemic.services.UbicacionService
 import ar.edu.unq.eperdemic.services.runner.TransactionRunner.runTrx
+import javax.persistence.NoResultException
 
 class UbicacionServiceImpl(val ubicacionDAO: HibernateUbicacionDAO): UbicacionService {
 
@@ -17,32 +20,42 @@ class UbicacionServiceImpl(val ubicacionDAO: HibernateUbicacionDAO): UbicacionSe
 
         val vector = vectorServiceImpl.recuperarVector(vectorId)
 
-        val vectoresEnUbicacion = runTrx {
-            val ubicacion = ubicacionDAO.recuperar(ubicacionid)
-            vector.mover(ubicacion)
-            ubicacionDAO.recuperarVectores(ubicacionid)
-        }
-        runTrx {
-            hibernateVectorDAO.actualizar(vector)
-            if (!vector.estaSano()) {
-                vectorServiceImpl.contagiar(vector, vectoresEnUbicacion)
+        if (vector.ubicacion.id!! != ubicacionid) {
+            val vectoresEnUbicacion = runTrx {
+                val ubicacion = ubicacionDAO.recuperar(ubicacionid)
+                vector.mover(ubicacion)
+                ubicacionDAO.recuperarVectores(ubicacionid)
+            }
+
+            runTrx {
+                hibernateVectorDAO.actualizar(vector)
+                if (!vector.estaSano()) {
+                    vectorServiceImpl.contagiar(vector, vectoresEnUbicacion)
+                }
             }
         }
     }
 
     override fun expandir(ubicacionId: Long) {
-       val vectores = runTrx { ubicacionDAO.recuperarVectores(ubicacionId) }
+        val ubicacion = runTrx { ubicacionDAO.recuperar(ubicacionId)?: throw NoExisteElid("el id buscado no existe en la base de datos") }
+        val vectores = runTrx { ubicacionDAO.recuperarVectores(ubicacion.id!!) }
         runTrx {
             val vectoresInfectados = vectores.filter {  v -> !v.estaSano() }
             if (vectoresInfectados.isNotEmpty()) {
-                val vectorAlAzar = vectoresInfectados[Diosito.decidir(vectoresInfectados.size)-1]
+                val vectorAlAzar = vectoresInfectados[Random.decidir(vectoresInfectados.size)-1]
                 vectorServiceImpl.contagiar(vectorAlAzar, vectores)
             }
         }
     }
 
     override fun crearUbicacion(nombreUbicacion: String): Ubicacion {
-        return runTrx { ubicacionDAO.crearUbicacion(nombreUbicacion) }
+        try {
+            runTrx { ubicacionDAO.recuperarUbicacionPorNombre(nombreUbicacion) }
+        } catch (e: NoResultException) {
+            val nuevaUbicacion = Ubicacion(nombreUbicacion)
+            return runTrx { ubicacionDAO.crearUbicacion(nuevaUbicacion) }
+        }
+        throw NombreDeUbicacionRepetido("Ya existe una ubicacion con ese nombre.")
     }
 
     override fun recuperarTodos(): List<Ubicacion> {
@@ -50,7 +63,9 @@ class UbicacionServiceImpl(val ubicacionDAO: HibernateUbicacionDAO): UbicacionSe
     }
 
     fun recuperar(ubicacionId: Long) : Ubicacion {
-        return runTrx { ubicacionDAO.recuperar(ubicacionId)}
+        return runTrx {
+            ubicacionDAO.recuperar(ubicacionId)?: throw NoExisteElid("el id buscado no existe en la base de datos")
+        }
     }
 
     fun recuperarVectores(ubicacionId: Long): List<Vector> {

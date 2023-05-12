@@ -6,18 +6,9 @@ import ar.edu.unq.eperdemic.persistencia.dao.EspecieDAO
 import ar.edu.unq.eperdemic.services.runner.TransactionRunner
 
 open class HibernateEspecieDAO : HibernateDAO<Especie>(Especie::class.java), EspecieDAO {
+
     override fun recuperarEspecie(id: Long): Especie {
-        val session = TransactionRunner.currentSession
-
-        val hql = """
-                    from Especie e
-                    where e.id = :idBuscado
-        """
-
-        val query = session.createQuery(hql, Especie::class.java)
-        query.setParameter("idBuscado", id)
-
-        return query.singleResult
+        return recuperar(id)
     }
 
     override fun cantidadDeInfectados(especieId: Long): Int {

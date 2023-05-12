@@ -1,159 +1,107 @@
 package ar.edu.unq.eperdemic.modelo
 
-import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateEspecieDAO
-import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateUbicacionDAO
-import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateVectorDAO
-import ar.edu.unq.eperdemic.services.impl.EspecieServiceImpl
-import ar.edu.unq.eperdemic.services.impl.UbicacionServiceImpl
-import ar.edu.unq.eperdemic.services.impl.VectorServiceImpl
-import org.junit.jupiter.api.*
 import org.junit.jupiter.api.Assertions.*
-import ar.edu.unq.eperdemic.utils.DataServiceHibernate
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+
 
 
 class VectorTest {
 
-    private val hibernateVectorDAO = HibernateVectorDAO()
-    private val hibernateUbicacionDAO = HibernateUbicacionDAO()
-    private val hibernateEspecieDAO = HibernateEspecieDAO()
-    private val ubicacionServiceImpl = UbicacionServiceImpl(hibernateUbicacionDAO)
-    private val vectorServiceImpl = VectorServiceImpl(hibernateVectorDAO)
-    private val especieServiceImpl = EspecieServiceImpl(hibernateEspecieDAO)
-    private val dataServiceHibernate = DataServiceHibernate()
+    private val ub1 = Ubicacion("Noruega")
+    private val ub2 = Ubicacion("Suiza")
+    private val ub3 = Ubicacion("Belgica")
+    private val vectorPersonaSano = Vector(TipoDeVector.Persona, ub1)
+    private val vectorPersonaEnfermo = Vector(TipoDeVector.Persona, ub1)
+    private val vectorInsecto = Vector(TipoDeVector.Insecto, ub3)
+    private val vectorAnimal = Vector(TipoDeVector.Animal, ub3)
+    private val patogeno1 = Patogeno("Virus")
+    private val especie1 = Especie(patogeno1, "Mercho", "Noruega")
+
 
     @BeforeEach
     fun setUp() {
-        dataServiceHibernate.crearSetDeDatosIniciales()
-
+        Random.switchModo(false)
     }
 
     @Test
     fun alInfectarUnVectorConUnaEspecieEstaSeGuarda() {
-        val vector = vectorServiceImpl.recuperarVector(1)
-        val especie = especieServiceImpl.recuperarEspecie(1)
 
-        vector.infectarCon(especie)
+        vectorPersonaEnfermo.infectarCon(especie1)
 
-        assertTrue(vector.especies.contains(especie))
+        assertTrue(vectorPersonaEnfermo.especies.contains(especie1))
+        assertEquals(1, vectorPersonaEnfermo.especies.size)
 
     }
 
     @Test
     fun alIntentarInfectarUnVectorConUnaEspecieQueYaEstaInfectadoNoSeDuplica() {
-        val vector = vectorServiceImpl.recuperarVector(1)
-        val especie = especieServiceImpl.recuperarEspecie(1)
 
-        vector.infectarCon(especie)
+        vectorPersonaEnfermo.infectarCon(especie1)
 
-        assertEquals(vector.especies.size, 1)
+        assertEquals(1, vectorPersonaEnfermo.especies.size)
 
-        vector.infectarCon(especie)
+        vectorPersonaEnfermo.infectarCon(especie1)
 
-        assertEquals(vector.especies.size, 1)
+        assertEquals(1, vectorPersonaEnfermo.especies.size)
+
 
     }
 
     @Test
     fun esContagioExitosoTrue() {
-        val vectorPersonaSano = vectorServiceImpl.recuperarVector(6)
-        val vectorPersonaEnfermo = vectorServiceImpl.recuperarVector(15)
-        val especie = especieServiceImpl.recuperarEspecie(1)
-        vectorServiceImpl.infectar(vectorPersonaEnfermo, especie)
 
         assertEquals(vectorPersonaSano.ubicacion.nombre, vectorPersonaEnfermo.ubicacion.nombre)
         assertEquals(vectorPersonaSano.tipo, vectorPersonaEnfermo.tipo)
 
-        val vectoresAInfectar = listOf(vectorPersonaSano)
-        assertTrue(vectorPersonaSano.estaSano())
-        assertFalse(vectorPersonaEnfermo.estaSano())
-        vectorServiceImpl.contagiar(vectorPersonaEnfermo, vectoresAInfectar)
-        assertFalse(vectorPersonaSano.estaSano())
+        assertTrue(vectorPersonaSano.esContagioExitoso(vectorPersonaEnfermo, especie1))
+
     }
 
     @Test
     fun esContagioExitosoFalsePorNoEstarEnLaMismaUbicacion() {
-        val vectorPersonaSano = vectorServiceImpl.recuperarVector(6)
-        val vectorPersonaEnfermo = vectorServiceImpl.recuperarVector(1)
-        val especie = especieServiceImpl.recuperarEspecie(1)
-        vectorServiceImpl.infectar(vectorPersonaEnfermo, especie)
 
-        assertNotEquals(vectorPersonaSano.ubicacion.nombre, vectorPersonaEnfermo.ubicacion.nombre)
+        assertNotEquals(vectorInsecto.ubicacion.nombre, vectorPersonaEnfermo.ubicacion.nombre)
 
-        val vectoresAInfectar = listOf(vectorPersonaSano)
-        assertTrue(vectorPersonaSano.estaSano())
-        assertFalse(vectorPersonaEnfermo.estaSano())
-        vectorServiceImpl.contagiar(vectorPersonaEnfermo, vectoresAInfectar)
-        assertTrue(vectorPersonaSano.estaSano())
-
+        assertFalse(vectorInsecto.esContagioExitoso(vectorPersonaEnfermo,especie1))
     }
 
     @Test
-    fun esContagioExitosoFalsePorNoEstarSerCompatibleDeTipo() {
-        val vectorInsecto = vectorServiceImpl.recuperarVector(2)
-        val vectorAnimalEnfermo = vectorServiceImpl.recuperarVector(1)
-        val especie = especieServiceImpl.recuperarEspecie(1)
-        vectorServiceImpl.infectar(vectorAnimalEnfermo, especie)
+    fun esContagioExitosoFalsePorNoSerCompatibleDeTipo() {
 
-        assertTrue(vectorInsecto.estaSano())
 
-        val vectoresAInfectar = listOf(vectorInsecto)
-
-        assertFalse(vectorAnimalEnfermo.estaSano())
-        vectorServiceImpl.contagiar(vectorAnimalEnfermo, vectoresAInfectar)
-        assertTrue(vectorInsecto.estaSano())
+        assertFalse(vectorAnimal.esContagioExitoso(vectorPersonaEnfermo,especie1))
 
     }
 
     @Test
     fun porcentajeDeContagioExitoso() {
-        val especie = especieServiceImpl.recuperarEspecie(1)
-        val vector = vectorServiceImpl.recuperarVector(6)
 
-        assertEquals(vector.porcentajeDeContagioExitoso(especie), 110)
+        assertEquals(110, vectorPersonaSano.porcentajeDeContagioExitoso(especie1))
     }
 
     @Test
     fun estaSanoTrue() {
-        val vectorSano = vectorServiceImpl.recuperarVector(7)
-        assertTrue(vectorSano.estaSano())
+
+        assertTrue(vectorPersonaSano.estaSano())
     }
 
     @Test
     fun estaSanoFalse() {
-        val vectorAInfectar = vectorServiceImpl.recuperarVector(7)
-        val especie = especieServiceImpl.recuperarEspecie(1)
-        assertTrue(vectorAInfectar.estaSano())
-        vectorAInfectar.infectarCon(especie)
-        assertFalse(vectorAInfectar.estaSano())
-    }
-
-    @Test
-    fun tieneEfermedad() {
-        val vectorSano = vectorServiceImpl.recuperarVector(6)
-        val especie = especieServiceImpl.recuperarEspecie(1)
-
-        assertTrue(vectorSano.estaSano())
-
-        vectorServiceImpl.infectar(vectorSano, especie)
-
-        assertTrue(vectorSano.tieneEfermedad(especie.id!!))
+        assertTrue(vectorPersonaSano.estaSano())
+        vectorPersonaSano.infectarCon(especie1)
+        assertFalse(vectorPersonaSano.estaSano())
     }
 
     @Test
     fun cuandoSeMueveUnVectorSeLeModificaSuUbicacion() {
-        val vector = vectorServiceImpl.recuperarVector(1)
-        val ubicacion = ubicacionServiceImpl.recuperar(2)
 
-        assertEquals(vector.ubicacion.nombre, "ubicacion1")
+        assertEquals("Noruega", vectorPersonaSano.ubicacion.nombre)
 
-        vector.mover(ubicacion)
+        vectorPersonaSano.mover(ub2)
 
-        assertEquals(vector.ubicacion.nombre, "ubicacion2")
+        assertEquals("Suiza", vectorPersonaSano.ubicacion.nombre)
 
     }
 
-    @AfterEach
-    fun tearDown() {
-        dataServiceHibernate.eliminarTodo()
-    }
 }

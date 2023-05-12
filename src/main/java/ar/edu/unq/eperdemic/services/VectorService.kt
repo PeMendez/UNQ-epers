@@ -7,6 +7,7 @@ import ar.edu.unq.eperdemic.modelo.Vector
 interface VectorService {
 
     fun contagiar(vectorInfectado: Vector, vectores: List<Vector>)
+    fun intentarInfectarConEspeciesDeVector(vectorAInfectar: Vector, vectorInfectado: Vector)
     fun infectar(vector: Vector, especie: Especie)
     fun enfermedades(vectorId: Long): List<Especie>
 

@@ -1,9 +1,10 @@
 package ar.edu.unq.eperdemic.services.impl
 
-import ar.edu.unq.eperdemic.modelo.Diosito
+import ar.edu.unq.eperdemic.modelo.Random
 import ar.edu.unq.eperdemic.modelo.Especie
 import ar.edu.unq.eperdemic.modelo.Patogeno
 import ar.edu.unq.eperdemic.modelo.exceptions.NingunVectorAInfectarEnLaUbicacionDada
+import ar.edu.unq.eperdemic.modelo.exceptions.NoExisteElid
 import ar.edu.unq.eperdemic.persistencia.dao.PatogenoDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateEspecieDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateUbicacionDAO
@@ -17,7 +18,7 @@ class PatogenoServiceImpl(val patogenoDAO: PatogenoDAO) : PatogenoService {
     private val ubicacionDAO = HibernateUbicacionDAO()
     private val vectorDAO = HibernateVectorDAO()
     private val especieDAO = HibernateEspecieDAO()
-    private val diosito = Diosito
+    private val diosito = Random
     private val vectorServiceImpl = VectorServiceImpl(vectorDAO)
     private val ubicacionServiceImpl = UbicacionServiceImpl(ubicacionDAO)
 
@@ -26,7 +27,8 @@ class PatogenoServiceImpl(val patogenoDAO: PatogenoDAO) : PatogenoService {
     }
 
     override fun recuperarPatogeno(id: Long): Patogeno {
-        return runTrx { patogenoDAO.recuperarPatogeno(id) }
+        return runTrx {
+            patogenoDAO.recuperarPatogeno(id)?: throw NoExisteElid("el id buscado no existe en la base de datos") }
     }
 
     override fun recuperarATodosLosPatogenos(): List<Patogeno> {
@@ -34,8 +36,12 @@ class PatogenoServiceImpl(val patogenoDAO: PatogenoDAO) : PatogenoService {
     }
 
     override fun agregarEspecie(id: Long, nombre: String, ubicacionId: Long): Especie {
-
-        val ubicacion = ubicacionServiceImpl.recuperar(ubicacionId)
+        val ubicacion = try{
+            ubicacionServiceImpl.recuperar(ubicacionId)
+        } catch (e: NoExisteElid){
+            throw NoExisteElid("La ubicacion no existe en la base de datos")
+        }
+        runTrx { patogenoDAO.recuperarPatogeno(id)?: throw NoExisteElid("El Patogeno con el ID dado no existe en la base de datos") }
         val vectores = ubicacionServiceImpl.recuperarVectores(ubicacionId)
         val vectorAInfectar = try{
             vectores[diosito.decidir(vectores.size)-1]
@@ -55,17 +61,11 @@ class PatogenoServiceImpl(val patogenoDAO: PatogenoDAO) : PatogenoService {
 
     override fun esPandemia(especieId: Long): Boolean {
         return runTrx {
-            val cantUbicaciones = ubicacionServiceImpl.recuperarTodos().size
-            val vectoresConEspecieId = vectorServiceImpl.recuperarTodos().filter { v -> v.tieneEfermedad(especieId) }
-            val ubicacionesDeVectoresEnfermosConEspecie = vectoresConEspecieId.map { v -> v.ubicacion}
-            ubicacionesDeVectoresEnfermosConEspecie.distinctBy { it.nombre }
-            val cantUbicacionesDeLaEspecie = ubicacionesDeVectoresEnfermosConEspecie.size
-
-            cantUbicaciones/2 < cantUbicacionesDeLaEspecie
+            patogenoDAO.esPandemia(especieId)
         }
     }
 
     override fun especiesDePatogeno(patogenoId: Long ): List<Especie> {
-        return runTrx {  patogenoDAO.especiesDePatogeno(patogenoId) }
+        return runTrx { patogenoDAO.especiesDePatogeno(patogenoId) }
     }
 }

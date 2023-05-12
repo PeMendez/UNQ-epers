@@ -11,5 +11,4 @@ interface EspecieDAO {
     fun lideres(): List<Especie>
     fun especieLiderDeUbicacion(ubicacionId: Long) : Especie
 
-
 }
