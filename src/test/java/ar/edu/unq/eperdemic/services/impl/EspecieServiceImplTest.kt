@@ -10,6 +10,7 @@ import org.junit.jupiter.api.*
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.data.domain.PageRequest
 import org.springframework.test.context.junit.jupiter.SpringExtension
 
 
@@ -304,6 +305,34 @@ class EspecieServiceImplTest {
         Assertions.assertEquals(2, especieService.cantidadDeInfectados(especieCreada1.id!!))
         Assertions.assertEquals(1, especieService.cantidadDeInfectados(especieCreada2.id!!))
         Assertions.assertEquals(especieCreada1.id!! ,lideres.first().id!!)
+    }
+
+
+    @Test
+    fun seRecuperanTodasLasEspeciesConPaginadoCorrectamenteConLaPagina0YSizeDos() {
+        dataService.eliminarTodo()
+        val patogeno1 = Patogeno("testEspecie")
+        val patogenoCreado1 = patogenoService.crearPatogeno(patogeno1)
+        val ubicacionCreada1 = ubicacionService.crearUbicacion("ubicacionTestEspecie")
+        vectorServiceImpl.crearVector(TipoDeVector.Animal, ubicacionCreada1.id!!)
+        val especieCreada1 = patogenoService.agregarEspecie(patogenoCreado1.id!!, "cualquierNombre", ubicacionCreada1.id!!)
+
+        val patogeno2 = Patogeno("otroNombre")
+        val patogenoCreado2 = patogenoService.crearPatogeno(patogeno2)
+        val ubicacionCreada2 = ubicacionService.crearUbicacion("otroNombreDeUbicacion")
+        vectorServiceImpl.crearVector(TipoDeVector.Insecto, ubicacionCreada2.id!!)
+        val especieCreada2 = patogenoService.agregarEspecie(patogenoCreado2.id!!, "cualquierNombre", ubicacionCreada2.id!!)
+
+        val pageable = PageRequest.of(0, 2)
+
+        val especiesRecuperadas = especieService.recuperarTodas(pageable)
+
+        Assertions.assertNotNull(especiesRecuperadas.find { it.id == especieCreada1.id!! })
+        Assertions.assertNotNull(especiesRecuperadas.find { it.id == especieCreada2.id!! })
+
+        Assertions.assertEquals(0, especiesRecuperadas.number)
+        Assertions.assertEquals(2, especiesRecuperadas.numberOfElements)
+        Assertions.assertEquals(2, especiesRecuperadas.size)
     }
 
     @AfterEach

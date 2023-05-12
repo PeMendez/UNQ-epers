@@ -63,7 +63,7 @@ class MutacionServiceImplTest {
         vectorService.crearVector(TipoDeVector.Persona, ubicacionCreada1.id!!)
         val especieCreada = patogenoService.agregarEspecie(patogenoCreado.id!!, "cualquierNombre1", ubicacionCreada1.id!!)
 
-        val mutacionAAgregar = Mutacion()
+        val mutacionAAgregar = Mutacion(TipoDeMutacion.SupresionBiomecanica)
 
         val mutacionPersistida = mutacionService.agregarMutacion(especieCreada.id!!, mutacionAAgregar)
         val mutacionRecuperada = mutacionService.recuperarMutacion(mutacionPersistida.id!!)

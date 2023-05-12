@@ -1,7 +1,5 @@
 package ar.edu.unq.eperdemic.modelo
 
-
-import ar.edu.unq.eperdemic.modelo.exceptions.NoPuedeEstarVacioOContenerCaracteresEspeciales
 import javax.persistence.*
 
 
@@ -15,17 +13,9 @@ class Mutacion() {
     @ManyToOne
     lateinit var especie: Especie
 
-    final var tipoDeVector : TipoDeVector? = null
-    final var potenciaDeMutacion: Int? = null
+    var tipoDeVector : TipoDeVector? = null
+    var potenciaDeMutacion: Int? = null
 
-    init {
-        tipoDeMutacion = Random.decidirTipoMutacion(0)
-        if(tipoDeMutacion == TipoDeMutacion.SupresionBiomecanica) {
-            potenciaDeMutacion = Random.decidir(100)
-        } else {
-            tipoDeVector = Random.decidirTipoVector(2)
-        }
-    }
 
     fun addEspecie(especie: Especie) {
         this.especie = especie
@@ -39,6 +29,15 @@ class Mutacion() {
             }
         }
         especiesAEliminar.forEach { e -> vector.especies.remove(e) }
+    }
+
+    constructor(tipoDeMutacion: TipoDeMutacion): this(){
+        this.tipoDeMutacion = tipoDeMutacion
+        if(tipoDeMutacion == TipoDeMutacion.SupresionBiomecanica) {
+            potenciaDeMutacion = Random.decidir(100)
+        } else {
+            tipoDeVector = Random.decidirTipoVector(2)
+        }
     }
 
 }

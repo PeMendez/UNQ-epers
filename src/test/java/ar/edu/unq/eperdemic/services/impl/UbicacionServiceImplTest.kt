@@ -12,6 +12,7 @@ import org.junit.jupiter.api.*
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.data.domain.PageRequest
 import org.springframework.test.context.junit.jupiter.SpringExtension
 
 @ExtendWith(SpringExtension::class)
@@ -375,6 +376,24 @@ class UbicacionServiceImplTest {
 
         Assertions.assertTrue(ubicacionService.recuperarVectores(nuevaUbicacion.id!!).isEmpty())
     }
+
+    @Test
+    fun seRecuperanTodasLasUbicacionesDeManeraCorrectaConPaginaUnoYSizeDos() {
+        dataService.eliminarTodo()
+
+        ubicacionService.crearUbicacion("nombreCualquiera1")
+        ubicacionService.crearUbicacion("nombreCualquiera2")
+        ubicacionService.crearUbicacion("nombreCualquiera3")
+
+        val pageable = PageRequest.of(1, 2)
+
+        val ubicacionesRecuperadas = ubicacionService.recuperarTodos(pageable)
+
+
+        Assertions.assertEquals(1, ubicacionesRecuperadas.number)
+        Assertions.assertEquals(1, ubicacionesRecuperadas.numberOfElements)
+    }
+
 
     @AfterEach
     fun clearAll() {
