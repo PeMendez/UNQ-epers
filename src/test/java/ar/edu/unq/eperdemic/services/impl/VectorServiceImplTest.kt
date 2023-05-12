@@ -876,7 +876,7 @@ class VectorServiceImplTest {
         vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada1.id!!)
         val especieCreadaConMutacion = patogenoService.agregarEspecie(patogenoCreado.id!!, "cualquierNombre1", ubicacionCreada1.id!!)
 
-        val mutacionAAgregar1 = Mutacion()
+        val mutacionAAgregar1 = Mutacion(TipoDeMutacion.SupresionBiomecanica)
         val mutacion1 = mutacionService.agregarMutacion(especieCreadaConMutacion.id!!, mutacionAAgregar1)
 
         val vectorConBioalteracion = vectorServiceImpl.crearVector(TipoDeVector.Insecto, ubicacionCreada1.id!!)
