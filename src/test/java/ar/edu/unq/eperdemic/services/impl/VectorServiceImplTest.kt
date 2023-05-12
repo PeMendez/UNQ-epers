@@ -1,7 +1,5 @@
 package ar.edu.unq.eperdemic.services.impl
 
-import ar.edu.unq.eperdemic.modelo.TipoDeVector
-import org.junit.jupiter.api.Test
 import ar.edu.unq.eperdemic.modelo.*
 import ar.edu.unq.eperdemic.modelo.exceptions.NoExisteElid
 import ar.edu.unq.eperdemic.utils.DataServiceSpring
@@ -10,6 +8,7 @@ import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.data.domain.PageRequest
 import org.springframework.test.context.junit.jupiter.SpringExtension
 @ExtendWith(SpringExtension::class)
 @SpringBootTest
@@ -705,6 +704,22 @@ class VectorServiceImplTest {
     @Test
     fun cuandoUnVectorContrajoBioalteracionGeneticaEntoncesPuedeContagiarACualquierVector() {
 
+    }
+
+    @Test
+    fun seRecuperanTodosLosVectoresCorrectamenteConPaginaCeroYSizeUno() {
+        dataServiceSpring.eliminarTodo()
+
+        val ubicacionCreada1 = ubicacionServiceImpl.crearUbicacion("nombreCualquiera1")
+        vectorServiceImpl.crearVector(TipoDeVector.Animal, ubicacionCreada1.id!!)
+        vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada1.id!!)
+
+        val pageable = PageRequest.of(0, 1)
+
+        val vectoresRecuperados = vectorServiceImpl.recuperarTodos(pageable)
+
+        assertEquals(0, vectoresRecuperados.number)
+        assertEquals(1, vectoresRecuperados.numberOfElements)
     }
 
 

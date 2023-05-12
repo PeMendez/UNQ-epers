@@ -3,6 +3,8 @@ package ar.edu.unq.eperdemic.services
 import ar.edu.unq.eperdemic.modelo.Especie
 import ar.edu.unq.eperdemic.modelo.TipoDeVector
 import ar.edu.unq.eperdemic.modelo.Vector
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 
 interface VectorService {
 
@@ -16,6 +18,7 @@ interface VectorService {
     fun recuperarVector(vectorId: Long): Vector
     fun borrarVector(vectorId: Long)
     fun recuperarTodos() : List<Vector>
+    fun recuperarTodos(page: Pageable): Page<Vector>
     fun vectoresEnUbicacionID(ubicacionId: Long): List<Vector>
 
 }

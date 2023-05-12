@@ -1,12 +1,15 @@
 package ar.edu.unq.eperdemic.spring.controllers
 
+import ar.edu.unq.eperdemic.modelo.Vector
 import ar.edu.unq.eperdemic.modelo.exceptions.NoExisteElid
-import ar.edu.unq.eperdemic.services.PatogenoService
 import ar.edu.unq.eperdemic.services.EspecieService
 import ar.edu.unq.eperdemic.services.VectorService
 import ar.edu.unq.eperdemic.spring.controllers.dto.EspecieDTO
 import ar.edu.unq.eperdemic.spring.controllers.dto.VectorDTO
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Pageable
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -31,10 +34,14 @@ class VectorControllerREST(private val vectorService: VectorService) {
     @DeleteMapping("/{id}")
     fun delete(@PathVariable id: Long) = vectorService.borrarVector(id)
 
-    @GetMapping("/vectores")//falta paginado
-    fun getAll() = vectorService.recuperarTodos().map{VectorDTO.desdeModelo(it)}
+    @GetMapping("/vectores")
+    fun getAll(@RequestParam(defaultValue = "0") page: Int, @RequestParam(defaultValue = "10") size:Int): List<VectorDTO> {
+        val pageable: Pageable = PageRequest.of(page, size)
+        val vectoresPage: Page<Vector> = vectorService.recuperarTodos(pageable)
+        return vectoresPage.map { VectorDTO.desdeModelo(it) }.toList()
+    }
 
-    @GetMapping("/vectores/{id}")//falta paginado
+    @GetMapping("/vectores/{id}")
     fun vectoresEnUbicacion(@PathVariable id: Long) = vectorService.vectoresEnUbicacionID(id).map { VectorDTO.desdeModelo(it) }
 
     @PutMapping("/contagiar/{vectorId}")

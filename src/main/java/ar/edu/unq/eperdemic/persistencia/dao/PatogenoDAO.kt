@@ -2,11 +2,12 @@ package ar.edu.unq.eperdemic.persistencia.dao
 
 import ar.edu.unq.eperdemic.modelo.Especie
 import ar.edu.unq.eperdemic.modelo.Patogeno
+import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.CrudRepository
 import org.springframework.stereotype.Repository
 @Repository
-interface PatogenoDAO: CrudRepository<Patogeno, Long> {
+interface PatogenoDAO: JpaRepository<Patogeno, Long> {
 
 
      @Query("select p.especies from Patogeno p where p.id = :patogenoId")
