@@ -1,7 +1,7 @@
 package ar.edu.unq.eperdemic.spring.controllers.dto
 
-import ar.edu.unq.eperdemic.modelo.Especie
 import ar.edu.unq.eperdemic.modelo.Mutacion
+import ar.edu.unq.eperdemic.modelo.Random
 import ar.edu.unq.eperdemic.modelo.TipoDeMutacion
 import ar.edu.unq.eperdemic.modelo.TipoDeVector
 
@@ -11,15 +11,10 @@ class MutacionDTO(
     val tipoDeVector : TipoDeVector?,
     val poderDeMutacion: Int?) {
 
-/*
+
     fun aModelo() : Mutacion {
-        var mutacion = Mutacion()
-        mutacion.tipoDeMutacion = this.tipoDeMutacion
-        if (mutacion.tipoDeMutacion == TipoDeMutacion.SupresionBiomecanica) {
-            mutacion.potenciaDeMutacion = this.poderDeMutacion
-        } else {
-            mutacion.tipoDeVector = this.tipoDeVector
-        }
+        val mutacion = Mutacion(this.tipoDeMutacion)
+
         return mutacion
     }
 
@@ -32,6 +27,6 @@ class MutacionDTO(
                 poderDeMutacion = mutacion.potenciaDeMutacion
             )
     }
-*/
+
 }
 
