@@ -3,9 +3,11 @@ package ar.edu.unq.eperdemic.spring.controllers
 import ar.edu.unq.eperdemic.modelo.Patogeno
 import ar.edu.unq.eperdemic.modelo.exceptions.NingunVectorAInfectarEnLaUbicacionDada
 import ar.edu.unq.eperdemic.modelo.exceptions.NoExisteElid
+import ar.edu.unq.eperdemic.persistencia.dao.UbicacionDAO
 import ar.edu.unq.eperdemic.services.PatogenoService
 import ar.edu.unq.eperdemic.spring.controllers.dto.EspecieDTO
 import ar.edu.unq.eperdemic.spring.controllers.dto.PatogenoDTO
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
@@ -18,15 +20,19 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/patogeno")
 class PatogenoControllerREST(private val patogenoService: PatogenoService) {
 
+  @Autowired
+  lateinit var ubicacionDAO: UbicacionDAO
+
   @PostMapping
   fun create(@RequestBody patogeno: PatogenoDTO): PatogenoDTO {
     val patogenoCreado = patogenoService.crearPatogeno(patogeno.aModelo())
     return PatogenoDTO.desdeModelo(patogenoCreado)
   }
 
-  @PostMapping("/addEspecie/{ubicacionId}")
-  fun agregarEspecie(@PathVariable ubicacionId: Long, @RequestBody especieDTO: EspecieDTO): EspecieDTO {
-    val especie = patogenoService.agregarEspecie(especieDTO.patogenoId!!, especieDTO.nombre, ubicacionId)
+  @PostMapping("/addEspecie/{id}")
+  fun agregarEspecie(@PathVariable id: Long, @RequestBody especieDTO: EspecieDTO): EspecieDTO {
+    val ubicacion = ubicacionDAO.recuperarUbicacionPorNombre(especieDTO.paisDeOrigen)
+    val especie = patogenoService.agregarEspecie(id, especieDTO.nombre, ubicacion.id!!)
     return EspecieDTO.desdeModelo(especie)
   }
 
@@ -40,7 +46,6 @@ class PatogenoControllerREST(private val patogenoService: PatogenoService) {
     val patogenosPage: Page<Patogeno> = patogenoService.recuperarATodosLosPatogenos(pageable)
     return patogenosPage.map { PatogenoDTO.desdeModelo(it)}.toList()
   }
-
 
   @GetMapping("/especies/{id}")
   fun especiesDePatogeno(@PathVariable id: Long) = patogenoService.especiesDePatogeno(id).map { EspecieDTO.desdeModelo(it) }
