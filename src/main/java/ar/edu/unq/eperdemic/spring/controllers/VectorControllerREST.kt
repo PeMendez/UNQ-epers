@@ -41,8 +41,7 @@ class VectorControllerREST(private val vectorService: VectorService) {
         return vectoresPage.map { VectorDTO.desdeModelo(it) }.toList()
     }
 
-
-    @GetMapping("/vectores/{id}")//falta paginado
+    @GetMapping("/vectores/{id}")
     fun vectoresEnUbicacion(@PathVariable id: Long) = vectorService.vectoresEnUbicacionID(id).map { VectorDTO.desdeModelo(it) }
 
     @PutMapping("/contagiar/{vectorId}")
