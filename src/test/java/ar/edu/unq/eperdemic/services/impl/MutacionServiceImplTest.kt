@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.data.domain.PageRequest
 import org.springframework.test.context.junit.jupiter.SpringExtension
 
 @ExtendWith(SpringExtension::class)
@@ -121,6 +122,35 @@ class MutacionServiceImplTest {
         assertThrows(NoExisteElid::class.java) {
             mutacionService.agregarMutacion(-11, mutacionTest)
         }
+    }
+
+    @Test
+    fun seRecuperanTodasLasMutacionesDeManeraCorrectaConPaginaUnoYSizeDos() {
+        dataService.eliminarTodo()
+
+        val patogeno = Patogeno("testEspecie1")
+        val patogenoCreado = patogenoService.crearPatogeno(patogeno)
+        val ubicacionCreada1 = ubicacionService.crearUbicacion("ubicacionTestEspecie1")
+        vectorService.crearVector(TipoDeVector.Persona, ubicacionCreada1.id!!)
+        val especieCreada = patogenoService.agregarEspecie(patogenoCreado.id!!, "cualquierNombre1", ubicacionCreada1.id!!)
+
+        val mutacionAAgregar1 = Mutacion()
+        mutacionService.agregarMutacion(especieCreada.id!!, mutacionAAgregar1)
+
+        val mutacionAAgregar2 = Mutacion()
+        mutacionService.agregarMutacion(especieCreada.id!!, mutacionAAgregar2)
+
+        val mutacionAAgregar3 = Mutacion()
+        mutacionService.agregarMutacion(especieCreada.id!!, mutacionAAgregar3)
+
+
+        val pageable = PageRequest.of(1, 2)
+
+        val mutacionesRecuperadas = mutacionService.recuperarTodas(pageable)
+
+
+        assertEquals(1, mutacionesRecuperadas.number)
+        assertEquals(1, mutacionesRecuperadas.numberOfElements)
     }
 
     @AfterEach
