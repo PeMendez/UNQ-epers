@@ -1,10 +1,10 @@
 package ar.edu.unq.eperdemic.persistencia.dao
 
 import ar.edu.unq.eperdemic.modelo.Especie
-import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
+import org.springframework.data.repository.PagingAndSortingRepository
 
-interface EspecieDAO : JpaRepository<Especie, Long>  {
+interface EspecieDAO : PagingAndSortingRepository<Especie, Long>  {
 
 
     @Query("select e from Vector v join v.especies e where v.tipo in (ar.edu.unq.eperdemic.modelo.TipoDeVector.Persona, ar.edu.unq.eperdemic.modelo.TipoDeVector.Animal) group by e order by count(v) desc")

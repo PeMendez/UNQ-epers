@@ -1,14 +1,10 @@
 package ar.edu.unq.eperdemic.spring.controllers
 
-import ar.edu.unq.eperdemic.modelo.Mutacion
-import ar.edu.unq.eperdemic.modelo.Vector
-import ar.edu.unq.eperdemic.modelo.exceptions.ConvinacionDeDatosIncorrecta
+import ar.edu.unq.eperdemic.modelo.exceptions.CombinacionDeDatosIncorrecta
 import ar.edu.unq.eperdemic.modelo.exceptions.NoExisteElid
 import ar.edu.unq.eperdemic.services.MutacionService
 import ar.edu.unq.eperdemic.spring.controllers.dto.MutacionDTO
-import ar.edu.unq.eperdemic.spring.controllers.dto.VectorDTO
 import com.fasterxml.jackson.databind.exc.InvalidFormatException
-import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
 import org.springframework.http.HttpStatus
@@ -30,10 +26,9 @@ class MutacionControllerREST(private val mutacionService: MutacionService) {
     fun findById(@PathVariable id: Long) = MutacionDTO.desdeModelo(mutacionService.recuperarMutacion(id))
 
     @GetMapping("/mutaciones")
-    fun getAll(@RequestParam(defaultValue = "0") page: Int, @RequestParam(defaultValue = "10") size:Int): List<MutacionDTO> {
-        val pageable: Pageable = PageRequest.of(page, size)
-        val mutacionesPage: Page<Mutacion> = mutacionService.recuperarTodas(pageable)
-        return mutacionesPage.map { MutacionDTO.desdeModelo(it) }.toList()
+    fun getAll(@RequestParam("offset", defaultValue = "0") offset: Int, @RequestParam("limit", defaultValue = "10") limit: Int): List<MutacionDTO> {
+        val pageable: Pageable = PageRequest.of(offset, limit)
+        return mutacionService.recuperarTodas(pageable).map { MutacionDTO.desdeModelo(it) }.toList()
     }
 
     @ExceptionHandler(NoExisteElid::class)
@@ -41,8 +36,8 @@ class MutacionControllerREST(private val mutacionService: MutacionService) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.message)
     }
 
-    @ExceptionHandler(ConvinacionDeDatosIncorrecta::class)
-    fun handleNotFoundException(ex: ConvinacionDeDatosIncorrecta): ResponseEntity<String> {
+    @ExceptionHandler(CombinacionDeDatosIncorrecta::class)
+    fun handleNotFoundException(ex: CombinacionDeDatosIncorrecta): ResponseEntity<String> {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.message)
     }
 
