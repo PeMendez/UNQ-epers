@@ -64,7 +64,7 @@ class VectorServiceImpl(): VectorService {
     }
 
     override fun recuperarTodos(): List<Vector> {
-        return vectorDAO.findAll()
+        return vectorDAO.findAll().toList()
     }
 
     override fun recuperarTodos(page: Pageable): Page<Vector> {

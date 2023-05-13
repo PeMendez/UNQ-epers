@@ -5,9 +5,10 @@ import ar.edu.unq.eperdemic.modelo.Patogeno
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.CrudRepository
+import org.springframework.data.repository.PagingAndSortingRepository
 import org.springframework.stereotype.Repository
 @Repository
-interface PatogenoDAO: JpaRepository<Patogeno, Long> {
+interface PatogenoDAO: PagingAndSortingRepository<Patogeno, Long> {
 
 
      @Query("select p.especies from Patogeno p where p.id = :patogenoId")

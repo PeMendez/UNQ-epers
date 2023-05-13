@@ -30,7 +30,7 @@ class EspecieServiceImpl() : EspecieService {
     }
 
     override fun recuperarTodas(): List<Especie> {
-        return especieDAO.findAll()
+        return especieDAO.findAll().toList()
     }
 
     override fun lideres(): List<Especie> {

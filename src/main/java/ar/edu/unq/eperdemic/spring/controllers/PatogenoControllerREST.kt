@@ -1,6 +1,5 @@
 package ar.edu.unq.eperdemic.spring.controllers
 
-import ar.edu.unq.eperdemic.modelo.Patogeno
 import ar.edu.unq.eperdemic.modelo.exceptions.NingunVectorAInfectarEnLaUbicacionDada
 import ar.edu.unq.eperdemic.modelo.exceptions.NoExisteElid
 import ar.edu.unq.eperdemic.persistencia.dao.UbicacionDAO
@@ -8,7 +7,6 @@ import ar.edu.unq.eperdemic.services.PatogenoService
 import ar.edu.unq.eperdemic.spring.controllers.dto.EspecieDTO
 import ar.edu.unq.eperdemic.spring.controllers.dto.PatogenoDTO
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
 import org.springframework.http.HttpStatus
@@ -40,11 +38,9 @@ class PatogenoControllerREST(private val patogenoService: PatogenoService) {
   fun findById(@PathVariable id: Long) = PatogenoDTO.desdeModelo(patogenoService.recuperarPatogeno(id))
 
   @GetMapping("/patogenos")
-  fun getAll(@RequestParam(defaultValue = "0") page: Int, @RequestParam(defaultValue = "10") size:Int) : List<PatogenoDTO> {
-
-    val pageable: Pageable = PageRequest.of(page, size)
-    val patogenosPage: Page<Patogeno> = patogenoService.recuperarATodosLosPatogenos(pageable)
-    return patogenosPage.map { PatogenoDTO.desdeModelo(it)}.toList()
+  fun getAll(@RequestParam("offset", defaultValue = "0") offset: Int, @RequestParam("limit", defaultValue = "10") limit: Int): List<PatogenoDTO> {
+    val pageable: Pageable = PageRequest.of(offset, limit)
+    return patogenoService.recuperarATodosLosPatogenos(pageable).map { PatogenoDTO.desdeModelo(it)}.toList()
   }
 
   @GetMapping("/especies/{id}")

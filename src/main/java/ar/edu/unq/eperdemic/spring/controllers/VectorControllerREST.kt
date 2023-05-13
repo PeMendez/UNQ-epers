@@ -1,6 +1,5 @@
 package ar.edu.unq.eperdemic.spring.controllers
 
-import ar.edu.unq.eperdemic.modelo.Vector
 import ar.edu.unq.eperdemic.modelo.exceptions.NoExisteElid
 import ar.edu.unq.eperdemic.services.EspecieService
 import ar.edu.unq.eperdemic.services.VectorService
@@ -8,7 +7,6 @@ import ar.edu.unq.eperdemic.spring.controllers.dto.EspecieDTO
 import ar.edu.unq.eperdemic.spring.controllers.dto.VectorDTO
 import com.fasterxml.jackson.databind.exc.InvalidFormatException
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
 import org.springframework.http.HttpStatus
@@ -36,10 +34,10 @@ class VectorControllerREST(private val vectorService: VectorService) {
     fun delete(@PathVariable id: Long) = vectorService.borrarVector(id)
 
     @GetMapping("/vectores")
-    fun getAll(@RequestParam(defaultValue = "0") page: Int, @RequestParam(defaultValue = "10") size:Int): List<VectorDTO> {
-        val pageable: Pageable = PageRequest.of(page, size)
-        val vectoresPage: Page<Vector> = vectorService.recuperarTodos(pageable)
-        return vectoresPage.map { VectorDTO.desdeModelo(it) }.toList()
+    fun getAll(@RequestParam("offset", defaultValue = "0") offset: Int, @RequestParam("limit", defaultValue = "10") limit: Int): List<VectorDTO> {
+        val pageable: Pageable = PageRequest.of(offset, limit)
+        return vectorService.recuperarTodos(pageable).map { VectorDTO.desdeModelo(it) }.toList()
+
     }
 
     @GetMapping("/vectores/{id}")
