@@ -25,9 +25,6 @@ class UbicacionControllerREST(private val ubicacionService: UbicacionService) {
         return  ubicacionService.recuperarTodos(pageRequest).map{ UbicacionDTO.desdeModelo(it)}.toList()
     }
 
-    @GetMapping("/allVectoresInUbicacion/{ubicacionId}")
-    fun recuperarVectores(@PathVariable ubicacionId: Long) = ubicacionService.recuperarVectores(ubicacionId).map { vector -> VectorDTO.desdeModelo(vector) }
-
     @PostMapping
     fun guardarUbicacion(@RequestBody ubicacionDTO: UbicacionDTO) = ubicacionService.guardar(ubicacionDTO.aModelo())
 

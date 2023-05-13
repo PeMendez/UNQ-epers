@@ -111,7 +111,7 @@ class EspecieServiceImplTest {
     }
 
     @Test
-    fun seRecuperaUnaEspecieConSusMutacionesCorrectamente() {
+    fun seAgregaUnaMutacionYseRecuperaUnaEspecieConSusMutacionesCorrectamente() {
         val patogeno = Patogeno("testEspecie")
         val patogenoCreado = patogenoService.crearPatogeno(patogeno)
         val ubicacionCreada = ubicacionService.crearUbicacion("ubicacionTestEspecie")

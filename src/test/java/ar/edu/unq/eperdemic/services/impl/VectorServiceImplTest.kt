@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.data.domain.PageRequest
 import org.springframework.test.context.junit.jupiter.SpringExtension
 @ExtendWith(SpringExtension::class)
 @SpringBootTest
@@ -388,6 +389,28 @@ class VectorServiceImplTest {
         val vectoresRecuperados = vectorServiceImpl.recuperarTodos()
 
         assertTrue(vectoresRecuperados.isEmpty())
+    }
+
+    @Test
+    fun seRecuperanTodosLosVectoresConPaginadoCorrectamenteConLaPagina0YSizeDos() {
+        dataServiceSpring.eliminarTodo()
+        val ubicacionCreada1 = ubicacionServiceImpl.crearUbicacion("ubicacionTestEspecie")
+
+        val vectorCreado1 = vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada1.id!!)
+        val vectorCreado2 = vectorServiceImpl.crearVector(TipoDeVector.Insecto, ubicacionCreada1.id!!)
+        val vectorCreado3 = vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada1.id!!)
+
+        val pageable = PageRequest.of(0, 2)
+
+        val vectoresRecuperados = vectorServiceImpl.recuperarTodos(pageable)
+
+        Assertions.assertNotNull(vectoresRecuperados.find { it.id == vectorCreado1.id!! })
+        Assertions.assertNotNull(vectoresRecuperados.find { it.id == vectorCreado2.id!! })
+        Assertions.assertNull(vectoresRecuperados.find { it.id == vectorCreado3.id!! })
+
+        Assertions.assertEquals(0, vectoresRecuperados.number)
+        Assertions.assertEquals(2, vectoresRecuperados.numberOfElements)
+        Assertions.assertEquals(2, vectoresRecuperados.size)
     }
 
     // --------------------- TESTS DE MUTACIONES ---------------------
