@@ -1,10 +1,9 @@
 package ar.edu.unq.eperdemic.spring.controllers.dto
 
 import ar.edu.unq.eperdemic.modelo.Mutacion
-import ar.edu.unq.eperdemic.modelo.Random
 import ar.edu.unq.eperdemic.modelo.TipoDeMutacion
 import ar.edu.unq.eperdemic.modelo.TipoDeVector
-import ar.edu.unq.eperdemic.modelo.exceptions.ConvinacionDeDatosIncorrecta
+import ar.edu.unq.eperdemic.modelo.exceptions.CombinacionDeDatosIncorrecta
 
 class MutacionDTO(
     val tipoDeMutacion: TipoDeMutacion,
@@ -21,10 +20,10 @@ class MutacionDTO(
             mutacion.tipoDeVector = tipoDeVector
         }
         if (tipoDeMutacion ==TipoDeMutacion.SupresionBiomecanica && tipoDeVector != null){
-            throw ConvinacionDeDatosIncorrecta("el tipo supresion biomecanica no tiene un tipo de vector")
+            throw CombinacionDeDatosIncorrecta("el tipo supresion biomecanica no tiene un tipo de vector")
         }
         if (tipoDeMutacion == TipoDeMutacion.BioalteracionGenetica && poderDeMutacion != null){
-            throw ConvinacionDeDatosIncorrecta("el tipo bioalteracion genetica no tiene un poder de mutación")
+            throw CombinacionDeDatosIncorrecta("el tipo bioalteracion genetica no tiene un poder de mutación")
         }
 
         return mutacion

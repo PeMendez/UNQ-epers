@@ -1,6 +1,6 @@
 package ar.edu.unq.eperdemic.spring.controllers
 
-import ar.edu.unq.eperdemic.modelo.exceptions.ConvinacionDeDatosIncorrecta
+import ar.edu.unq.eperdemic.modelo.exceptions.CombinacionDeDatosIncorrecta
 import ar.edu.unq.eperdemic.modelo.exceptions.NoExisteElid
 import ar.edu.unq.eperdemic.services.MutacionService
 import ar.edu.unq.eperdemic.spring.controllers.dto.MutacionDTO
@@ -36,8 +36,8 @@ class MutacionControllerREST(private val mutacionService: MutacionService) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.message)
     }
 
-    @ExceptionHandler(ConvinacionDeDatosIncorrecta::class)
-    fun handleNotFoundException(ex: ConvinacionDeDatosIncorrecta): ResponseEntity<String> {
+    @ExceptionHandler(CombinacionDeDatosIncorrecta::class)
+    fun handleNotFoundException(ex: CombinacionDeDatosIncorrecta): ResponseEntity<String> {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.message)
     }
 
