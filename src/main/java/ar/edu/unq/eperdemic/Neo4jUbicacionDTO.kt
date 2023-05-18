@@ -11,7 +11,6 @@ import org.springframework.data.neo4j.core.schema.Node
 class Neo4jUbicacionDTO() {
 
     @Id
-    @GeneratedValue
     var id : Long? = null
     lateinit var nombre: String
 

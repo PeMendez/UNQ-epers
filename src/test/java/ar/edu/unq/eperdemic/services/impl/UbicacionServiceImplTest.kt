@@ -6,6 +6,7 @@ import ar.edu.unq.eperdemic.modelo.Ubicacion
 import ar.edu.unq.eperdemic.modelo.exceptions.NoExisteElid
 import ar.edu.unq.eperdemic.modelo.exceptions.NoPuedeEstarVacioOContenerCaracteresEspeciales
 import ar.edu.unq.eperdemic.modelo.exceptions.NombreDeUbicacionRepetido
+import ar.edu.unq.eperdemic.persistencia.dao.Neo4jUbicacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.UbicacionDAO
 import ar.edu.unq.eperdemic.utils.DataService
 import org.junit.jupiter.api.*
@@ -28,8 +29,12 @@ class UbicacionServiceImplTest {
     private lateinit var ubicacionService: UbicacionServiceImpl
     @Autowired
     private lateinit var patogenoService: PatogenoServiceImpl
+
     @Autowired
     private lateinit var ubicacionDAO: UbicacionDAO
+    @Autowired
+    private lateinit var neo4jUbicacionDAO: Neo4jUbicacionDAO
+
 
     @BeforeEach
     fun setUp() {
@@ -397,8 +402,17 @@ class UbicacionServiceImplTest {
     // ------------------------ Neo4jTests ------------------------ //
 
     @Test
-    fun seCreaUnaUbicacionEnNeo4jCorrectamente() {
-        val ubicacion = ubicacionService.crearUbicacion("asdUbi")
+    fun seRecuperaUnaUbicacionDeNeo4jCorrectamente() {
+        val ubicacionCreada = ubicacionService.crearUbicacion("testNeo")
+        val ubicacionRecuperadaOptional = neo4jUbicacionDAO.findById(ubicacionCreada.id!!)
+
+        // Hay un error al recuperar porque crearUbicacion retorna una ubicacion con el ID de Hibernate
+        // y se intenta recuperar la ubicacion en neo4J con el ID de Hibernate (no es el mismo)
+        Assertions.assertTrue(ubicacionRecuperadaOptional.isPresent)
+
+        val ubicacionRecuperada = ubicacionRecuperadaOptional.get()
+
+        Assertions.assertEquals(ubicacionRecuperada.nombre, ubicacionCreada.nombre)
     }
 
     @AfterEach

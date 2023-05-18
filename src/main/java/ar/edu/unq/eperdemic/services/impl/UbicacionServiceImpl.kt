@@ -17,6 +17,7 @@ import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.util.NoSuchElementException
 
 
 @Service
@@ -52,12 +53,15 @@ class UbicacionServiceImpl(): UbicacionService {
     }
 
     override fun crearUbicacion(nombreUbicacion: String): Ubicacion {
+        if (neo4jUbicacionDAO.recuperarUbicacionPorNombre(nombreUbicacion) != null) {
+            throw NombreDeUbicacionRepetido("Ya existe una ubicacion con ese nombre.")
+        }
         try {
-             ubicacionDAO.recuperarUbicacionPorNombre(nombreUbicacion)
+            ubicacionDAO.recuperarUbicacionPorNombre(nombreUbicacion)
         } catch (e: EmptyResultDataAccessException) {
             val nuevaUbicacion = Ubicacion(nombreUbicacion)
-            neo4jUbicacionDAO.save(Neo4jUbicacionDTO.desdeModelo(nuevaUbicacion))
             ubicacionDAO.save(nuevaUbicacion)
+            neo4jUbicacionDAO.save(Neo4jUbicacionDTO.desdeModelo(nuevaUbicacion))
             return nuevaUbicacion
         }
         throw NombreDeUbicacionRepetido("Ya existe una ubicacion con ese nombre.")

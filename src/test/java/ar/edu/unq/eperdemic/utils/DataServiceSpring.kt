@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional
 import ar.edu.unq.eperdemic.services.impl.PatogenoServiceImpl
 import ar.edu.unq.eperdemic.services.impl.UbicacionServiceImpl
 import ar.edu.unq.eperdemic.services.impl.VectorServiceImpl
-
+import org.springframework.data.neo4j.repository.query.Query
 
 
 @Service
@@ -37,6 +37,9 @@ class DataServiceSpring : DataService {
     lateinit var ubicacionService: UbicacionServiceImpl
     @Autowired
     lateinit var vectorService: VectorServiceImpl
+
+    @Autowired
+    lateinit var neo4jUbicacionDAO: Neo4jUbicacionDAO
 
 
     val patogeno1 = Patogeno("tipo1")
@@ -128,6 +131,8 @@ class DataServiceSpring : DataService {
         patogenoDAO.deleteAll()
         especieDAO.deleteAll()
         mutacionDAO.deleteAll()
+
+        neo4jUbicacionDAO.detachDelete()
     }
 
 }
