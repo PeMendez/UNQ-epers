@@ -394,6 +394,12 @@ class UbicacionServiceImplTest {
         Assertions.assertEquals(1, ubicacionesRecuperadas.numberOfElements)
     }
 
+    // ------------------------ Neo4jTests ------------------------ //
+
+    @Test
+    fun seCreaUnaUbicacionEnNeo4jCorrectamente() {
+        val ubicacion = ubicacionService.crearUbicacion("asdUbi")
+    }
 
     @AfterEach
     fun clearAll() {

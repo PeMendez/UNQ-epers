@@ -1,10 +1,12 @@
 package ar.edu.unq.eperdemic.services.impl
 
+import ar.edu.unq.eperdemic.Neo4jUbicacionDTO
 import ar.edu.unq.eperdemic.modelo.Random
 import ar.edu.unq.eperdemic.modelo.Ubicacion
 import ar.edu.unq.eperdemic.modelo.Vector
 import ar.edu.unq.eperdemic.modelo.exceptions.NoExisteElid
 import ar.edu.unq.eperdemic.modelo.exceptions.NombreDeUbicacionRepetido
+import ar.edu.unq.eperdemic.persistencia.dao.Neo4jUbicacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.UbicacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.VectorDAO
 import ar.edu.unq.eperdemic.services.UbicacionService
@@ -21,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional
 @Transactional
 class UbicacionServiceImpl(): UbicacionService {
 
+    @Autowired private lateinit var neo4jUbicacionDAO: Neo4jUbicacionDAO
     @Autowired private lateinit var ubicacionDAO: UbicacionDAO
     @Autowired private lateinit var vectorServiceImpl: VectorServiceImpl
     @Autowired private lateinit var vectorDAO: VectorDAO
@@ -53,7 +56,9 @@ class UbicacionServiceImpl(): UbicacionService {
              ubicacionDAO.recuperarUbicacionPorNombre(nombreUbicacion)
         } catch (e: EmptyResultDataAccessException) {
             val nuevaUbicacion = Ubicacion(nombreUbicacion)
-            return ubicacionDAO.save(nuevaUbicacion)
+            neo4jUbicacionDAO.save(Neo4jUbicacionDTO.desdeModelo(nuevaUbicacion))
+            ubicacionDAO.save(nuevaUbicacion)
+            return nuevaUbicacion
         }
         throw NombreDeUbicacionRepetido("Ya existe una ubicacion con ese nombre.")
     }
