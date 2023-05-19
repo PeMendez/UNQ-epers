@@ -35,7 +35,7 @@ class Mutacion() {
         if(tipoDeMutacion == TipoDeMutacion.SupresionBiomecanica) {
             potenciaDeMutacion = Random.decidir(100)
         } else {
-            tipoDeVector = Random.decidirTipoVector(2)
+            tipoDeVector = Random.decidirTipoVector()
         }
     }
 
