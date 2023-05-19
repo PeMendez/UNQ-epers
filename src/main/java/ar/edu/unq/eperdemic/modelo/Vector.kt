@@ -48,7 +48,7 @@ class Vector(var tipo: TipoDeVector,
 
     fun esContagioExitoso(vectorAInfectar: Vector, especie: Especie): Boolean {
         return  ubicacion.nombre == vectorAInfectar.ubicacion.nombre
-                && Random.decidir(100) < porcentajeDeContagioExitoso(especie)
+                && Random.decidir(100) <= porcentajeDeContagioExitoso(especie)
                 && supresionNoExitosa(vectorAInfectar, especie)
                 && hayContagioPorTipo(especie, vectorAInfectar)
     }

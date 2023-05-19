@@ -51,7 +51,6 @@ class DataServiceSpring : DataService {
     @Transactional
     override fun crearSetDeDatosIniciales() {
         Random.switchModo(false)
-        Random.switchModo(false)
         val listaPatogenosCreados = crearPatogenos()
         val listaDeUbicacionesCreadas = crearUbicaciones()
         crearVectores(listaDeUbicacionesCreadas)
