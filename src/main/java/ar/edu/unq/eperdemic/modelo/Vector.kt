@@ -16,7 +16,7 @@ class Vector(var tipo: TipoDeVector,
     @ManyToMany(fetch = FetchType.EAGER)
     var mutaciones: MutableSet<Mutacion> = mutableSetOf()
 
-    fun intentarInfectarConEspecies(especies: List<Especie>, vectorAInfectar: Vector) {
+    fun intentarInfectarConEspecies(vectorAInfectar: Vector) {
         especies.forEach { e ->
             this.intentarInfectar(vectorAInfectar, e)
         }
