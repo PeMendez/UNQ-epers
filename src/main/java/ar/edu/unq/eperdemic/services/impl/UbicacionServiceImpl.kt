@@ -53,7 +53,7 @@ class UbicacionServiceImpl(): UbicacionService {
     }
 
     override fun crearUbicacion(nombreUbicacion: String): Ubicacion {
-        if (neo4jUbicacionDAO.recuperarUbicacionPorNombre(nombreUbicacion) != null) {
+        if (neo4jUbicacionDAO.recuperarUbicacionPorNombre(nombreUbicacion).isPresent) {
             throw NombreDeUbicacionRepetido("Ya existe una ubicacion con ese nombre.")
         }
         try {

@@ -13,6 +13,7 @@ class Neo4jUbicacionDTO() {
     @Id
     var id : Long? = null
     lateinit var nombre: String
+    var idRelacional: Long? = null
 
     constructor(newName: String): this() {
         if (Check.validar(newName)){
@@ -28,7 +29,9 @@ class Neo4jUbicacionDTO() {
 
     companion object {
         fun desdeModelo(ubicacion: Ubicacion): Neo4jUbicacionDTO {
-            return Neo4jUbicacionDTO(ubicacion.nombre)
+            val ubi = Neo4jUbicacionDTO(ubicacion.nombre)
+            ubi.idRelacional = ubicacion.id!!
+            return ubi
         }
     }
 }

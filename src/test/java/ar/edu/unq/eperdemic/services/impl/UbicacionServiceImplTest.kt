@@ -36,7 +36,7 @@ class UbicacionServiceImplTest {
     private lateinit var neo4jUbicacionDAO: Neo4jUbicacionDAO
 
 
-    @BeforeEach
+    //@BeforeEach
     fun setUp() {
        dataService.crearSetDeDatosIniciales()
     }
@@ -404,7 +404,7 @@ class UbicacionServiceImplTest {
     @Test
     fun seRecuperaUnaUbicacionDeNeo4jCorrectamente() {
         val ubicacionCreada = ubicacionService.crearUbicacion("testNeo")
-        val ubicacionRecuperadaOptional = neo4jUbicacionDAO.findById(ubicacionCreada.id!!)
+        val ubicacionRecuperadaOptional = neo4jUbicacionDAO.findByIdRelacional(ubicacionCreada.id!!)
 
         // Hay un error al recuperar porque crearUbicacion retorna una ubicacion con el ID de Hibernate
         // y se intenta recuperar la ubicacion en neo4J con el ID de Hibernate (no es el mismo)
@@ -415,7 +415,7 @@ class UbicacionServiceImplTest {
         Assertions.assertEquals(ubicacionRecuperada.nombre, ubicacionCreada.nombre)
     }
 
-    @AfterEach
+    //@AfterEach
     fun clearAll() {
         dataService.eliminarTodo()
     }
