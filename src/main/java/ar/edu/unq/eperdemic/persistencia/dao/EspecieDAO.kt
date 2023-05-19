@@ -19,7 +19,7 @@ interface EspecieDAO : PagingAndSortingRepository<Especie, Long>  {
     @Query("select e from Vector v join v.especies e where v.ubicacion.id = :ubicacionId group by e order by count(v) desc")
     fun especieLiderDeUbicacion(ubicacionId: Long) : List<Especie>
 
-    @Query("select COUNT(e) > 0 from Especie e where e.nombre = :nombreEspecie")
+    @Query("select COUNT(e) != 0 from Especie e where e.nombre = :nombreEspecie")
     fun existeElNombreEnLaBase(nombreEspecie: String): Boolean
 
 }

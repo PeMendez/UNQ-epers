@@ -54,9 +54,9 @@ class VectorServiceImplTest {
         patogeno1 = patogenoService.crearPatogeno(Patogeno("patogeno1"))
 
         vectorCarnada = vectorServiceImpl.crearVector(TipoDeVector.Persona,ubicacion1.id!!)
-        especie1 = patogenoService.agregarEspecie(patogeno1.id!!,"especie1",ubicacion1.id!!)
-        especie2 = patogenoService.agregarEspecie(patogeno1.id!!,"especie2",ubicacion1.id!!)
-        especie3 = patogenoService.agregarEspecie(patogeno1.id!!,"especie3",ubicacion1.id!!)
+        especie1 = patogenoService.agregarEspecie(patogeno1.id!!,"especieRARA", ubicacion1.id!!)
+        especie2 = patogenoService.agregarEspecie(patogeno1.id!!,"especieEXTRR",ubicacion1.id!!)
+        especie3 = patogenoService.agregarEspecie(patogeno1.id!!,"especieFR",ubicacion1.id!!)
 
         vectorPersona1 = vectorServiceImpl.crearVector(TipoDeVector.Persona,ubicacion2.id!!)
         vectorPersona2 = vectorServiceImpl.crearVector(TipoDeVector.Persona,ubicacion2.id!!)

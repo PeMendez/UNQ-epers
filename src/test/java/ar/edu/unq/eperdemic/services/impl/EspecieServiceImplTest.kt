@@ -88,7 +88,7 @@ class EspecieServiceImplTest {
         val ubicacionCreada = ubicacionService.crearUbicacion("ubicacionTestEspecie")
         vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada.id!!)
         val especieCreada = patogenoService.agregarEspecie(patogenoCreado.id!!, "cualquierNombre", ubicacionCreada.id!!)
-        val especieCreada1 = patogenoService.agregarEspecie(patogenoCreado.id!!, "cualquierNombre1", ubicacionCreada.id!!)
+
         val especieRecuperada = especieService.recuperarEspecie(especieCreada.id!!)
 
         Assertions.assertEquals(especieRecuperada.id!!, especieCreada.id!!)
@@ -101,7 +101,7 @@ class EspecieServiceImplTest {
     @Test
     fun seRecuperanLaCantidadDeInfectadosCorrectamente() {
         dataService.eliminarTodo()
-        val patogeno = Patogeno("testEspecie1")
+        val patogeno = Patogeno("testEspecie")
         val patogenoCreado = patogenoService.crearPatogeno(patogeno)
         val ubicacionCreada = ubicacionService.crearUbicacion("ubicacionTestEspecie")
         vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada.id!!)
@@ -112,7 +112,7 @@ class EspecieServiceImplTest {
 
     @Test
     fun seAgregaUnaMutacionYseRecuperaUnaEspecieConSusMutacionesCorrectamente() {
-        val patogeno = Patogeno("testEspecie22")
+        val patogeno = Patogeno("testEspecie")
         val patogenoCreado = patogenoService.crearPatogeno(patogeno)
         val ubicacionCreada = ubicacionService.crearUbicacion("ubicacionTestEspecie")
         vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada.id!!)
@@ -322,6 +322,9 @@ class EspecieServiceImplTest {
         val ubicacionCreada2 = ubicacionService.crearUbicacion("otroNombreDeUbicacion")
         vectorServiceImpl.crearVector(TipoDeVector.Insecto, ubicacionCreada2.id!!)
         val especieCreada2 = patogenoService.agregarEspecie(patogenoCreado2.id!!, "cualquierNombre1", ubicacionCreada2.id!!)
+
+
+
 
         val pageable = PageRequest.of(0, 2)
 
