@@ -111,14 +111,6 @@ enum class TipoDeVector {
             return vector == Insecto
         }
     };
-    /*
-    fun esContagioExitoso(vectorAInfectar: Vector, especie: Especie): Boolean {
-        return ubicacion.nombre == vectorAInfectar.ubicacion.nombre
-                && vectorAInfectar.tipo.puedeSerInfectado(this)
-                && Random.decidir(100) < porcentajeDeContagioExitoso(especie)
-                && supresionNoExitosa(vectorAInfectar, especie)
-    }
-     */
 
     abstract fun puedeSerInfectado(vector: TipoDeVector): Boolean
 }
