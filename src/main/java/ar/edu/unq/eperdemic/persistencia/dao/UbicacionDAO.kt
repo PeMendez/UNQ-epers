@@ -2,10 +2,10 @@ package ar.edu.unq.eperdemic.persistencia.dao
 
 import ar.edu.unq.eperdemic.modelo.Ubicacion
 import ar.edu.unq.eperdemic.modelo.Vector
-import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
+import org.springframework.data.repository.PagingAndSortingRepository
 
-interface UbicacionDAO: JpaRepository<Ubicacion, Long> {
+interface UbicacionDAO: PagingAndSortingRepository<Ubicacion, Long> {
 
     @Query(
         """ SELECT v 

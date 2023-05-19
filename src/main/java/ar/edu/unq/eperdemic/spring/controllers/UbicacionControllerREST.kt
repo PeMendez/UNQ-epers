@@ -1,15 +1,12 @@
 package ar.edu.unq.eperdemic.spring.controllers
 
-import ar.edu.unq.eperdemic.modelo.Ubicacion
 import ar.edu.unq.eperdemic.modelo.exceptions.NoExisteElNombreDeLaUbicacion
 import ar.edu.unq.eperdemic.modelo.exceptions.NoExisteElid
 import ar.edu.unq.eperdemic.modelo.exceptions.NombreDeUbicacionRepetido
 import ar.edu.unq.eperdemic.services.UbicacionService
 import ar.edu.unq.eperdemic.spring.controllers.dto.UbicacionDTO
 import ar.edu.unq.eperdemic.spring.controllers.dto.VectorDTO
-import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
-import org.springframework.data.domain.Pageable
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -23,15 +20,10 @@ class UbicacionControllerREST(private val ubicacionService: UbicacionService) {
     fun recuperarUbicacion(@PathVariable ubicacionId: Long) = UbicacionDTO.desdeModelo(ubicacionService.recuperar(ubicacionId))
 
     @GetMapping("/allUbicaciones")
-    fun recuperarTodas(@RequestParam(defaultValue = "0") page: Int, @RequestParam(defaultValue = "10") size:Int): List<UbicacionDTO> {
-        val pageable: Pageable = PageRequest.of(page, size)
-        val ubicacionesPage: Page<Ubicacion> = ubicacionService.recuperarTodos(pageable)
-        return ubicacionesPage.map { UbicacionDTO.desdeModelo(it)}.toList()
-
-        }
-
-    @GetMapping("/allVectoresInUbicacion/{ubicacionId}")
-    fun recuperarVectores(@PathVariable ubicacionId: Long) = ubicacionService.recuperarVectores(ubicacionId).map { vector -> VectorDTO.desdeModelo(vector) }
+    fun recuperarTodas(@RequestParam("offset", defaultValue = "0") offset: Int, @RequestParam("limit", defaultValue = "10") limit: Int): List<UbicacionDTO> {
+        val pageRequest = PageRequest.of(offset, limit)
+        return  ubicacionService.recuperarTodos(pageRequest).map{ UbicacionDTO.desdeModelo(it)}.toList()
+    }
 
     @PostMapping
     fun guardarUbicacion(@RequestBody ubicacionDTO: UbicacionDTO) = ubicacionService.guardar(ubicacionDTO.aModelo())

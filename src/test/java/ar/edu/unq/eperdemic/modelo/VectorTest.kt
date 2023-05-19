@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test
 
 class VectorTest {
 
+
     private val ub1 = Ubicacion("Noruega")
     private val ub2 = Ubicacion("Suiza")
     private val ub3 = Ubicacion("Belgica")
