@@ -69,10 +69,10 @@ class MutacionServiceImplTest {
         val mutacionRecuperada = mutacionService.recuperarMutacion(mutacionPersistida.id!!)
 
         assertEquals(mutacionPersistida.id!!, mutacionRecuperada.id!!)
-        assertEquals(mutacionPersistida.potenciaDeMutacion, mutacionPersistida.potenciaDeMutacion)
-        assertEquals(mutacionPersistida.tipoDeMutacion, mutacionPersistida.tipoDeMutacion)
-        assertEquals(mutacionPersistida.tipoDeVector, mutacionPersistida.tipoDeVector)
-        assertEquals(mutacionPersistida.especie.id!!, mutacionPersistida.especie.id!!)
+        assertEquals(mutacionPersistida.potenciaDeMutacion, mutacionRecuperada.potenciaDeMutacion)
+        assertEquals(mutacionPersistida.tipoDeMutacion, mutacionRecuperada.tipoDeMutacion)
+        assertEquals(mutacionPersistida.tipoDeVector, mutacionRecuperada.tipoDeVector)
+        assertEquals(mutacionPersistida.especie.id!!, mutacionRecuperada.especie.id!!)
     }
 
     @Test

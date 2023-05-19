@@ -88,11 +88,10 @@ class PatogenoServiceTest {
 
     @Test
     fun alAgregarleUnaEspecieAUnPatogenoSeIncrementaSuCantidadDeEspecies() {
-        val patogeno = patogenoService.recuperarPatogeno(patogenoMalDeDragon.id!!)
         patogenoService.agregarEspecie(patogenoMalDeDragon.id!!, "EspecieImperius", ubicacionPrivateDrive.id!!)
         val patogenoRecuperado = patogenoService.recuperarPatogeno(patogenoMalDeDragon.id!!)
 
-        Assertions.assertEquals(patogenoRecuperado.cantidadDeEspecies, patogeno.cantidadDeEspecies + 1)
+        Assertions.assertEquals(1, patogenoRecuperado.cantidadDeEspecies)
     }
 
     @Test
