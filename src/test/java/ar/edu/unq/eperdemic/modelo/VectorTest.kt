@@ -144,4 +144,25 @@ class VectorTest {
         assertFalse(vector1.supresionNoExitosa(vector2,especie2))
     }
 
+    @Test
+    fun tieneEnfermedadTrue(){
+        val ubicacion = Ubicacion("ubicacion")
+        val patogeno = Patogeno("patogeno")
+        val vector = Vector(TipoDeVector.Persona,ubicacion)
+        val especie = Especie(patogeno,"especie","ubicacion")
+        vector.serInfectadoCon(especie)
+
+        assertTrue(vector.tieneEnfermedad(especie))
+    }
+
+    @Test
+    fun tieneEnfermedadFalse(){
+        val ubicacion = Ubicacion("ubicacion")
+        val patogeno = Patogeno("patogeno")
+        val vector = Vector(TipoDeVector.Persona,ubicacion)
+        val especie = Especie(patogeno,"especie","ubicacion")
+
+        assertFalse(vector.tieneEnfermedad(especie))
+    }
+
 }

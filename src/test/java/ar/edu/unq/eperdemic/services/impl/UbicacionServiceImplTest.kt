@@ -43,8 +43,7 @@ class UbicacionServiceImplTest {
 
     @Test
     fun seGuardaUnaUbicacionCorrectamente() {
-        val ubicacionAGuardar = Ubicacion("testGuardarUbi")
-        ubicacionService.guardar(ubicacionAGuardar)
+        val ubicacionAGuardar = ubicacionService.crearUbicacion("testGuardarUbi")
 
         val ubicacionRecuperada = ubicacionDAO.recuperarUbicacionPorNombre(ubicacionAGuardar.nombre)
 
@@ -53,11 +52,10 @@ class UbicacionServiceImplTest {
 
     @Test
     fun noSePuedeGuardarUnaUbicacionConUnNombreYaExistenteEnLaBDD() {
-        val ubicacionCreada = ubicacionService.crearUbicacion("nombreIgual")
-        val ubicacionAGuardar = Ubicacion(ubicacionCreada.nombre)
+        ubicacionService.crearUbicacion("nombreIgual")
 
         Assertions.assertThrows(NombreDeUbicacionRepetido::class.java) {
-            ubicacionService.guardar(ubicacionAGuardar)
+            ubicacionService.crearUbicacion("nombreIgual")
         }
     }
 

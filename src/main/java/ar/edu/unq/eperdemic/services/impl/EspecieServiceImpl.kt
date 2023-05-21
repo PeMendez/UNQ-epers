@@ -60,5 +60,9 @@ class EspecieServiceImpl() : EspecieService {
 
     }
 
+    override fun existeElNombreEnLaBase(nombre: String): Boolean {
+        return especieDAO.existeElNombreEnLaBase(nombre)
+    }
+
 }
 

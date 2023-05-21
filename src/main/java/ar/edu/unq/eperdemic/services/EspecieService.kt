@@ -12,5 +12,6 @@ interface EspecieService {
     fun especieLider(): Especie
     fun lideres(): List<Especie>
     fun especieLiderDeUbicacion(ubicacionId: Long) : Especie
+    fun existeElNombreEnLaBase(nombre: String): Boolean
 
 }

@@ -39,7 +39,7 @@ dependencies {
         exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
     }
     implementation("mysql:mysql-connector-java:8.0.33")
-    testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.9.2")
     runtimeOnly("mysql:mysql-connector-java")
     testImplementation("com.h2database:h2")
 

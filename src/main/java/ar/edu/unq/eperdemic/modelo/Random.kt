@@ -11,24 +11,14 @@ object Random {
                     limiteFinal
                 }
     }
-    fun decidirTipoVector(limiteFinal: Int): TipoDeVector{
+    fun decidirTipoVector(): TipoDeVector{
         val tipos = TipoDeVector.values()
         return if (esRandom){
-            tipos.get((0..limiteFinal).random())
+            tipos.get((0..1).random())
         } else {
-            tipos.get(limiteFinal)
+            tipos.get(1)
         }
     }
-
-    fun decidirTipoMutacion(limiteFinal: Int): TipoDeMutacion{
-        val tipos = TipoDeMutacion.values()
-        return if (esRandom){
-            tipos[(0..limiteFinal).random()]
-        } else {
-            tipos[limiteFinal]
-        }
-    }
-
 
     fun switchModo(esRandom: Boolean) {
          this.esRandom = esRandom

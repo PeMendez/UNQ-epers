@@ -48,6 +48,10 @@ class Especie() {
         return this.patogeno.capacidadDeContagio()
     }
 
+    fun sonMismaEspecie(especie: Especie): Boolean{
+        return this.nombre == especie.nombre
+    }
+
 }
 
 
