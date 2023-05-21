@@ -37,11 +37,10 @@ class Vector(var tipo: TipoDeVector,
         }
     }
 
+
     private fun agregarMutacion(mutacion: Mutacion) {
-        if (!this.mutaciones.any { m -> m.id == mutacion.id && m.especie.id == mutacion.especie.id }) {
-            if (mutacion.tipoDeMutacion == TipoDeMutacion.SupresionBiomecanica) {
-                mutacion.activarSupresion(this)
-            }
+        if (!this.mutaciones.any { m -> m.sonMismaMutacion(mutacion) && m.sonDeMismaEspecie(mutacion)}){
+            mutacion.activarSupresionSiCorresponde(this)
             mutaciones.add(mutacion)
         }
     }
@@ -54,9 +53,7 @@ class Vector(var tipo: TipoDeVector,
     }
 
     fun hayContagioPorTipo(especie: Especie, vectorAInfectar: Vector): Boolean {
-        val mutacion = this.mutaciones.find { m ->
-            m.tipoDeMutacion == TipoDeMutacion.BioalteracionGenetica && m.especie.id!! == especie.id!!
-        }
+        val mutacion = this.mutaciones.find { m -> m.esBioalteracionGenetica() && m.especie.sonMismaEspecie(especie)}
         if (mutacion != null) {
             return  mutacion.tipoDeVector == vectorAInfectar.tipo || vectorAInfectar.tipo.puedeSerInfectado(this.tipo)
         } else {

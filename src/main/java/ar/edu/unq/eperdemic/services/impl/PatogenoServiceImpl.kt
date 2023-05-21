@@ -49,12 +49,11 @@ class PatogenoServiceImpl : PatogenoService {
     }
 
     override fun agregarEspecie(id: Long, nombre: String, ubicacionId: Long): Especie {
-
+        if (especieDAO.existeElNombreEnLaBase(nombre)) {
+            throw NombreDeEspecieRepetido("Ya existe una especie con ese nombre $nombre")
+        }
         val ubicacion = ubicacionDAO.findByIdOrNull(ubicacionId)?: throw NoExisteElid("No existe la ubicacion")
         val patogeno = patogenoDAO.findByIdOrNull(id)?: throw NoExisteElid("No existe el patógeno")
-        if (especieDAO.existeElNombreEnLaBase(nombre)) {
-            throw Exception("Ya existe una especie con ese nombre " + nombre)
-        }
         val vectores = vectorDAO.findAllByUbicacionId(ubicacionId)
         val vectorAInfectar = try{
             vectores[diosito.decidir(vectores.size)-1]

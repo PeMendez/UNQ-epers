@@ -20,6 +20,16 @@ class Mutacion() {
         this.especie = especie
     }
 
+    fun activarSupresionSiCorresponde(vector: Vector){
+        if (tipoDeMutacion == TipoDeMutacion.SupresionBiomecanica) {
+           activarSupresion(vector)
+        }
+    }
+
+    fun esBioalteracionGenetica(): Boolean{
+        return tipoDeMutacion == TipoDeMutacion.BioalteracionGenetica
+    }
+
     fun activarSupresion(vector: Vector) {
         val especiesAEliminar = mutableListOf<Especie>()
         vector.especies.forEach { e ->
@@ -28,6 +38,23 @@ class Mutacion() {
             }
         }
         especiesAEliminar.forEach { e -> vector.especies.remove(e) }
+    }
+
+    fun sonMismaMutacion(mutacion: Mutacion): Boolean {
+        return this.tipoDeMutacion == mutacion.tipoDeMutacion
+                && coincidenSusAtributos(mutacion)
+    }
+
+    fun sonDeMismaEspecie(mutacion: Mutacion): Boolean {
+        return this.especie.sonMismaEspecie(mutacion.especie)
+    }
+
+    fun coincidenSusAtributos(mutacion: Mutacion): Boolean{
+        return if(tipoDeMutacion == TipoDeMutacion.SupresionBiomecanica){
+            potenciaDeMutacion == mutacion.potenciaDeMutacion
+        } else {
+            tipoDeVector == mutacion.tipoDeVector
+        }
     }
 
     constructor(tipoDeMutacion: TipoDeMutacion): this(){

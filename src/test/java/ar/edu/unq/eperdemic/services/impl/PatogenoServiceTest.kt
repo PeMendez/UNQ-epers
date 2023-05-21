@@ -1,9 +1,7 @@
 package ar.edu.unq.eperdemic.services.impl
 
 import ar.edu.unq.eperdemic.modelo.*
-import ar.edu.unq.eperdemic.modelo.exceptions.NingunVectorAInfectarEnLaUbicacionDada
-import ar.edu.unq.eperdemic.modelo.exceptions.NoExisteElid
-import ar.edu.unq.eperdemic.modelo.exceptions.NoPuedeEstarVacioOContenerCaracteresEspeciales
+import ar.edu.unq.eperdemic.modelo.exceptions.*
 import ar.edu.unq.eperdemic.utils.DataService
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.extension.ExtendWith
@@ -94,6 +92,14 @@ class PatogenoServiceTest {
         Assertions.assertEquals(1, patogenoRecuperado.cantidadDeEspecies)
     }
 
+    @Test
+    fun noSePuedeAgregarUnaEspecieConUnNombreYaExistenteEnLaBDD() {
+        patogenoService.agregarEspecie(patogenoMalDeDragon.id!!, "EspecieImperius", ubicacionPrivateDrive.id!!)
+
+        Assertions.assertThrows(NombreDeEspecieRepetido::class.java) {
+            patogenoService.agregarEspecie(patogenoMalDeDragon.id!!, "EspecieImperius", ubicacionPrivateDrive.id!!)
+        }
+    }
     @Test
     fun seIntentaAgregarUnaEspecieEnUnaUbicacionInexistente(){
 
