@@ -50,7 +50,7 @@ class PatogenoServiceImpl : PatogenoService {
 
     override fun agregarEspecie(id: Long, nombre: String, ubicacionId: Long): Especie {
         if (especieDAO.existeElNombreEnLaBase(nombre)) {
-            throw NombreDeEspecieRepetido("Ya existe una especie con ese nombre $nombre")
+            throw NombreDeEspecieRepetido("Ya existe una especie con el nombre $nombre")
         }
         val ubicacion = ubicacionDAO.findByIdOrNull(ubicacionId)?: throw NoExisteElid("No existe la ubicacion")
         val patogeno = patogenoDAO.findByIdOrNull(id)?: throw NoExisteElid("No existe el patógeno")
