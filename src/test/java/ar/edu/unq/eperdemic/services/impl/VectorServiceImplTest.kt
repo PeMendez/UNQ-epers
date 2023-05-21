@@ -143,9 +143,9 @@ class VectorServiceImplTest {
         val vectorCon2Especies = vectorServiceImpl.recuperarVector(vectorPersona2.id!!)
         vectorServiceImpl.contagiar(vectorInsecto1, listOf(vectorCon2Especies))
 
-        assertTrue(vectorCon2Especies.tieneEfermedad(especie1.id!!))
-        assertTrue(vectorCon2Especies.tieneEfermedad(especie2.id!!))
-        assertTrue(vectorCon2Especies.tieneEfermedad(especie3.id!!))
+        assertTrue(vectorCon2Especies.tieneEnfermedad(especie1))
+        assertTrue(vectorCon2Especies.tieneEnfermedad(especie2))
+        assertTrue(vectorCon2Especies.tieneEnfermedad(especie3))
     }
 
     @Test
@@ -163,19 +163,19 @@ class VectorServiceImplTest {
 
         val vectores = listOf(vectorAnimalCreado1)
 
-        assertFalse(vectorAnimalCreado1.tieneEfermedad(unaEspecie.id!!))
+        assertFalse(vectorAnimalCreado1.tieneEnfermedad(unaEspecie))
         assertEquals(vectorAnimalCreado1.ubicacion.id!!, vectorAnimalCreado2.ubicacion.id!!)
         assertEquals(vectorAnimalCreado1.ubicacion.id!!, vectorPersonaCreado.ubicacion.id!!)
         assertEquals(vectorAnimalCreado1.ubicacion.id!!, vectorInsectoCreado.ubicacion.id!!)
 
         vectorServiceImpl.contagiar(vectorAnimalCreado2, vectores)
-        assertFalse(vectorAnimalCreado1.tieneEfermedad(unaEspecie.id!!))
+        assertFalse(vectorAnimalCreado1.tieneEnfermedad(unaEspecie))
 
         vectorServiceImpl.contagiar(vectorPersonaCreado, vectores)
-        assertFalse(vectorAnimalCreado1.tieneEfermedad(unaEspecie.id!!))
+        assertFalse(vectorAnimalCreado1.tieneEnfermedad(unaEspecie))
 
         vectorServiceImpl.contagiar(vectorInsectoCreado, vectores)
-        assertTrue(vectorAnimalCreado1.tieneEfermedad(unaEspecie.id!!))
+        assertTrue(vectorAnimalCreado1.tieneEnfermedad(unaEspecie))
     }
 
     @Test
@@ -226,19 +226,19 @@ class VectorServiceImplTest {
         vectorServiceImpl.infectar(vectorAniminalInfectado,especie2)
         val vectorAnimalInfectadoConDos = vectorServiceImpl.recuperarVector(vectorAniminalInfectado.id!!)
 
-        assertTrue(vectorAnimalInfectadoConDos.tieneEfermedad(especie1.id!!))
-        assertTrue(vectorAnimalInfectadoConDos.tieneEfermedad(especie2.id!!))
+        assertTrue(vectorAnimalInfectadoConDos.tieneEnfermedad(especie1))
+        assertTrue(vectorAnimalInfectadoConDos.tieneEnfermedad(especie2))
 
         assertTrue(vectorPersona1.estaSano())
         assertTrue(vectorPersona2.estaSano())
 
         vectorServiceImpl.contagiar(vectorAnimalInfectadoConDos, listOf(vectorPersona1,vectorPersona2))
 
-        assertTrue(vectorPersona1.tieneEfermedad(especie1.id!!))
-        assertTrue(vectorPersona1.tieneEfermedad(especie2.id!!))
+        assertTrue(vectorPersona1.tieneEnfermedad(especie1))
+        assertTrue(vectorPersona1.tieneEnfermedad(especie2))
 
-        assertTrue(vectorPersona2.tieneEfermedad(especie1.id!!))
-        assertTrue(vectorPersona2.tieneEfermedad(especie2.id!!))
+        assertTrue(vectorPersona2.tieneEnfermedad(especie1))
+        assertTrue(vectorPersona2.tieneEnfermedad(especie2))
     }
 
     @Test
@@ -246,7 +246,7 @@ class VectorServiceImplTest {
 
         assertTrue(vectorPersona1.estaSano())
         vectorServiceImpl.infectar(vectorPersona1,especie1)
-        assertTrue(vectorPersona1.tieneEfermedad(especie1.id!!))
+        assertTrue(vectorPersona1.tieneEnfermedad(especie1))
 
     }
 
@@ -286,9 +286,9 @@ class VectorServiceImplTest {
     fun seRecuperanLasEnfermedadesDeUnVectorInfectadoCorrectamente() {
         val vectorInfectado = vectorServiceImpl.recuperarVector(vectorCarnada.id!!)
 
-        assertTrue(vectorInfectado.tieneEfermedad(especie1.id!!))
-        assertTrue(vectorInfectado.tieneEfermedad(especie2.id!!))
-        assertTrue(vectorInfectado.tieneEfermedad(especie3.id!!))
+        assertTrue(vectorInfectado.tieneEnfermedad(especie1))
+        assertTrue(vectorInfectado.tieneEnfermedad(especie2))
+        assertTrue(vectorInfectado.tieneEnfermedad(especie3))
 
         val enfermedadesDeVector= vectorServiceImpl.enfermedades(vectorInfectado.id!!).map { it.id }
 

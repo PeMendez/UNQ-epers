@@ -17,7 +17,8 @@ class Vector(var tipo: TipoDeVector,
     var mutaciones: MutableSet<Mutacion> = mutableSetOf()
 
     fun intentarInfectarConEspecies(vectorAInfectar: Vector) {
-        especies.forEach { e ->
+        val especiesDelVector = ArrayList(especies)
+        especiesDelVector.forEach { e ->
             this.intentarInfectar(vectorAInfectar, e)
         }
     }
@@ -65,7 +66,7 @@ class Vector(var tipo: TipoDeVector,
         var supresionNoExitosa = true
         vectorAInfectar.mutaciones.forEach { m ->
             if (m.tipoDeMutacion == TipoDeMutacion.SupresionBiomecanica) {
-                supresionNoExitosa = supresionNoExitosa && m.potenciaDeMutacion!! < especie.capacidadDeDefensa()
+                supresionNoExitosa = supresionNoExitosa && m.potenciaDeMutacion!! <= especie.capacidadDeDefensa()
             }
         }
         return supresionNoExitosa
@@ -83,8 +84,8 @@ class Vector(var tipo: TipoDeVector,
         return especies.isEmpty()
     }
 
-    fun tieneEfermedad(especieId: Long): Boolean {
-        return especies.filter { e -> e.id == especieId }.isNotEmpty()
+    fun tieneEnfermedad(especie: Especie): Boolean {
+        return especies.any { e -> e.sonMismaEspecie(especie) }
     }
 
     fun mover(ubicacion: Ubicacion) {

@@ -233,7 +233,7 @@ class PatogenoServiceTest {
 
         val vectorHarryPotterEnfermo = vectorServiceImpl.recuperarVector(vectorHarryPotter.id!!)
 
-        Assertions.assertTrue(vectorHarryPotterEnfermo.tieneEfermedad(especieImperius.id!!))
+        Assertions.assertTrue(vectorHarryPotterEnfermo.tieneEnfermedad(especieImperius))
     }
 
     @Test
