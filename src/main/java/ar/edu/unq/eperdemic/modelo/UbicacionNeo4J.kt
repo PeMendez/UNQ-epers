@@ -10,6 +10,8 @@ class UbicacionNeo4J {
     var id : Long? = null
     lateinit var nombre: String
     var idRelacional: Long? = null
-    @Relationship
-    var ubicaciones: MutableSet<UbicacionNeo4J> = mutableSetOf()
+
+    //comento porque no anduvo////////////////////////////////////////////////////
+    //@Relationship(type = "CAMINO", direction = Relationship.Direction.OUTGOING)
+    //var ubicaciones: MutableSet<UbicacionNeo4J> = mutableSetOf()
 }

@@ -408,27 +408,63 @@ class UbicacionServiceImplTest {
 
         // Hay un error al recuperar porque crearUbicacion retorna una ubicacion con el ID de Hibernate
         // y se intenta recuperar la ubicacion en neo4J con el ID de Hibernate (no es el mismo)
-        //Assertions.assertTrue(ubicacionRecuperadaOptional.isPresent)
+        Assertions.assertTrue(ubicacionRecuperadaOptional.isPresent)
 
-//        val ubicacionRecuperada = ubicacionRecuperadaOptional.get()
+        val ubicacionRecuperada = ubicacionRecuperadaOptional.get()
 
-        //Assertions.assertEquals(ubicacionRecuperada.nombre, ubicacionCreada.nombre)
+        Assertions.assertEquals(ubicacionRecuperada.nombre, ubicacionCreada.nombre)
     }
+
+
+    @Test
+    fun hayConexionDirectaTrue() {
+        dataService.eliminarTodo()
+        val ubicacion1 = ubicacionService.crearUbicacion("ubicacion1")
+        val ubicacion2 = ubicacionService.crearUbicacion("ubicacion2")
+
+        val ubicacionNeo1 = neo4jUbicacionDAO.findByIdRelacional(ubicacion1.id!!).get()
+        val ubicacionNeo2 = neo4jUbicacionDAO.findByIdRelacional(ubicacion2.id!!).get()
+
+        ubicacionService.conectarConQuery(ubicacionNeo1.nombre,ubicacionNeo2.nombre,"Terrestre")
+
+        Assertions.assertTrue(ubicacionService.hayConexionDirecta(ubicacionNeo1.nombre,ubicacionNeo2.nombre))
+    }
+    @Test
+    fun hayConexionDirectaFalse() {
+        dataService.eliminarTodo()
+        val ubicacion1 = ubicacionService.crearUbicacion("ubicacion1")
+        val ubicacion2 = ubicacionService.crearUbicacion("ubicacion2")
+        val ubicacion3 = ubicacionService.crearUbicacion("ubicacion3")
+
+        val ubicacionNeo1 = neo4jUbicacionDAO.findByIdRelacional(ubicacion1.id!!).get()
+        val ubicacionNeo2 = neo4jUbicacionDAO.findByIdRelacional(ubicacion2.id!!).get()
+        val ubicacionNeo3 = neo4jUbicacionDAO.findByIdRelacional(ubicacion3.id!!).get()
+
+        ubicacionService.conectarConQuery(ubicacionNeo1.nombre,ubicacionNeo2.nombre,"Terrestre")
+        ubicacionService.conectarConQuery(ubicacionNeo2.nombre,ubicacionNeo3.nombre,"Terrestre")
+
+        Assertions.assertTrue(ubicacionService.hayConexionDirecta(ubicacionNeo1.nombre,ubicacionNeo2.nombre))
+        Assertions.assertTrue(ubicacionService.hayConexionDirecta(ubicacionNeo2.nombre,ubicacionNeo3.nombre))
+        Assertions.assertFalse(ubicacionService.hayConexionDirecta(ubicacionNeo1.nombre,ubicacionNeo3.nombre))
+    }
+
     @Test
     fun seCreaUnaRelacionEntreDosUbicaciones() {
         dataService.eliminarTodo()
         val ubicacion1 = ubicacionService.crearUbicacion("ubicacion1")
         val ubicacion2 = ubicacionService.crearUbicacion("ubicacion2")
 
-        val ubicacionNeo1 = neo4jUbicacionDAO.findByIdRelacional(ubicacion1.id!!)
-        val ubicacionNeo2 = neo4jUbicacionDAO.findByIdRelacional(ubicacion2.id!!)
+        val ubicacionNeo1 = neo4jUbicacionDAO.findByIdRelacional(ubicacion1.id!!).get()
+        val ubicacionNeo2 = neo4jUbicacionDAO.findByIdRelacional(ubicacion2.id!!).get()
+
+        Assertions.assertFalse(ubicacionService.hayConexionDirecta(ubicacionNeo1.nombre,ubicacionNeo2.nombre))
 
         ubicacionService.conectarConQuery(ubicacionNeo1.nombre,ubicacionNeo2.nombre,"Terrestre")
 
-        val nombresDeUbicaciones = ubicacionNeo1.ubicaciones.map { u -> u.nombre }.toList()
-
-        Assertions.assertTrue(nombresDeUbicaciones.contains(ubicacionNeo2.nombre))
+        Assertions.assertTrue(ubicacionService.hayConexionDirecta(ubicacionNeo1.nombre,ubicacionNeo2.nombre))
     }
+
+
     //@AfterEach
     fun clearAll() {
         dataService.eliminarTodo()

@@ -1,6 +1,5 @@
 package ar.edu.unq.eperdemic.services.impl
 
-import ar.edu.unq.eperdemic.Neo4jUbicacionDTO
 import ar.edu.unq.eperdemic.modelo.Random
 import ar.edu.unq.eperdemic.modelo.Ubicacion
 import ar.edu.unq.eperdemic.modelo.Vector
@@ -17,7 +16,6 @@ import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import java.util.NoSuchElementException
 
 
 @Service
@@ -53,10 +51,9 @@ class UbicacionServiceImpl(): UbicacionService {
     }
 
     override fun crearUbicacion(nombreUbicacion: String): Ubicacion {
-        //dejo comentado el if porque no anada
-        //if (neo4jUbicacionDAO.recuperarUbicacionPorNombre(nombreUbicacion).isPresent) {
-        //    throw NombreDeUbicacionRepetido("Ya existe una ubicacion con ese nombre.")
-        //}
+        if (neo4jUbicacionDAO.recuperarUbicacionPorNombre(nombreUbicacion).isPresent) {
+            throw NombreDeUbicacionRepetido("Ya existe una ubicacion con ese nombre.")
+        }
         try {
             ubicacionDAO.recuperarUbicacionPorNombre(nombreUbicacion)
         } catch (e: EmptyResultDataAccessException) {
@@ -99,10 +96,30 @@ class UbicacionServiceImpl(): UbicacionService {
     }
 
     fun conectarConQuery(ubicacionOrigen: String, ubicacionDestino:String, tipoDeCamino:String){
-        val ubiOrigen = neo4jUbicacionDAO.recuperarUbicacionPorNombre(ubicacionOrigen)
-        val ubiDestino = neo4jUbicacionDAO.recuperarUbicacionPorNombre(ubicacionDestino)
+        existeUbicacionPorNombre(ubicacionOrigen)
+        existeUbicacionPorNombre(ubicacionDestino)
+        //esCaminoValido(tipoDeCamino) para que solo pueda ser terrestre aereo o maritimo
+        val ubiOrigen = neo4jUbicacionDAO.recuperarUbicacionPorNombre(ubicacionOrigen).get()
+        val ubiDestino = neo4jUbicacionDAO.recuperarUbicacionPorNombre(ubicacionDestino).get()
 
+        //comento porque no anduvo////////////////////////////////////////////////////////////
+        //ubiOrigen.ubicaciones.add(ubiDestino)
+        //neo4jUbicacionDAO.save(ubiOrigen)
         neo4jUbicacionDAO.conectar(ubiOrigen.idRelacional!!,ubiDestino.idRelacional!!, tipoDeCamino)
+    }
+
+    fun hayConexionDirecta(ubicacionOrigen: String, ubicacionDestino:String): Boolean{
+        val ubiOrigen = neo4jUbicacionDAO.recuperarUbicacionPorNombre(ubicacionOrigen).get()
+        val ubiDestino = neo4jUbicacionDAO.recuperarUbicacionPorNombre(ubicacionDestino).get()
+
+        return neo4jUbicacionDAO.hayConexionDirecta(ubiOrigen.idRelacional!!,ubiDestino.idRelacional!!)
+    }
+
+    private fun existeUbicacionPorNombre(nombreDeUbicacionABuscar:String){
+        if (!neo4jUbicacionDAO.recuperarUbicacionPorNombre(nombreDeUbicacionABuscar).isPresent
+            || ubicacionDAO.recuperarUbicacionPorNombre(nombreDeUbicacionABuscar).id == null) {
+            throw NombreDeUbicacionRepetido("Ubicación no encontrada")
+        }
     }
 }
 
