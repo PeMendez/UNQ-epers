@@ -414,7 +414,19 @@ class UbicacionServiceImplTest {
 
         Assertions.assertEquals(ubicacionRecuperada.nombre, ubicacionCreada.nombre)
     }
+    @Test
+    fun seCreaUnaRelacion() {
+        dataService.eliminarTodo()
+        val ubicacion1 = ubicacionService.crearUbicacion("ubicacion1")
+        val ubicacion2 = ubicacionService.crearUbicacion("ubicacion2")
+        val ubicacionNeo1 = neo4jUbicacionDAO.findByIdRelacional(ubicacion1.id!!).get()
+        val ubicacionNeo2 = neo4jUbicacionDAO.findByIdRelacional(ubicacion2.id!!).get()
 
+        ubicacionService.conectarConQuery(ubicacionNeo1.nombre,ubicacionNeo2.nombre,"Terrestre")
+        val nombresDeUbicaciones = ubicacionNeo1.ubicaciones.map { u -> u.nombre }.toList()
+
+        Assertions.assertTrue(nombresDeUbicaciones.contains(ubicacionNeo2.nombre))
+    }
     //@AfterEach
     fun clearAll() {
         dataService.eliminarTodo()

@@ -6,6 +6,7 @@ import ar.edu.unq.eperdemic.modelo.exceptions.NoPuedeEstarVacioOContenerCaracter
 import org.springframework.data.neo4j.core.schema.GeneratedValue
 import org.springframework.data.neo4j.core.schema.Id
 import org.springframework.data.neo4j.core.schema.Node
+import org.springframework.data.neo4j.core.schema.Relationship
 
 @Node
 class Neo4jUbicacionDTO() {
@@ -14,6 +15,9 @@ class Neo4jUbicacionDTO() {
     var id : Long? = null
     lateinit var nombre: String
     var idRelacional: Long? = null
+
+    @Relationship
+    var ubicaciones: MutableSet<Neo4jUbicacionDTO> = mutableSetOf()
 
     constructor(newName: String): this() {
         if (Check.validar(newName)){

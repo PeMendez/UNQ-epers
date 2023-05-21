@@ -96,5 +96,12 @@ class UbicacionServiceImpl(): UbicacionService {
             throw NombreDeUbicacionRepetido("Ya existe una ubicacion con ese nombre.")
         }
     }
+
+    fun conectarConQuery(ubicacionOrigen: String, ubicacionDestino:String, tipoDeCamino:String){
+        val ubiOrigen = neo4jUbicacionDAO.recuperarUbicacionPorNombre(ubicacionOrigen).get()
+        val ubiDestino = neo4jUbicacionDAO.recuperarUbicacionPorNombre(ubicacionDestino).get()
+
+        neo4jUbicacionDAO.conectar(ubiOrigen.idRelacional!!,ubiDestino.idRelacional!!, tipoDeCamino)
+    }
 }
 
