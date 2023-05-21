@@ -3,6 +3,7 @@ package ar.edu.unq.eperdemic.services.impl
 import ar.edu.unq.eperdemic.modelo.Random
 import ar.edu.unq.eperdemic.modelo.Ubicacion
 import ar.edu.unq.eperdemic.modelo.Vector
+import ar.edu.unq.eperdemic.modelo.exceptions.NoExisteElNombreDeLaUbicacion
 import ar.edu.unq.eperdemic.modelo.exceptions.NoExisteElid
 import ar.edu.unq.eperdemic.modelo.exceptions.NombreDeUbicacionRepetido
 import ar.edu.unq.eperdemic.persistencia.dao.Neo4jUbicacionDAO
@@ -109,6 +110,8 @@ class UbicacionServiceImpl(): UbicacionService {
     }
 
     fun hayConexionDirecta(ubicacionOrigen: String, ubicacionDestino:String): Boolean{
+        existeUbicacionPorNombre(ubicacionOrigen)
+        existeUbicacionPorNombre(ubicacionDestino)
         val ubiOrigen = neo4jUbicacionDAO.recuperarUbicacionPorNombre(ubicacionOrigen).get()
         val ubiDestino = neo4jUbicacionDAO.recuperarUbicacionPorNombre(ubicacionDestino).get()
 
@@ -118,7 +121,7 @@ class UbicacionServiceImpl(): UbicacionService {
     private fun existeUbicacionPorNombre(nombreDeUbicacionABuscar:String){
         if (!neo4jUbicacionDAO.recuperarUbicacionPorNombre(nombreDeUbicacionABuscar).isPresent
             || ubicacionDAO.recuperarUbicacionPorNombre(nombreDeUbicacionABuscar).id == null) {
-            throw NombreDeUbicacionRepetido("Ubicación no encontrada")
+            throw NoExisteElNombreDeLaUbicacion("Ubicación no encontrada")
         }
     }
 }
