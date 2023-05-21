@@ -18,5 +18,12 @@ class Ubicacion() {
             throw NoPuedeEstarVacioOContenerCaracteresEspeciales("El nombre no puede ser vacío o contener caracteres especiales")
         }
     }
+    fun aUbicacionNeo4J():UbicacionNeo4J{
+        val nuevaUbicacionNeo4J = UbicacionNeo4J()
 
+        nuevaUbicacionNeo4J.nombre = this.nombre
+        nuevaUbicacionNeo4J.idRelacional = this.id
+
+        return nuevaUbicacionNeo4J
+    }
 }

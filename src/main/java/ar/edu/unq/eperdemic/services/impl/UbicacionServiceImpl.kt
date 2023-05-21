@@ -53,15 +53,16 @@ class UbicacionServiceImpl(): UbicacionService {
     }
 
     override fun crearUbicacion(nombreUbicacion: String): Ubicacion {
-        if (neo4jUbicacionDAO.recuperarUbicacionPorNombre(nombreUbicacion).isPresent) {
-            throw NombreDeUbicacionRepetido("Ya existe una ubicacion con ese nombre.")
-        }
+        //dejo comentado el if porque no anada
+        //if (neo4jUbicacionDAO.recuperarUbicacionPorNombre(nombreUbicacion).isPresent) {
+        //    throw NombreDeUbicacionRepetido("Ya existe una ubicacion con ese nombre.")
+        //}
         try {
             ubicacionDAO.recuperarUbicacionPorNombre(nombreUbicacion)
         } catch (e: EmptyResultDataAccessException) {
             val nuevaUbicacion = Ubicacion(nombreUbicacion)
             ubicacionDAO.save(nuevaUbicacion)
-            neo4jUbicacionDAO.save(Neo4jUbicacionDTO.desdeModelo(nuevaUbicacion))
+            neo4jUbicacionDAO.save(nuevaUbicacion.aUbicacionNeo4J())
             return nuevaUbicacion
         }
         throw NombreDeUbicacionRepetido("Ya existe una ubicacion con ese nombre.")
@@ -98,8 +99,8 @@ class UbicacionServiceImpl(): UbicacionService {
     }
 
     fun conectarConQuery(ubicacionOrigen: String, ubicacionDestino:String, tipoDeCamino:String){
-        val ubiOrigen = neo4jUbicacionDAO.recuperarUbicacionPorNombre(ubicacionOrigen).get()
-        val ubiDestino = neo4jUbicacionDAO.recuperarUbicacionPorNombre(ubicacionDestino).get()
+        val ubiOrigen = neo4jUbicacionDAO.recuperarUbicacionPorNombre(ubicacionOrigen)
+        val ubiDestino = neo4jUbicacionDAO.recuperarUbicacionPorNombre(ubicacionDestino)
 
         neo4jUbicacionDAO.conectar(ubiOrigen.idRelacional!!,ubiDestino.idRelacional!!, tipoDeCamino)
     }
