@@ -16,4 +16,5 @@ interface UbicacionService {
     fun recuperarTodos(page: Pageable): Page<Ubicacion>
     fun recuperar(ubicacionId: Long): Ubicacion
     fun recuperarVectores(ubicacionId: Long): List<Vector>
+    fun guardar(ubicacion: Ubicacion)
 }
