@@ -1,12 +1,11 @@
 package ar.edu.unq.eperdemic.services.impl
 
+import ar.edu.unq.eperdemic.Neo4jUbicacionDTO
 import ar.edu.unq.eperdemic.modelo.Random
 import ar.edu.unq.eperdemic.modelo.Ubicacion
 import ar.edu.unq.eperdemic.modelo.UbicacionNeo4J
 import ar.edu.unq.eperdemic.modelo.Vector
-import ar.edu.unq.eperdemic.modelo.exceptions.NoExisteElNombreDeLaUbicacion
-import ar.edu.unq.eperdemic.modelo.exceptions.NoExisteElid
-import ar.edu.unq.eperdemic.modelo.exceptions.NombreDeUbicacionRepetido
+import ar.edu.unq.eperdemic.modelo.exceptions.*
 import ar.edu.unq.eperdemic.persistencia.dao.Neo4jUbicacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.UbicacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.VectorDAO
@@ -30,15 +29,18 @@ class UbicacionServiceImpl(): UbicacionService {
     @Autowired private lateinit var vectorDAO: VectorDAO
 
     override fun mover(vectorId: Long, ubicacionid: Long) {
+        val ubicacion = ubicacionDAO.findByIdOrNull(ubicacionid)?: throw NoExisteElid("el id de la ubiacion no existe en la base de datos")
         val vector = vectorServiceImpl.recuperarVector(vectorId)
-        if (vector.ubicacion.id!! != ubicacionid) {
-            val ubicacion = ubicacionDAO.findByIdOrNull(ubicacionid)?: throw NoExisteElid("el id de la ubiacion no existe en la base de datos")
-            vector.mover(ubicacion)
-            val vectoresEnUbicacion = ubicacionDAO.recuperarVectores(ubicacionid)
-            vectorDAO.save(vector)
-            if (!vector.estaSano()) {
-                vectorServiceImpl.contagiar(vector, vectoresEnUbicacion)
-            }
+        val ubicacionNeo4JAMoverse = neo4jUbicacionDAO.findByIdRelacional(ubicacionid).get()
+        val ubicacionNeo4JActual = neo4jUbicacionDAO.findByIdRelacional(vector.ubicacion.id!!).get()
+        val caminoDeConexionEntreUbicaciones = neo4jUbicacionDAO.conectadosPorCamino(ubicacionNeo4JActual.nombre, ubicacionNeo4JAMoverse.nombre)
+
+        if (!caminoDeConexionEntreUbicaciones.isPresent) {
+            throw UbicacionMuyLejana("La ubicacion '" + ubicacionNeo4JAMoverse.nombre + "' es muy lejana para moverse.")
+        } else if (vector.tipo.puedeMoverseACamino(caminoDeConexionEntreUbicaciones.get())) {
+            intentarMover(vector, ubicacion)
+        } else {
+            throw UbicacionNoAlcanzable("El vector con ID '" + vectorId + "' no puede moverse a la ubicación '" + ubicacionNeo4JAMoverse.nombre + "'")
         }
     }
 
@@ -100,14 +102,14 @@ class UbicacionServiceImpl(): UbicacionService {
     fun conectarConQuery(ubicacionOrigen: String, ubicacionDestino:String, tipoDeCamino:String){
         existeUbicacionPorNombre(ubicacionOrigen)
         existeUbicacionPorNombre(ubicacionDestino)
-        //esCaminoValido(tipoDeCamino) para que solo pueda ser terrestre aereo o maritimo
+        val camino = verificarCaminoValido(tipoDeCamino)
         val ubiOrigen = neo4jUbicacionDAO.recuperarUbicacionPorNombre(ubicacionOrigen).get()
         val ubiDestino = neo4jUbicacionDAO.recuperarUbicacionPorNombre(ubicacionDestino).get()
 
         //comento porque no anduvo////////////////////////////////////////////////////////////
         //ubiOrigen.ubicaciones.add(ubiDestino)
         //neo4jUbicacionDAO.save(ubiOrigen)
-        neo4jUbicacionDAO.conectar(ubiOrigen.idRelacional!!,ubiDestino.idRelacional!!, tipoDeCamino)
+        neo4jUbicacionDAO.conectar(ubiOrigen.idRelacional!!,ubiDestino.idRelacional!!, camino)
     }
 
     fun hayConexionDirecta(ubicacionOrigen: String, ubicacionDestino:String): Boolean{
@@ -120,13 +122,35 @@ class UbicacionServiceImpl(): UbicacionService {
     }
 
     fun conectados(ubicacionOrigen:String):List<UbicacionNeo4J>{
-        return neo4jUbicacionDAO.conectados(ubicacionOrigen).get()
+        return neo4jUbicacionDAO.conectados(ubicacionOrigen)
     }
 
     private fun existeUbicacionPorNombre(nombreDeUbicacionABuscar:String){
         if (!neo4jUbicacionDAO.recuperarUbicacionPorNombre(nombreDeUbicacionABuscar).isPresent
             || ubicacionDAO.recuperarUbicacionPorNombre(nombreDeUbicacionABuscar).id == null) {
             throw NoExisteElNombreDeLaUbicacion("Ubicación no encontrada")
+        }
+    }
+
+    private fun verificarCaminoValido(camino: String): String {
+        val caminoUpper = camino.uppercase()
+        if (caminoUpper == "AEREO" ||
+            caminoUpper == "TERRESTRE" ||
+            caminoUpper == "MARITIMO") {
+            return caminoUpper
+        } else {
+            throw TipoDeCaminoInvalido("El tipo de camino '" + camino +  "' por el que se intenta conectar es inválido.")
+        }
+    }
+
+    private fun intentarMover(vector: Vector, ubicacion: Ubicacion) {
+        if (vector.ubicacion.id!! != ubicacion.id!!) {
+            vector.mover(ubicacion)
+            val vectoresEnUbicacion = ubicacionDAO.recuperarVectores(ubicacion.id!!)
+            vectorDAO.save(vector)
+            if (!vector.estaSano()) {
+                vectorServiceImpl.contagiar(vector, vectoresEnUbicacion)
+            }
         }
     }
 }

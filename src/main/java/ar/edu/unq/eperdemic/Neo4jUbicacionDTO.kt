@@ -12,22 +12,23 @@ import org.springframework.data.neo4j.core.schema.Relationship
 class Neo4jUbicacionDTO() {
 
     @Id
-    var id : Long? = null
+    @GeneratedValue
+    var id: Long? = null
     lateinit var nombre: String
     var idRelacional: Long? = null
 
     @Relationship
     var ubicaciones: MutableSet<Neo4jUbicacionDTO> = mutableSetOf()
 
-    constructor(newName: String): this() {
-        if (Check.validar(newName)){
+    constructor(newName: String) : this() {
+        if (Check.validar(newName)) {
             this.nombre = newName
         } else {
             throw NoPuedeEstarVacioOContenerCaracteresEspeciales("El nombre no puede ser vacío o contener caracteres especiales")
         }
     }
 
-    fun aModelo() : Ubicacion {
+    fun aModelo(): Ubicacion {
         return Ubicacion(nombre)
     }
 
@@ -38,4 +39,5 @@ class Neo4jUbicacionDTO() {
             return ubi
         }
     }
+
 }

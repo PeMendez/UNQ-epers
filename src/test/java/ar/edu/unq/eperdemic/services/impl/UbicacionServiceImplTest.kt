@@ -3,9 +3,7 @@ package ar.edu.unq.eperdemic.services.impl
 import ar.edu.unq.eperdemic.modelo.Patogeno
 import ar.edu.unq.eperdemic.modelo.TipoDeVector
 import ar.edu.unq.eperdemic.modelo.Ubicacion
-import ar.edu.unq.eperdemic.modelo.exceptions.NoExisteElid
-import ar.edu.unq.eperdemic.modelo.exceptions.NoPuedeEstarVacioOContenerCaracteresEspeciales
-import ar.edu.unq.eperdemic.modelo.exceptions.NombreDeUbicacionRepetido
+import ar.edu.unq.eperdemic.modelo.exceptions.*
 import ar.edu.unq.eperdemic.persistencia.dao.Neo4jUbicacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.UbicacionDAO
 import ar.edu.unq.eperdemic.utils.DataService
@@ -23,22 +21,26 @@ class UbicacionServiceImplTest {
 
     @Autowired
     private lateinit var dataService: DataService
+
     @Autowired
     private lateinit var vectorService: VectorServiceImpl
+
     @Autowired
     private lateinit var ubicacionService: UbicacionServiceImpl
+
     @Autowired
     private lateinit var patogenoService: PatogenoServiceImpl
 
     @Autowired
     private lateinit var ubicacionDAO: UbicacionDAO
+
     @Autowired
     private lateinit var neo4jUbicacionDAO: Neo4jUbicacionDAO
 
 
     //@BeforeEach
     fun setUp() {
-       dataService.crearSetDeDatosIniciales()
+        dataService.crearSetDeDatosIniciales()
     }
 
     @Test
@@ -93,6 +95,7 @@ class UbicacionServiceImplTest {
 
         Assertions.assertNotNull(ubicacionCreada.id)
     }
+
     @Test
     fun noSePuedeRecuperarUnaUbicacionConUnIdInexistente() {
         Assertions.assertThrows(NoExisteElid::class.java) {
@@ -161,8 +164,8 @@ class UbicacionServiceImplTest {
         dataService.eliminarTodo()
 
         val ubicacionCreada1 = ubicacionService.crearUbicacion("nombreCualquiera1")
-        val ubicacionCreada2 =ubicacionService.crearUbicacion("nombreCualquiera2")
-        val ubicacionCreada3 =ubicacionService.crearUbicacion("nombreCualquiera3")
+        val ubicacionCreada2 = ubicacionService.crearUbicacion("nombreCualquiera2")
+        val ubicacionCreada3 = ubicacionService.crearUbicacion("nombreCualquiera3")
 
         val ubicacionesRecuperadas = ubicacionService.recuperarTodos()
 
@@ -204,7 +207,8 @@ class UbicacionServiceImplTest {
         val patogenoCreado = patogenoService.crearPatogeno(patogeno)
         val ubicacionCreada2 = ubicacionService.crearUbicacion("ubicacionTestEspecie")
         vectorService.crearVector(TipoDeVector.Persona, ubicacionCreada2.id!!)
-        val especieCreada = patogenoService.agregarEspecie(patogenoCreado.id!!, "cualquierNombre", ubicacionCreada2.id!!)
+        val especieCreada =
+            patogenoService.agregarEspecie(patogenoCreado.id!!, "cualquierNombre", ubicacionCreada2.id!!)
 
         vectorService.infectar(vectorCreado2, especieCreada)
 
@@ -221,7 +225,6 @@ class UbicacionServiceImplTest {
         Assertions.assertEquals(vectorCreado2.especies.size, vectorActualizado2.especies.size)
         Assertions.assertEquals(ubicacionService.recuperarVectores(ubicacionCreada1.id!!).size, 2)
     }
-
 
 
     @Test
@@ -252,7 +255,8 @@ class UbicacionServiceImplTest {
         val patogenoCreado = patogenoService.crearPatogeno(patogeno)
         val ubicacionCreada3 = ubicacionService.crearUbicacion("ubicacionTestEspecie")
         vectorService.crearVector(TipoDeVector.Persona, ubicacionCreada3.id!!)
-        val especieCreada = patogenoService.agregarEspecie(patogenoCreado.id!!, "cualquierNombre", ubicacionCreada3.id!!)
+        val especieCreada =
+            patogenoService.agregarEspecie(patogenoCreado.id!!, "cualquierNombre", ubicacionCreada3.id!!)
 
         vectorService.infectar(vectorCreado2, especieCreada)
 
@@ -285,7 +289,10 @@ class UbicacionServiceImplTest {
         val vectorNoInfectado2Actualizado = vectorService.recuperarVector(vectorNoInfectado2.id!!)
         val vectorNoInfectado1Actualizado = vectorService.recuperarVector(vectorNoInfectado1.id!!)
 
-        Assertions.assertEquals(vectorNoInfectado1Actualizado.ubicacion.id!!, vectorNoInfectado2Actualizado.ubicacion.id!!)
+        Assertions.assertEquals(
+            vectorNoInfectado1Actualizado.ubicacion.id!!,
+            vectorNoInfectado2Actualizado.ubicacion.id!!
+        )
         Assertions.assertTrue(vectorNoInfectado2Actualizado.estaSano())
         Assertions.assertTrue(vectorNoInfectado1Actualizado.estaSano())
     }
@@ -301,10 +308,10 @@ class UbicacionServiceImplTest {
 
         Assertions.assertEquals(2, vectoresEnUbicacion.size)
         Assertions.assertNotNull(vectoresEnUbicacion.find {
-            it.id == vectorCreado1.id  && it.ubicacion.id!! == vectorCreado1.ubicacion.id!! && it.especies.size == vectorCreado1.especies.size
+            it.id == vectorCreado1.id && it.ubicacion.id!! == vectorCreado1.ubicacion.id!! && it.especies.size == vectorCreado1.especies.size
         })
         Assertions.assertNotNull(vectoresEnUbicacion.find {
-            it.id == vectorCreado2.id  && it.ubicacion.id!! == vectorCreado2.ubicacion.id!! && it.especies.size == vectorCreado2.especies.size
+            it.id == vectorCreado2.id && it.ubicacion.id!! == vectorCreado2.ubicacion.id!! && it.especies.size == vectorCreado2.especies.size
         })
     }
 
@@ -328,7 +335,8 @@ class UbicacionServiceImplTest {
         val patogenoCreado = patogenoService.crearPatogeno(patogeno)
         val ubicacionCreada2 = ubicacionService.crearUbicacion("ubicacionTestEspecie")
         vectorService.crearVector(TipoDeVector.Persona, ubicacionCreada2.id!!)
-        val especieCreada = patogenoService.agregarEspecie(patogenoCreado.id!!, "cualquierNombre", ubicacionCreada2.id!!)
+        val especieCreada =
+            patogenoService.agregarEspecie(patogenoCreado.id!!, "cualquierNombre", ubicacionCreada2.id!!)
 
         vectorService.infectar(vectorCreado3, especieCreada)
 
@@ -413,12 +421,41 @@ class UbicacionServiceImplTest {
         Assertions.assertEquals(ubicacionRecuperada.nombre, ubicacionCreada.nombre)
     }
 
+    @Test
+    fun noSePuedeRecuperarUnaUbicacionDeNeo4jConUnIdInexistente() {
+        val ubicacionRecuperada = neo4jUbicacionDAO.findByIdRelacional(-2222)
+
+        Assertions.assertFalse(ubicacionRecuperada.isPresent)
+    }
+
+    @Test
+    fun noSePuedeConectarADosUbicacionesPorMedioDeUnCaminoInvalido() {
+        dataService.eliminarTodo()
+        val ubicacion1 = ubicacionService.crearUbicacion("testConectarFalso1")
+        val ubicacion2 = ubicacionService.crearUbicacion("testConectarFalso2")
+
+        val ubicacionNeo1 = neo4jUbicacionDAO.findByIdRelacional(ubicacion1.id!!).get()
+        val ubicacionNeo2 = neo4jUbicacionDAO.findByIdRelacional(ubicacion2.id!!).get()
+
+        Assertions.assertThrows(TipoDeCaminoInvalido::class.java) {
+            ubicacionService.conectarConQuery(ubicacionNeo1.nombre, ubicacionNeo2.nombre, "123")
+        }
+        Assertions.assertThrows(TipoDeCaminoInvalido::class.java) {
+            ubicacionService.conectarConQuery(ubicacionNeo1.nombre, ubicacionNeo2.nombre, "Tierra")
+        }
+        Assertions.assertThrows(TipoDeCaminoInvalido::class.java) {
+            ubicacionService.conectarConQuery(ubicacionNeo1.nombre, ubicacionNeo2.nombre, "@Terrestre")
+        }
+        Assertions.assertThrows(TipoDeCaminoInvalido::class.java) {
+            ubicacionService.conectarConQuery(ubicacionNeo1.nombre, ubicacionNeo2.nombre, "Maritimo1")
+        }
+    }
 
     @Test
     fun hayConexionDirectaTrue() {
         dataService.eliminarTodo()
-        val ubicacion1 = ubicacionService.crearUbicacion("ubicacion1")
-        val ubicacion2 = ubicacionService.crearUbicacion("ubicacion2")
+        val ubicacion1 = ubicacionService.crearUbicacion("neoUbicacion1")
+        val ubicacion2 = ubicacionService.crearUbicacion("neoUbicacion2")
 
         val ubicacionNeo1 = neo4jUbicacionDAO.findByIdRelacional(ubicacion1.id!!).get()
         val ubicacionNeo2 = neo4jUbicacionDAO.findByIdRelacional(ubicacion2.id!!).get()
@@ -427,12 +464,13 @@ class UbicacionServiceImplTest {
 
         Assertions.assertTrue(ubicacionService.hayConexionDirecta(ubicacionNeo1.nombre,ubicacionNeo2.nombre))
     }
+
     @Test
     fun hayConexionDirectaFalse() {
         dataService.eliminarTodo()
-        val ubicacion1 = ubicacionService.crearUbicacion("ubicacion1")
-        val ubicacion2 = ubicacionService.crearUbicacion("ubicacion2")
-        val ubicacion3 = ubicacionService.crearUbicacion("ubicacion3")
+        val ubicacion1 = ubicacionService.crearUbicacion("ubicacion123")
+        val ubicacion2 = ubicacionService.crearUbicacion("ubicacion234")
+        val ubicacion3 = ubicacionService.crearUbicacion("ubicacion345")
 
         val ubicacionNeo1 = neo4jUbicacionDAO.findByIdRelacional(ubicacion1.id!!).get()
         val ubicacionNeo2 = neo4jUbicacionDAO.findByIdRelacional(ubicacion2.id!!).get()
@@ -447,10 +485,10 @@ class UbicacionServiceImplTest {
     }
 
     @Test
-    fun seCreaUnaRelacionEntreDosUbicaciones() {
+    fun seConectanDosUbicacionesCorrectamente() {
         dataService.eliminarTodo()
-        val ubicacion1 = ubicacionService.crearUbicacion("ubicacion1")
-        val ubicacion2 = ubicacionService.crearUbicacion("ubicacion2")
+        val ubicacion1 = ubicacionService.crearUbicacion("nuevaUbicacion1")
+        val ubicacion2 = ubicacionService.crearUbicacion("nuevaUbicacion2")
 
         val ubicacionNeo1 = neo4jUbicacionDAO.findByIdRelacional(ubicacion1.id!!).get()
         val ubicacionNeo2 = neo4jUbicacionDAO.findByIdRelacional(ubicacion2.id!!).get()
@@ -463,40 +501,75 @@ class UbicacionServiceImplTest {
     }
 
     @Test
-    fun conectados() {
+    fun cuandoUnaUbicacionTieneConectadosEntoncesSeRetornanCorrectamente() {
         dataService.eliminarTodo()
-        val ubicacion1 = ubicacionService.crearUbicacion("ubicacion1")
-        val ubicacion2 = ubicacionService.crearUbicacion("ubicacion2")
-        val ubicacion3 = ubicacionService.crearUbicacion("ubicacion3")
-        val ubicacion4 = ubicacionService.crearUbicacion("ubicacion4")
-        val ubicacion5 = ubicacionService.crearUbicacion("ubicacion5")
-        val ubicacion6 = ubicacionService.crearUbicacion("ubicacion6")
+        val ubicacion1 = ubicacionService.crearUbicacion("nuevaUbicacion1")
+        val ubicacion2 = ubicacionService.crearUbicacion("nuevaUbicacion2")
+        val ubicacion3 = ubicacionService.crearUbicacion("nuevaUbicacion3")
 
         val ubicacionNeo1 = neo4jUbicacionDAO.findByIdRelacional(ubicacion1.id!!).get()
         val ubicacionNeo2 = neo4jUbicacionDAO.findByIdRelacional(ubicacion2.id!!).get()
         val ubicacionNeo3 = neo4jUbicacionDAO.findByIdRelacional(ubicacion3.id!!).get()
-        val ubicacionNeo4 = neo4jUbicacionDAO.findByIdRelacional(ubicacion4.id!!).get()
-        val ubicacionNeo5 = neo4jUbicacionDAO.findByIdRelacional(ubicacion5.id!!).get()
-        val ubicacionNeo6 = neo4jUbicacionDAO.findByIdRelacional(ubicacion6.id!!).get()
 
         ubicacionService.conectarConQuery(ubicacionNeo1.nombre,ubicacionNeo3.nombre,"Terrestre")
-        ubicacionService.conectarConQuery(ubicacionNeo1.nombre,ubicacionNeo5.nombre,"Terrestre")
-        ubicacionService.conectarConQuery(ubicacionNeo1.nombre,ubicacionNeo6.nombre,"Terrestre")
-        ubicacionService.conectarConQuery(ubicacionNeo6.nombre,ubicacionNeo2.nombre,"Terrestre")
-        ubicacionService.conectarConQuery(ubicacionNeo6.nombre,ubicacionNeo4.nombre,"Terrestre")
+        ubicacionService.conectarConQuery(ubicacionNeo1.nombre,ubicacionNeo2.nombre,"Terrestre")
 
-        val conectadosConUbicacion1 = ubicacionService.conectados("ubicacion1").map{u->u.nombre}.toList()
-        val conectadosConUbicacion6 = ubicacionService.conectados("ubicacion6").map{u->u.nombre}.toList()
+        val conectadosConUbicacion1 = ubicacionService.conectados(ubicacionNeo1.nombre)
 
-        Assertions.assertTrue(conectadosConUbicacion1.containsAll(
-            setOf(ubicacionNeo3,ubicacionNeo5,ubicacionNeo6).map{u->u.nombre}.toList()))
-        Assertions.assertTrue(conectadosConUbicacion6.containsAll(setOf(
-            ubicacionNeo1,ubicacionNeo2,ubicacionNeo4).map{u->u.nombre}.toList()))
-        Assertions.assertFalse(conectadosConUbicacion1.containsAll(
-            setOf(ubicacionNeo2,ubicacionNeo4).map{u->u.nombre}.toList()))
-        Assertions.assertFalse(conectadosConUbicacion6.containsAll(
-            setOf(ubicacionNeo3,ubicacionNeo5).map{u->u.nombre}.toList()))
+        Assertions.assertNotNull(conectadosConUbicacion1.find { u -> u.idRelacional!! == ubicacionNeo2.idRelacional!! })
+        Assertions.assertNotNull(conectadosConUbicacion1.find { u -> u.idRelacional!! == ubicacionNeo3.idRelacional!! })
+        Assertions.assertTrue(conectadosConUbicacion1.size == 2)
     }
+
+    @Test
+    fun seRetornanUnicamenteLosConectadosAUnPasoDeDistanciaDeUnaUbicacion() {
+        dataService.eliminarTodo()
+        val ubicacion1 = ubicacionService.crearUbicacion("nuevaUbicacion1")
+        val ubicacion2 = ubicacionService.crearUbicacion("nuevaUbicacion2")
+        val ubicacion3 = ubicacionService.crearUbicacion("nuevaUbicacion3")
+
+        val ubicacionNeo1 = neo4jUbicacionDAO.findByIdRelacional(ubicacion1.id!!).get()
+        val ubicacionNeo2 = neo4jUbicacionDAO.findByIdRelacional(ubicacion2.id!!).get()
+        val ubicacionNeo3 = neo4jUbicacionDAO.findByIdRelacional(ubicacion3.id!!).get()
+
+        ubicacionService.conectarConQuery(ubicacionNeo1.nombre,ubicacionNeo2.nombre,"Terrestre")
+        ubicacionService.conectarConQuery(ubicacionNeo2.nombre,ubicacionNeo3.nombre,"Terrestre")
+
+        val conectadosConUbicacion1 = ubicacionService.conectados(ubicacionNeo1.nombre)
+
+        Assertions.assertNotNull(conectadosConUbicacion1.find { u -> u.idRelacional!! == ubicacionNeo2.idRelacional!! })
+        Assertions.assertTrue(conectadosConUbicacion1.size == 1)
+    }
+
+    @Test
+    fun cuandoUnaUbicacionNoTieneConectadosEntoncesSeRetornaUnaListaVacia() {
+        dataService.eliminarTodo()
+        val ubicacion1 = ubicacionService.crearUbicacion("nuevaUbicacion1")
+
+        val ubicacionNeo1 = neo4jUbicacionDAO.findByIdRelacional(ubicacion1.id!!).get()
+
+        val conectadosUbicacion1 = ubicacionService.conectados(ubicacionNeo1.nombre)
+
+        Assertions.assertTrue(conectadosUbicacion1.isEmpty())
+    }
+
+    @Test
+    fun unVectorPersonaNoPuedeMoverseAUnaUbicaiconPorUnCaminoAereo() {
+        dataService.eliminarTodo()
+        val ubicacionCreada1 = ubicacionService.crearUbicacion("testMoverUbicacion")
+        val vectorCreado1 = vectorService.crearVector(TipoDeVector.Persona, ubicacionCreada1.id!!)
+        val ubicacionCreada2 = ubicacionService.crearUbicacion("testMoverUbicacion2")
+
+        val ubicacionNeo1 = neo4jUbicacionDAO.findByIdRelacional(ubicacionCreada1.id!!).get()
+        val ubicacionNeo2 = neo4jUbicacionDAO.findByIdRelacional(ubicacionCreada2.id!!).get()
+
+        ubicacionService.conectarConQuery(ubicacionNeo1.nombre, ubicacionNeo2.nombre,"Aereo")
+
+        Assertions.assertThrows(UbicacionNoAlcanzable ::class.java ){
+            ubicacionService.mover(vectorCreado1.id!!, ubicacionCreada2.id!!)
+        }
+    }
+
     //@AfterEach
     fun clearAll() {
         dataService.eliminarTodo()

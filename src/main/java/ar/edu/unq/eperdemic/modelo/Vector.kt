@@ -1,5 +1,6 @@
 package ar.edu.unq.eperdemic.modelo
 
+import ar.edu.unq.eperdemic.Neo4jUbicacionDTO
 import javax.persistence.*
 
 @Entity
@@ -98,17 +99,27 @@ enum class TipoDeVector {
         override fun puedeSerInfectado(vector: TipoDeVector): Boolean {
             return true
         }
+        override fun puedeMoverseACamino(camino: String): Boolean {
+            return camino == "MARITIMO" || camino == "TERRESTRE"
+        }
     },
     Insecto{
         override fun puedeSerInfectado(vector: TipoDeVector): Boolean {
             return this != vector
+        }
+        override fun puedeMoverseACamino(camino: String): Boolean {
+            return camino == "AEREO" || camino == "TERRESTRE"
         }
     },
     Animal{
         override fun puedeSerInfectado(vector: TipoDeVector): Boolean {
             return vector == Insecto
         }
+        override fun puedeMoverseACamino(camino: String): Boolean {
+            return true
+        }
     };
 
     abstract fun puedeSerInfectado(vector: TipoDeVector): Boolean
+    abstract fun puedeMoverseACamino(camino: String): Boolean
 }
