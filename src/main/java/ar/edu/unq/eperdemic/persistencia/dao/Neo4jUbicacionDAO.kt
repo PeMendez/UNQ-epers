@@ -27,6 +27,7 @@ interface Neo4jUbicacionDAO : Neo4jRepository<UbicacionNeo4J, Long?> {
             "MATCH (destino: UbicacionNeo4J {idRelacional: ${'$'}destinoID})" +
             "RETURN EXISTS ((origen)-[:CAMINO]->(destino))")
     fun hayConexionDirecta(origenID:Long,destinoID:Long): Boolean
+
     @Query("MATCH (origen: UbicacionNeo4J {nombre: ${'$'}origenNombre})" +
             "MATCH (origen)-[:CAMINO*1]-(conectado: UbicacionNeo4J)" +
             "RETURN conectado")

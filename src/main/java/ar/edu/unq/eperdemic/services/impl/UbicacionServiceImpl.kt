@@ -122,6 +122,7 @@ class UbicacionServiceImpl(): UbicacionService {
     }
 
     fun conectados(ubicacionOrigen:String):List<UbicacionNeo4J>{
+        existeUbicacionPorNombre(ubicacionOrigen)
         return neo4jUbicacionDAO.conectados(ubicacionOrigen)
     }
 

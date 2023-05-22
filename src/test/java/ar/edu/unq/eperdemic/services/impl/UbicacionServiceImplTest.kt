@@ -429,6 +429,33 @@ class UbicacionServiceImplTest {
     }
 
     @Test
+    fun noSePuedeConectarDosUbicacionesConNombresInexistentes() {
+        dataService.eliminarTodo()
+
+        Assertions.assertThrows(NoExisteElNombreDeLaUbicacion::class.java) {
+            ubicacionService.conectarConQuery("nombreNoExistente", "nombreNoExistente2", "Terrestre")
+        }
+    }
+
+    @Test
+    fun noSePuedeObtenerConexionDirectaDeDosUbicacionesConNombresInexistentes() {
+        dataService.eliminarTodo()
+
+        Assertions.assertThrows(NoExisteElNombreDeLaUbicacion::class.java) {
+            ubicacionService.hayConexionDirecta("nombre1", "nombre2")
+        }
+    }
+
+    @Test
+    fun noSePuedenObtenerLosConectadosDeUnaUbicacionConUnNombreInexistente() {
+        dataService.eliminarTodo()
+
+        Assertions.assertThrows(NoExisteElNombreDeLaUbicacion::class.java) {
+            ubicacionService.conectados("nombreInexistente")
+        }
+    }
+
+    @Test
     fun noSePuedeConectarADosUbicacionesPorMedioDeUnCaminoInvalido() {
         dataService.eliminarTodo()
         val ubicacion1 = ubicacionService.crearUbicacion("testConectarFalso1")
@@ -554,7 +581,39 @@ class UbicacionServiceImplTest {
     }
 
     @Test
-    fun unVectorPersonaNoPuedeMoverseAUnaUbicaiconPorUnCaminoAereo() {
+    fun cuandoSeConectanDosUbicacionesEntoncesSeCreaUnCaminoUnidireccional() {
+        dataService.eliminarTodo()
+        val ubicacionCreada1 = ubicacionService.crearUbicacion("testMoverUbicacion")
+        val ubicacionCreada2 = ubicacionService.crearUbicacion("testMoverUbicacion2")
+
+        val ubicacionNeo1 = neo4jUbicacionDAO.findByIdRelacional(ubicacionCreada1.id!!).get()
+        val ubicacionNeo2 = neo4jUbicacionDAO.findByIdRelacional(ubicacionCreada2.id!!).get()
+
+        ubicacionService.conectarConQuery(ubicacionNeo1.nombre, ubicacionNeo2.nombre,"terrestre")
+
+        Assertions.assertTrue(ubicacionService.hayConexionDirecta(ubicacionNeo1.nombre, ubicacionNeo2.nombre))
+        Assertions.assertFalse(ubicacionService.hayConexionDirecta(ubicacionNeo2.nombre, ubicacionNeo1.nombre))
+    }
+
+    @Test
+    fun unVectorInsectoNoPuedeMoverseAUnaUbicacionPorUnCaminoMaritimo() {
+        dataService.eliminarTodo()
+        val ubicacionCreada1 = ubicacionService.crearUbicacion("testMoverUbicacion")
+        val vectorCreado1 = vectorService.crearVector(TipoDeVector.Insecto, ubicacionCreada1.id!!)
+        val ubicacionCreada2 = ubicacionService.crearUbicacion("testMoverUbicacion2")
+
+        val ubicacionNeo1 = neo4jUbicacionDAO.findByIdRelacional(ubicacionCreada1.id!!).get()
+        val ubicacionNeo2 = neo4jUbicacionDAO.findByIdRelacional(ubicacionCreada2.id!!).get()
+
+        ubicacionService.conectarConQuery(ubicacionNeo1.nombre, ubicacionNeo2.nombre,"Maritimo")
+
+        Assertions.assertThrows(UbicacionNoAlcanzable ::class.java ){
+            ubicacionService.mover(vectorCreado1.id!!, ubicacionCreada2.id!!)
+        }
+    }
+
+    @Test
+    fun unVectorPersonaNoPuedeMoverseAUnaUbicacionPorUnCaminoAereo() {
         dataService.eliminarTodo()
         val ubicacionCreada1 = ubicacionService.crearUbicacion("testMoverUbicacion")
         val vectorCreado1 = vectorService.crearVector(TipoDeVector.Persona, ubicacionCreada1.id!!)
