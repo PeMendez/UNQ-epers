@@ -92,6 +92,9 @@ class Vector(var tipo: TipoDeVector,
     fun mover(ubicacion: Ubicacion) {
         this.ubicacion = ubicacion
     }
+    fun caminosCompatibles(): List<String>{
+        return tipo.caminosCompatibles()
+    }
 }
 
 enum class TipoDeVector {
@@ -99,27 +102,42 @@ enum class TipoDeVector {
         override fun puedeSerInfectado(vector: TipoDeVector): Boolean {
             return true
         }
+        //al final borrar lo que no se use
         override fun puedeMoverseACamino(camino: String): Boolean {
             return camino == "MARITIMO" || camino == "TERRESTRE"
+        }
+        override fun caminosCompatibles(): List<String> {
+            return listOf("Terrestre","Acuatico")
         }
     },
     Insecto{
         override fun puedeSerInfectado(vector: TipoDeVector): Boolean {
             return this != vector
         }
+        //al final borrar lo que no se use
         override fun puedeMoverseACamino(camino: String): Boolean {
             return camino == "AEREO" || camino == "TERRESTRE"
+        }
+        override fun caminosCompatibles(): List<String> {
+            return listOf("Terrestre","Aereo")
         }
     },
     Animal{
         override fun puedeSerInfectado(vector: TipoDeVector): Boolean {
             return vector == Insecto
         }
+        //al final borrar lo que no se use
         override fun puedeMoverseACamino(camino: String): Boolean {
             return true
+        }
+        override fun caminosCompatibles(): List<String> {
+            return listOf("Terrestre","Acuatico","Aereo")
         }
     };
 
     abstract fun puedeSerInfectado(vector: TipoDeVector): Boolean
+
+    //al final borrar lo que no se use
     abstract fun puedeMoverseACamino(camino: String): Boolean
+    abstract fun caminosCompatibles(): List<String>
 }

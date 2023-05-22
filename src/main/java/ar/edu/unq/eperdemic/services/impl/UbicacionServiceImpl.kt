@@ -1,10 +1,7 @@
 package ar.edu.unq.eperdemic.services.impl
 
 import ar.edu.unq.eperdemic.Neo4jUbicacionDTO
-import ar.edu.unq.eperdemic.modelo.Random
-import ar.edu.unq.eperdemic.modelo.Ubicacion
-import ar.edu.unq.eperdemic.modelo.UbicacionNeo4J
-import ar.edu.unq.eperdemic.modelo.Vector
+import ar.edu.unq.eperdemic.modelo.*
 import ar.edu.unq.eperdemic.modelo.exceptions.*
 import ar.edu.unq.eperdemic.persistencia.dao.Neo4jUbicacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.UbicacionDAO
@@ -133,6 +130,7 @@ class UbicacionServiceImpl(): UbicacionService {
         }
     }
 
+    //al final borrar lo que no se use
     private fun verificarCaminoValido(camino: String): String {
         val caminoUpper = camino.uppercase()
         if (caminoUpper == "AEREO" ||
@@ -142,6 +140,9 @@ class UbicacionServiceImpl(): UbicacionService {
         } else {
             throw TipoDeCaminoInvalido("El tipo de camino '" + camino +  "' por el que se intenta conectar es inválido.")
         }
+    }
+    private fun esCaminoValido(camino: String): Boolean {
+        return TipoDeVector.values().map { t -> t.caminosCompatibles() }.toList().flatten().contains(camino)
     }
 
     private fun intentarMover(vector: Vector, ubicacion: Ubicacion) {
