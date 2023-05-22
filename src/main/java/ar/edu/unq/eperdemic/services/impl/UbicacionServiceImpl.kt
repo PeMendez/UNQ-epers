@@ -2,6 +2,7 @@ package ar.edu.unq.eperdemic.services.impl
 
 import ar.edu.unq.eperdemic.modelo.Random
 import ar.edu.unq.eperdemic.modelo.Ubicacion
+import ar.edu.unq.eperdemic.modelo.UbicacionNeo4J
 import ar.edu.unq.eperdemic.modelo.Vector
 import ar.edu.unq.eperdemic.modelo.exceptions.NoExisteElNombreDeLaUbicacion
 import ar.edu.unq.eperdemic.modelo.exceptions.NoExisteElid
@@ -116,6 +117,10 @@ class UbicacionServiceImpl(): UbicacionService {
         val ubiDestino = neo4jUbicacionDAO.recuperarUbicacionPorNombre(ubicacionDestino).get()
 
         return neo4jUbicacionDAO.hayConexionDirecta(ubiOrigen.idRelacional!!,ubiDestino.idRelacional!!)
+    }
+
+    fun conectados(ubicacionOrigen:String):List<UbicacionNeo4J>{
+        return neo4jUbicacionDAO.conectados(ubicacionOrigen).get()
     }
 
     private fun existeUbicacionPorNombre(nombreDeUbicacionABuscar:String){
