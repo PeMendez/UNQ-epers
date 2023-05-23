@@ -82,19 +82,6 @@ class UbicacionServiceImpl(): UbicacionService {
         return ubicacionDAO.recuperarVectores(ubicacionId)
     }
 
-    override fun guardar(ubicacion: Ubicacion) {
-        var flag = true
-        try {
-            ubicacionDAO.recuperarUbicacionPorNombre(ubicacion.nombre)
-        } catch (e: EmptyResultDataAccessException) {
-            flag = false
-            ubicacionDAO.save(ubicacion)
-        }
-        if (flag) {
-            throw NombreDeUbicacionRepetido("Ya existe una ubicacion con ese nombre.")
-        }
-    }
-
     fun conectarConQuery(ubicacionOrigen: String, ubicacionDestino:String, tipoDeCamino:String){
         existeUbicacionPorNombre(ubicacionOrigen)
         existeUbicacionPorNombre(ubicacionDestino)
