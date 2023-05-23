@@ -14,7 +14,7 @@ Nos asignaron al equipo de backend, encargado de implementar la lógica de negoc
 - [Entrega 1 - JDBC](enunciado/entrega1/entrega1.md)
 - [Entrega 2 hito 1 - ORM - Hibernate](enunciado/entrega2/entrega2.md)
 - [Entrega 2 hito 2 - ORM - Spring](enunciado/entrega3/entrega3.md)
-- Entrega 3 - NoSQL - Neo4j 
+- [Entrega 3 - NoSQL - Neo4j](enunciado/entrega4/entrega4.md)
 - Entrega 4 - NoSQL - MongoDB
 
 ## Consideraciones

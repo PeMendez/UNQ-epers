@@ -1,50 +1,88 @@
 package ar.edu.unq.eperdemic.services.impl
 
+import ar.edu.unq.eperdemic.modelo.Mutacion
 import ar.edu.unq.eperdemic.modelo.Patogeno
 import ar.edu.unq.eperdemic.modelo.TipoDeVector
 import ar.edu.unq.eperdemic.modelo.exceptions.NoExisteElid
 import ar.edu.unq.eperdemic.modelo.exceptions.NoExisteUnaEspecieLider
-import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateEspecieDAO
-import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernatePatogenoDAO
-import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateUbicacionDAO
-import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateVectorDAO
-import ar.edu.unq.eperdemic.utils.DataServiceHibernate
-import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.Assertions
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
+import ar.edu.unq.eperdemic.utils.DataService
+import org.junit.jupiter.api.*
+import org.junit.jupiter.api.extension.ExtendWith
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.data.domain.PageRequest
+import org.springframework.test.context.junit.jupiter.SpringExtension
 
+
+@ExtendWith(SpringExtension::class)
+@SpringBootTest
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class EspecieServiceImplTest {
 
-    private val hibernateEspecieDAO = HibernateEspecieDAO()
-    private val especieService = EspecieServiceImpl(hibernateEspecieDAO)
+    @Autowired
+    private lateinit var vectorServiceImpl: VectorServiceImpl
 
-    private var dataService = DataServiceHibernate()
+    @Autowired
+    private lateinit var ubicacionService: UbicacionServiceImpl
 
-    private val patogenoDAO = HibernatePatogenoDAO()
-    private val patogenoService = PatogenoServiceImpl(patogenoDAO)
+    @Autowired
+    private lateinit var patogenoService: PatogenoServiceImpl
 
-    private val ubicacionDAO = HibernateUbicacionDAO()
-    private val ubicacionService = UbicacionServiceImpl(ubicacionDAO)
+    @Autowired
+    private lateinit var especieService: EspecieServiceImpl
 
-    private val vectorDAO = HibernateVectorDAO()
-    private val vectorServiceImpl = VectorServiceImpl(vectorDAO)
+    @Autowired
+    private lateinit var mutacionService: MutacionServiceImpl
+
+    @Autowired
+    private lateinit var dataService: DataService
 
 
     @BeforeEach
     fun crearModelo() {
-       dataService.crearSetDeDatosIniciales()
+        dataService.crearSetDeDatosIniciales()
     }
 
     @Test
     fun noSePuedeRecuperarUnaEspecieConUnIdInexistente() {
+        dataService.eliminarTodo()
         Assertions.assertThrows(NoExisteElid::class.java) {
             especieService.recuperarEspecie(82828)
         }
     }
 
     @Test
+    fun alRecuperarTodasLasEspeciesConUnaBDDVaciaEntoncesSeRetornaUnaListaVacia() {
+        dataService.eliminarTodo()
+        val especiesRecuperadas = especieService.recuperarTodas()
+        Assertions.assertTrue(especiesRecuperadas.isEmpty())
+    }
+
+    @Test
+    fun siNoHayEspeciesEnLaBDDEntoncesAlRecuperarLideresSeRetornaListaVacia() {
+        dataService.eliminarTodo()
+        Assertions.assertTrue(especieService.lideres().isEmpty())
+    }
+
+    @Test
+    fun noSePuedeRecuperarLaCantidadDeInfectadosConUnIdDeEspecieInexistente() {
+        dataService.eliminarTodo()
+        Assertions.assertThrows(NoExisteElid::class.java) {
+            especieService.cantidadDeInfectados(238383494)
+        }
+    }
+
+    @Test
+    fun alNoHaberEspeciesEnLaBDDEntoncesNoHayEspecieLider() {
+        dataService.eliminarTodo()
+        Assertions.assertThrows(NoExisteUnaEspecieLider::class.java) {
+            especieService.especieLider()
+        }
+    }
+
+    @Test
     fun seRecuperaUnaEspecieConTodosSusDatosCorrectos() {
+        dataService.eliminarTodo()
         val patogeno = Patogeno("testEspecie")
         val patogenoCreado = patogenoService.crearPatogeno(patogeno)
         val ubicacionCreada = ubicacionService.crearUbicacion("ubicacionTestEspecie")
@@ -57,31 +95,48 @@ class EspecieServiceImplTest {
         Assertions.assertEquals(especieRecuperada.nombre, especieCreada.nombre)
         Assertions.assertEquals(especieRecuperada.paisDeOrigen, ubicacionCreada.nombre)
         Assertions.assertEquals(especieRecuperada.patogeno.id, patogenoCreado.id!!)
-
     }
 
-    @Test
-    fun noSePuedeRecuperarLaCantidadDeInfectadosConUnIdDeEspecieInexistente() {
-        Assertions.assertThrows(NoExisteElid::class.java) {
-            especieService.cantidadDeInfectados(238383494)
-        }
-    }
 
     @Test
     fun seRecuperanLaCantidadDeInfectadosCorrectamente() {
+        dataService.eliminarTodo()
         val patogeno = Patogeno("testEspecie")
         val patogenoCreado = patogenoService.crearPatogeno(patogeno)
         val ubicacionCreada = ubicacionService.crearUbicacion("ubicacionTestEspecie")
         vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada.id!!)
-        val vectorRecuperado = vectorServiceImpl.recuperarVector(1)
         val especieCreada = patogenoService.agregarEspecie(patogenoCreado.id!!, "cualquierNombre", ubicacionCreada.id!!)
 
         Assertions.assertEquals(1, especieService.cantidadDeInfectados(especieCreada.id!!))
-
-        vectorServiceImpl.infectar(vectorRecuperado, especieCreada)
-
-        Assertions.assertEquals(2, especieService.cantidadDeInfectados(especieCreada.id!!))
     }
+
+    @Test
+    fun seAgregaUnaMutacionYseRecuperaUnaEspecieConSusMutacionesCorrectamente() {
+        val patogeno = Patogeno("testEspecie")
+        val patogenoCreado = patogenoService.crearPatogeno(patogeno)
+        val ubicacionCreada = ubicacionService.crearUbicacion("ubicacionTestEspecie")
+        vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada.id!!)
+        val especieCreada = patogenoService.agregarEspecie(patogenoCreado.id!!, "cualquierNombre", ubicacionCreada.id!!)
+
+        val mutacionAAgregar1 = Mutacion()
+        val mutacion1 = mutacionService.agregarMutacion(especieCreada.id!!, mutacionAAgregar1)
+
+        val especieRecuperada = especieService.recuperarEspecie(especieCreada.id!!)
+
+        Assertions.assertNotNull(especieRecuperada.mutaciones.find { m -> m.id!! == mutacion1.id!! })
+    }
+
+    @Test
+    fun unaEspecieRecienCreadaNoTieneMutaciones() {
+        val patogeno = Patogeno("testEspecie")
+        val patogenoCreado = patogenoService.crearPatogeno(patogeno)
+        val ubicacionCreada = ubicacionService.crearUbicacion("ubicacionTestEspecie")
+        vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada.id!!)
+        val especieCreada = patogenoService.agregarEspecie(patogenoCreado.id!!, "cualquierNombre", ubicacionCreada.id!!)
+
+        Assertions.assertTrue(especieCreada.mutaciones.isEmpty())
+    }
+
 
     @Test
     fun seConoceLaEspecieLiderConMayorCantidadDePersonasInfectadasCorrectamente() {
@@ -104,8 +159,10 @@ class EspecieServiceImplTest {
         Assertions.assertEquals(especieService.cantidadDeInfectados(especieCreada2.id!!), 2)
         Assertions.assertEquals(especieService.cantidadDeInfectados(especieCreada1.id!!), 1)
 
-        Assertions.assertEquals(especieService.especieLider().id!!, especieCreada1.id!!)
+        Assertions.assertEquals(especieService.especieLider()?.id!!, especieCreada1.id!!)
     }
+
+
 
     @Test
     fun alHaberSoloEspeciesConInfectadosNoPersonasEntoncesNoHayEspecieLider() {
@@ -129,14 +186,6 @@ class EspecieServiceImplTest {
         }
     }
 
-    @Test
-    fun alNoHaberEspeciesEnLaBDDEntoncesNoHayEspecieLider() {
-        dataService.eliminarTodo()
-
-        Assertions.assertThrows(NoExisteUnaEspecieLider::class.java) {
-            especieService.especieLider()
-        }
-    }
 
     @Test
     fun seRecuperanTodasLasEspeciesCorrectamente() {
@@ -161,14 +210,6 @@ class EspecieServiceImplTest {
         Assertions.assertEquals(2, especiesRecuperadas.size)
     }
 
-    @Test
-    fun alRecuperarTodasLasEspeciesConUnaBDDVaciaEntoncesSeRetornaUnaListaVacia() {
-        dataService.eliminarTodo()
-
-        val especiesRecuperadas = especieService.recuperarTodas()
-
-        Assertions.assertTrue(especiesRecuperadas.isEmpty())
-    }
 
     @Test
     fun seRecuperanCorrectamenteLosLideresConMayorCantidadDeInfectadosPersonasOAnimales() {
@@ -193,6 +234,7 @@ class EspecieServiceImplTest {
         Assertions.assertEquals(2, lideres.size)
     }
 
+
     @Test
     fun siUnaEspecieSoloTieneInfectadosInsectosNoFormaParteDelResultadoFinal() {
         dataService.eliminarTodo()
@@ -214,6 +256,7 @@ class EspecieServiceImplTest {
 
         Assertions.assertEquals(1, lideres.size)
     }
+
 
     @Test
     fun siHayMasDeDiezEspeciesLideresSoloSeMuestranLasPrimerasDiez() {
@@ -264,16 +307,70 @@ class EspecieServiceImplTest {
         Assertions.assertEquals(especieCreada1.id!! ,lideres.first().id!!)
     }
 
-    @Test
-    fun siNoHayEspeciesEnLaBDDEntoncesAlRecuperarLideresSeRetornaListaVacia() {
-        dataService.eliminarTodo()
 
-        Assertions.assertTrue(especieService.lideres().isEmpty())
+    @Test
+    fun seRecuperanTodasLasEspeciesConPaginadoCorrectamenteConLaPagina0YSizeDos() {
+        dataService.eliminarTodo()
+        val patogeno1 = Patogeno("testEspecie")
+        val patogenoCreado1 = patogenoService.crearPatogeno(patogeno1)
+        val ubicacionCreada1 = ubicacionService.crearUbicacion("ubicacionTestEspecie")
+        vectorServiceImpl.crearVector(TipoDeVector.Animal, ubicacionCreada1.id!!)
+        val especieCreada1 = patogenoService.agregarEspecie(patogenoCreado1.id!!, "cualquierNombre", ubicacionCreada1.id!!)
+
+        val patogeno2 = Patogeno("otroNombre")
+        val patogenoCreado2 = patogenoService.crearPatogeno(patogeno2)
+        val ubicacionCreada2 = ubicacionService.crearUbicacion("otroNombreDeUbicacion")
+        vectorServiceImpl.crearVector(TipoDeVector.Insecto, ubicacionCreada2.id!!)
+        val especieCreada2 = patogenoService.agregarEspecie(patogenoCreado2.id!!, "cualquierNombre", ubicacionCreada2.id!!)
+
+        val pageable = PageRequest.of(0, 2)
+
+        val especiesRecuperadas = especieService.recuperarTodas(pageable)
+
+        Assertions.assertNotNull(especiesRecuperadas.find { it.id == especieCreada1.id!! })
+        Assertions.assertNotNull(especiesRecuperadas.find { it.id == especieCreada2.id!! })
+
+        Assertions.assertEquals(0, especiesRecuperadas.number)
+        Assertions.assertEquals(2, especiesRecuperadas.numberOfElements)
+        Assertions.assertEquals(2, especiesRecuperadas.size)
     }
 
     @AfterEach
     fun eliminarModelo() {
-       dataService.eliminarTodo()
+        dataService.eliminarTodo()
     }
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

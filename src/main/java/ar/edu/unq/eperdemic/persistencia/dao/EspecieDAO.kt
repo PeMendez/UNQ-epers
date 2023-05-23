@@ -1,15 +1,22 @@
 package ar.edu.unq.eperdemic.persistencia.dao
 
 import ar.edu.unq.eperdemic.modelo.Especie
-import org.springframework.data.repository.CrudRepository
+import org.springframework.data.jpa.repository.Query
+import org.springframework.data.repository.PagingAndSortingRepository
 
-interface EspecieDAO : CrudRepository<Especie, Long>  {
+interface EspecieDAO : PagingAndSortingRepository<Especie, Long>  {
 
-    fun recuperarEspecie(id: Long): Especie
-    fun cantidadDeInfectados(especieId: Long ): Int
-    fun recuperarTodas(): List<Especie>
-    fun especieLider(): Especie
+
+    @Query("select e from Vector v join v.especies e where v.tipo in (ar.edu.unq.eperdemic.modelo.TipoDeVector.Persona, ar.edu.unq.eperdemic.modelo.TipoDeVector.Animal) group by e order by count(v) desc")
     fun lideres(): List<Especie>
-    fun especieLiderDeUbicacion(ubicacionId: Long) : Especie
+
+    @Query("select count(e.id) from Vector v join v.especies e where e.id = :especieId")
+    fun cantidadDeInfectados(especieId: Long ): Int
+
+    @Query("select e from Vector v join v.especies e where v.tipo in (ar.edu.unq.eperdemic.modelo.TipoDeVector.Persona) group by e order by count(v) desc")
+    fun especieLider(): List<Especie>
+
+    @Query("select e from Vector v join v.especies e where v.ubicacion.id = :ubicacionId group by e order by count(v) desc")
+    fun especieLiderDeUbicacion(ubicacionId: Long) : List<Especie>
 
 }
