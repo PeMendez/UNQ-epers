@@ -107,7 +107,7 @@ enum class TipoDeVector {
             return camino == "MARITIMO" || camino == "TERRESTRE"
         }
         override fun caminosCompatibles(): List<String> {
-            return listOf("Terrestre","Acuatico")
+            return listOf("TERRESTRE","MARITIMO")
         }
     },
     Insecto{
@@ -119,7 +119,7 @@ enum class TipoDeVector {
             return camino == "AEREO" || camino == "TERRESTRE"
         }
         override fun caminosCompatibles(): List<String> {
-            return listOf("Terrestre","Aereo")
+            return listOf("TERRESTRE","AEREO")
         }
     },
     Animal{
@@ -131,7 +131,7 @@ enum class TipoDeVector {
             return true
         }
         override fun caminosCompatibles(): List<String> {
-            return listOf("Terrestre","Acuatico","Aereo")
+            return listOf("TERRESTRE","MARITIMO","AEREO")
         }
     };
 
