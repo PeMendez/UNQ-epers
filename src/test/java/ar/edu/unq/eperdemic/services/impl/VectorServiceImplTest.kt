@@ -48,29 +48,24 @@ class VectorServiceImplTest {
     fun setUp() {
         Random.switchModo(false)
 
-        //ubicaciones
         ubicacion1 = ubicacionServiceImpl.crearUbicacion("ubicacion1")
         ubicacion2 = ubicacionServiceImpl.crearUbicacion("ubicacion2")
 
-        //patogeno
         patogeno1 = patogenoService.crearPatogeno(Patogeno("patogeno1"))
 
-        //especies
         vectorCarnada = vectorServiceImpl.crearVector(TipoDeVector.Persona,ubicacion1.id!!)
-        especie1 = patogenoService.agregarEspecie(patogeno1.id!!,"especie1",ubicacion1.id!!)
-        especie2 = patogenoService.agregarEspecie(patogeno1.id!!,"especie2",ubicacion1.id!!)
-        especie3 = patogenoService.agregarEspecie(patogeno1.id!!,"especie3",ubicacion1.id!!)
+        especie1 = patogenoService.agregarEspecie(patogeno1.id!!,"especieRARA", ubicacion1.id!!)
+        especie2 = patogenoService.agregarEspecie(patogeno1.id!!,"especieEXTRR",ubicacion1.id!!)
+        especie3 = patogenoService.agregarEspecie(patogeno1.id!!,"especieFR",ubicacion1.id!!)
 
-        //vectores sanos de cada tipo
-        //persona
         vectorPersona1 = vectorServiceImpl.crearVector(TipoDeVector.Persona,ubicacion2.id!!)
         vectorPersona2 = vectorServiceImpl.crearVector(TipoDeVector.Persona,ubicacion2.id!!)
         vectorPersona3 = vectorServiceImpl.crearVector(TipoDeVector.Persona,ubicacion2.id!!)
         vectorPersona4 = vectorServiceImpl.crearVector(TipoDeVector.Persona,ubicacion2.id!!)
-        //animal
+
         vectorAnimal1 = vectorServiceImpl.crearVector(TipoDeVector.Animal,ubicacion2.id!!)
         vectorAnimal2 = vectorServiceImpl.crearVector(TipoDeVector.Animal,ubicacion2.id!!)
-        //insecto
+
         vectorInsecto1 = vectorServiceImpl.crearVector(TipoDeVector.Insecto,ubicacion2.id!!)
         vectorInsecto2 = vectorServiceImpl.crearVector(TipoDeVector.Insecto,ubicacion2.id!!)
         dataServiceSpring.crearSetDeDatosIniciales()
@@ -106,49 +101,40 @@ class VectorServiceImplTest {
     @Test
     fun soloSePuedenContagiarVectoresInsectosDeVectoresPersonaOAnimalDeLoContrarioNoHaceNada() {
 
-        //infecto un vector sano con una especie
         assertTrue(vectorInsecto2.estaSano())
         vectorServiceImpl.infectar(vectorInsecto2,especie1)
         assertFalse(vectorInsecto2.estaSano())
 
-        //verifico que los vectores de los tres tipos estén sanos
         assertTrue(vectorPersona1.estaSano())
         assertTrue(vectorAnimal1.estaSano())
         assertTrue(vectorInsecto1.estaSano())
         val vectoresAContagiar = listOf(vectorPersona1,vectorAnimal1,vectorInsecto1)
 
-        //contagio los vectores sanos con un vector insecto enfermo
         vectorServiceImpl.contagiar(vectorInsecto2, vectoresAContagiar)
 
-        //verifico que los vectores persona y animal esten enfermos
         assertFalse(vectorPersona1.estaSano())
         assertFalse(vectorAnimal1.estaSano())
 
-        //verifico que el vector insecto siga sano
         assertTrue(vectorInsecto1.estaSano())
     }
 
     @Test
     fun losVectoresPersonaSePuedenContagiarDeCualquierVector() {
-        //contagio tres vectores diferentes con tres especies diferentes
-        //persona con especie1
+
         assertTrue(vectorPersona1.estaSano())
         vectorServiceImpl.infectar(vectorPersona1,especie1)
         assertFalse(vectorPersona1.estaSano())
-        //animal con especie2
+
         assertTrue(vectorAnimal1.estaSano())
         vectorServiceImpl.infectar(vectorAnimal1,especie2)
         assertFalse(vectorAnimal1.estaSano())
-        //insecto con especie3
+
         assertTrue(vectorInsecto1.estaSano())
         vectorServiceImpl.infectar(vectorInsecto1,especie3)
         assertFalse(vectorInsecto1.estaSano())
 
-        //verifico que el vector persona a contagiar este sano
         assertTrue(vectorPersona2.estaSano())
-        //val vectoresAContagiar = listOf(vectorPersona2)
 
-        //contagio un vector persona sano con los tres vectores infectados
         vectorServiceImpl.contagiar(vectorPersona1, listOf(vectorPersona2))
 
         val vectorCon1Especie = vectorServiceImpl.recuperarVector(vectorPersona2.id!!)
@@ -157,10 +143,9 @@ class VectorServiceImplTest {
         val vectorCon2Especies = vectorServiceImpl.recuperarVector(vectorPersona2.id!!)
         vectorServiceImpl.contagiar(vectorInsecto1, listOf(vectorCon2Especies))
 
-        //verifico que el vector persona se haya infectado con las tres especies
-        assertTrue(vectorCon2Especies.tieneEfermedad(especie1.id!!))
-        assertTrue(vectorCon2Especies.tieneEfermedad(especie2.id!!))
-        assertTrue(vectorCon2Especies.tieneEfermedad(especie3.id!!))
+        assertTrue(vectorCon2Especies.tieneEnfermedad(especie1))
+        assertTrue(vectorCon2Especies.tieneEnfermedad(especie2))
+        assertTrue(vectorCon2Especies.tieneEnfermedad(especie3))
     }
 
     @Test
@@ -178,19 +163,19 @@ class VectorServiceImplTest {
 
         val vectores = listOf(vectorAnimalCreado1)
 
-        assertFalse(vectorAnimalCreado1.tieneEfermedad(unaEspecie.id!!))
+        assertFalse(vectorAnimalCreado1.tieneEnfermedad(unaEspecie))
         assertEquals(vectorAnimalCreado1.ubicacion.id!!, vectorAnimalCreado2.ubicacion.id!!)
         assertEquals(vectorAnimalCreado1.ubicacion.id!!, vectorPersonaCreado.ubicacion.id!!)
         assertEquals(vectorAnimalCreado1.ubicacion.id!!, vectorInsectoCreado.ubicacion.id!!)
 
         vectorServiceImpl.contagiar(vectorAnimalCreado2, vectores)
-        assertFalse(vectorAnimalCreado1.tieneEfermedad(unaEspecie.id!!))
+        assertFalse(vectorAnimalCreado1.tieneEnfermedad(unaEspecie))
 
         vectorServiceImpl.contagiar(vectorPersonaCreado, vectores)
-        assertFalse(vectorAnimalCreado1.tieneEfermedad(unaEspecie.id!!))
+        assertFalse(vectorAnimalCreado1.tieneEnfermedad(unaEspecie))
 
         vectorServiceImpl.contagiar(vectorInsectoCreado, vectores)
-        assertTrue(vectorAnimalCreado1.tieneEfermedad(unaEspecie.id!!))
+        assertTrue(vectorAnimalCreado1.tieneEnfermedad(unaEspecie))
     }
 
     @Test
@@ -241,19 +226,19 @@ class VectorServiceImplTest {
         vectorServiceImpl.infectar(vectorAniminalInfectado,especie2)
         val vectorAnimalInfectadoConDos = vectorServiceImpl.recuperarVector(vectorAniminalInfectado.id!!)
 
-        assertTrue(vectorAnimalInfectadoConDos.tieneEfermedad(especie1.id!!))
-        assertTrue(vectorAnimalInfectadoConDos.tieneEfermedad(especie2.id!!))
+        assertTrue(vectorAnimalInfectadoConDos.tieneEnfermedad(especie1))
+        assertTrue(vectorAnimalInfectadoConDos.tieneEnfermedad(especie2))
 
         assertTrue(vectorPersona1.estaSano())
         assertTrue(vectorPersona2.estaSano())
 
         vectorServiceImpl.contagiar(vectorAnimalInfectadoConDos, listOf(vectorPersona1,vectorPersona2))
 
-        assertTrue(vectorPersona1.tieneEfermedad(especie1.id!!))
-        assertTrue(vectorPersona1.tieneEfermedad(especie2.id!!))
+        assertTrue(vectorPersona1.tieneEnfermedad(especie1))
+        assertTrue(vectorPersona1.tieneEnfermedad(especie2))
 
-        assertTrue(vectorPersona2.tieneEfermedad(especie1.id!!))
-        assertTrue(vectorPersona2.tieneEfermedad(especie2.id!!))
+        assertTrue(vectorPersona2.tieneEnfermedad(especie1))
+        assertTrue(vectorPersona2.tieneEnfermedad(especie2))
     }
 
     @Test
@@ -261,7 +246,7 @@ class VectorServiceImplTest {
 
         assertTrue(vectorPersona1.estaSano())
         vectorServiceImpl.infectar(vectorPersona1,especie1)
-        assertTrue(vectorPersona1.tieneEfermedad(especie1.id!!))
+        assertTrue(vectorPersona1.tieneEnfermedad(especie1))
 
     }
 
@@ -301,9 +286,9 @@ class VectorServiceImplTest {
     fun seRecuperanLasEnfermedadesDeUnVectorInfectadoCorrectamente() {
         val vectorInfectado = vectorServiceImpl.recuperarVector(vectorCarnada.id!!)
 
-        assertTrue(vectorInfectado.tieneEfermedad(especie1.id!!))
-        assertTrue(vectorInfectado.tieneEfermedad(especie2.id!!))
-        assertTrue(vectorInfectado.tieneEfermedad(especie3.id!!))
+        assertTrue(vectorInfectado.tieneEnfermedad(especie1))
+        assertTrue(vectorInfectado.tieneEnfermedad(especie2))
+        assertTrue(vectorInfectado.tieneEnfermedad(especie3))
 
         val enfermedadesDeVector= vectorServiceImpl.enfermedades(vectorInfectado.id!!).map { it.id }
 

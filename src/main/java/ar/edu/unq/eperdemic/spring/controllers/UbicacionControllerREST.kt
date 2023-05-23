@@ -26,7 +26,7 @@ class UbicacionControllerREST(private val ubicacionService: UbicacionService) {
     }
 
     @PostMapping
-    fun guardarUbicacion(@RequestBody ubicacionDTO: UbicacionDTO) = ubicacionService.guardar(ubicacionDTO.aModelo())
+    fun guardarUbicacion(@RequestBody ubicacionDTO: UbicacionDTO) = ubicacionService.crearUbicacion(ubicacionDTO.nombreDeLaUbicacion)
 
     @PutMapping("/mover/{vectorId}/{ubicacionId}")
     fun mover(@PathVariable vectorId: Long, @PathVariable ubicacionId: Long) = ubicacionService.mover(vectorId, ubicacionId)

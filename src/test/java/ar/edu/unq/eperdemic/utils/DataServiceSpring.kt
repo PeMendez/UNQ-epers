@@ -13,11 +13,10 @@ import org.springframework.transaction.annotation.Transactional
 import ar.edu.unq.eperdemic.services.impl.PatogenoServiceImpl
 import ar.edu.unq.eperdemic.services.impl.UbicacionServiceImpl
 import ar.edu.unq.eperdemic.services.impl.VectorServiceImpl
-
+import org.springframework.data.neo4j.repository.query.Query
 
 
 @Service
-@Transactional
 class DataServiceSpring : DataService {
 
     @Autowired
@@ -38,6 +37,9 @@ class DataServiceSpring : DataService {
     @Autowired
     lateinit var vectorService: VectorServiceImpl
 
+    @Autowired
+    lateinit var neo4jUbicacionDAO: Neo4jUbicacionDAO
+
 
     val patogeno1 = Patogeno("tipo1")
     val patogeno2 = Patogeno("tipo2")
@@ -48,9 +50,7 @@ class DataServiceSpring : DataService {
     val ubicacion3 = Ubicacion("ubicacionTesteable")
 
 
-    @Transactional
     override fun crearSetDeDatosIniciales() {
-        Random.switchModo(false)
         Random.switchModo(false)
         val listaPatogenosCreados = crearPatogenos()
         val listaDeUbicacionesCreadas = crearUbicaciones()
@@ -106,7 +106,7 @@ class DataServiceSpring : DataService {
     }
 
     private fun crearEspecies(listaDePatogenos: List<Patogeno>, listaDeUbicaciones: List<Ubicacion>) {
-        patogenoService.agregarEspecie(listaDePatogenos[0].id!!, "especie1", listaDeUbicaciones[0].id!!)
+        patogenoService.agregarEspecie(listaDePatogenos[0].id!!, "especieASD", listaDeUbicaciones[0].id!!)
         patogenoService.agregarEspecie(listaDePatogenos[1].id!!, "especie2", listaDeUbicaciones[1].id!!)
         patogenoService.agregarEspecie(listaDePatogenos[2].id!!, "especie3", listaDeUbicaciones[2].id!!)
         patogenoService.agregarEspecie(listaDePatogenos[1].id!!, "especie4", listaDeUbicaciones[0].id!!)
@@ -128,6 +128,8 @@ class DataServiceSpring : DataService {
         patogenoDAO.deleteAll()
         especieDAO.deleteAll()
         mutacionDAO.deleteAll()
+
+        neo4jUbicacionDAO.detachDelete()
     }
 
 }
