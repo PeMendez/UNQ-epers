@@ -1,6 +1,5 @@
 package ar.edu.unq.eperdemic.services.impl
 
-import ar.edu.unq.eperdemic.Neo4jUbicacionDTO
 import ar.edu.unq.eperdemic.modelo.*
 import ar.edu.unq.eperdemic.modelo.exceptions.*
 import ar.edu.unq.eperdemic.persistencia.dao.Neo4jUbicacionDAO
@@ -99,14 +98,14 @@ class UbicacionServiceImpl(): UbicacionService {
     fun conectarConQuery(ubicacionOrigen: String, ubicacionDestino:String, tipoDeCamino:String){
         existeUbicacionPorNombre(ubicacionOrigen)
         existeUbicacionPorNombre(ubicacionDestino)
-        val camino = verificarCaminoValido(tipoDeCamino)
+        esTipoDeCaminoValido(tipoDeCamino)
         val ubiOrigen = neo4jUbicacionDAO.recuperarUbicacionPorNombre(ubicacionOrigen).get()
         val ubiDestino = neo4jUbicacionDAO.recuperarUbicacionPorNombre(ubicacionDestino).get()
 
         //comento porque no anduvo////////////////////////////////////////////////////////////
         //ubiOrigen.ubicaciones.add(ubiDestino)
         //neo4jUbicacionDAO.save(ubiOrigen)
-        neo4jUbicacionDAO.conectar(ubiOrigen.idRelacional!!,ubiDestino.idRelacional!!, camino)
+        neo4jUbicacionDAO.conectar(ubiOrigen.idRelacional!!,ubiDestino.idRelacional!!, tipoDeCamino)
     }
 
     fun hayConexionDirecta(ubicacionOrigen: String, ubicacionDestino:String): Boolean{
@@ -141,8 +140,12 @@ class UbicacionServiceImpl(): UbicacionService {
             throw TipoDeCaminoInvalido("El tipo de camino '" + camino +  "' por el que se intenta conectar es inválido.")
         }
     }
-    private fun esCaminoValido(camino: String): Boolean {
+    private fun esTipoDeCaminoValido(camino: String): Boolean {
         return TipoDeVector.values().map { t -> t.caminosCompatibles() }.toList().flatten().contains(camino)
+    }
+
+    fun caminosCompataibles(caminosCompataibles: List<String>, ubicacionOrigen:String,  ubicacionDestino: String):List<List<UbicacionNeo4J>>{
+        return neo4jUbicacionDAO.caminosCompatibles(caminosCompataibles, ubicacionOrigen, ubicacionDestino).get()
     }
 
     private fun intentarMover(vector: Vector, ubicacion: Ubicacion) {
