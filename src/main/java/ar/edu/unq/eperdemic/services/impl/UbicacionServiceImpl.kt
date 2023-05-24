@@ -85,14 +85,14 @@ class UbicacionServiceImpl(): UbicacionService {
     fun conectarConQuery(ubicacionOrigen: String, ubicacionDestino:String, tipoDeCamino:String){
         existeUbicacionPorNombre(ubicacionOrigen)
         existeUbicacionPorNombre(ubicacionDestino)
-        esTipoDeCaminoValido(tipoDeCamino)
+        val caminoVerificado = esTipoDeCaminoValido(tipoDeCamino)
         val ubiOrigen = neo4jUbicacionDAO.recuperarUbicacionPorNombre(ubicacionOrigen).get()
         val ubiDestino = neo4jUbicacionDAO.recuperarUbicacionPorNombre(ubicacionDestino).get()
 
         //comento porque no anduvo////////////////////////////////////////////////////////////
         //ubiOrigen.ubicaciones.add(ubiDestino)
         //neo4jUbicacionDAO.save(ubiOrigen)
-        neo4jUbicacionDAO.conectar(ubiOrigen.idRelacional!!,ubiDestino.idRelacional!!, tipoDeCamino)
+        neo4jUbicacionDAO.conectar(ubiOrigen.idRelacional!!,ubiDestino.idRelacional!!, caminoVerificado)
     }
 
     fun hayConexionDirecta(ubicacionOrigen: String, ubicacionDestino:String): Boolean{
@@ -116,22 +116,9 @@ class UbicacionServiceImpl(): UbicacionService {
         }
     }
 
-    //al final borrar lo que no se use
-    private fun verificarCaminoValido(camino: String): String {
-        val caminoUpper = camino.uppercase()
-        if (caminoUpper == "AEREO" ||
-            caminoUpper == "TERRESTRE" ||
-            caminoUpper == "MARITIMO") {
-            return caminoUpper
-        } else {
-            throw TipoDeCaminoInvalido("El tipo de camino '" + camino +  "' por el que se intenta conectar es inválido.")
-        }
-    }
-    private fun esTipoDeCaminoValido(camino: String): Boolean {
-        return TipoDeVector.values().map { t -> t.caminosCompatibles() }.toList().flatten().contains(camino)
-    }
 
-    fun caminosCompataibles(caminosCompataibles: List<String>, ubicacionOrigen:String,  ubicacionDestino: String):List<List<UbicacionNeo4J>>{
+
+    fun caminosCompatibles(caminosCompataibles: List<String>, ubicacionOrigen:String, ubicacionDestino: String):List<List<UbicacionNeo4J>>{
         return neo4jUbicacionDAO.caminosCompatibles(caminosCompataibles, ubicacionOrigen, ubicacionDestino).get()
     }
 
@@ -145,5 +132,16 @@ class UbicacionServiceImpl(): UbicacionService {
             }
         }
     }
+
+
+    private fun esTipoDeCaminoValido(camino: String): String {
+        val caminoAVerificar = camino.uppercase()
+        if (TipoDeVector.values().flatMap { t -> t.caminosCompatibles() }.contains(caminoAVerificar)) {
+            return caminoAVerificar
+        } else {
+            throw TipoDeCaminoInvalido("El tipo de camino '$camino' no es válido.")
+        }
+    }
+
 }
 
