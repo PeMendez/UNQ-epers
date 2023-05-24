@@ -146,17 +146,15 @@ class UbicacionServiceImpl(): UbicacionService {
         }
     }
 
-    fun moverMasCorto(vectorId:Long, nombreDeUbicacion:String){
+    override fun moverMasCorto(vectorId:Long, nombreDeUbicacion:String){
         val vector = vectorDAO.findByIdOrNull(vectorId)?: throw NoExisteElid("No existe el ID del vector")
         val ubicacionDelVector = vector.ubicacion.nombre
         existeUbicacionPorNombre(nombreDeUbicacion)
-        //val ubicacionDestino = neo4jUbicacionDAO.recuperarUbicacionPorNombre(nombreDeUbicacion).get().nombre
-        //val caminosPosibles = neo4jUbicacionDAO.caminosPosiblesEntre(ubicacionDelVector, ubicacionDestino)
         val caminosCompatibles = vector.tipo.caminosCompatibles()
-        val caminoMasCorto = neo4jUbicacionDAO.caminoMasCortoParaEntre(ubicacionDelVector, nombreDeUbicacion, caminosCompatibles)
+        val caminoMasCorto = neo4jUbicacionDAO.caminoMasCortoParaEntre(caminosCompatibles, ubicacionDelVector, nombreDeUbicacion).get()
 
-        caminoMasCorto.forEach { nombre ->
-            val ubicacionAMover = ubicacionDAO.recuperarUbicacionPorNombre(nombre)
+        caminoMasCorto.forEach { ubicacion ->
+            val ubicacionAMover = ubicacionDAO.recuperarUbicacionPorNombre(ubicacion.nombre)
             vector.mover(ubicacionAMover)
         }
 

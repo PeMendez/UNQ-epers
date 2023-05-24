@@ -1,9 +1,9 @@
 package ar.edu.unq.eperdemic.persistencia.dao
 
-import ar.edu.unq.eperdemic.modelo.TipoDeVector
 import ar.edu.unq.eperdemic.modelo.UbicacionNeo4J
 import org.springframework.data.neo4j.repository.query.Query
 import org.springframework.data.neo4j.repository.Neo4jRepository
+import org.springframework.data.repository.query.Param
 import org.springframework.stereotype.Repository
 import java.util.*
 
@@ -45,14 +45,20 @@ interface Neo4jUbicacionDAO : Neo4jRepository<UbicacionNeo4J, Long?> {
             "RETURN caminosMasCortos")
     fun caminosCompatibles(caminosCompatibles:List<String>,origenNombre:String,destinoNombre:String): Optional<List<List<UbicacionNeo4J>>>
 
+    @Query("MATCH (origen:UbicacionNeo4J {nombre: ${'$'}origenNombre})" +
+            "MATCH (destino:UbicacionNeo4J {nombre: ${'$'}destinoNombre})" +
+            "MATCH caminosMasCortos = allShortestPaths((origen)-[CAMINO*]-(destino))" +
+            "WHERE ALL(rel in relationships(caminosMasCortos) WHERE rel.tipoDeCamino IN \$caminosCompatibles) " +
+            "RETURN caminosMasCortos")
+    fun caminoMasCortoParaEntre(caminosCompatibles:List<String>,origenNombre:String,destinoNombre:String): Optional<List<UbicacionNeo4J>>
 
-    @Query("MATCH paths=(origen:UbicacionNeo4J {nombre: ${'$'}ubicacionOrigen})-[:CAMINO*]->(destino:UbicacionNeo4J {nombre: ${'$'}ubicacionDestino}) " +
-            "RETURN [node IN nodes(path) | node.nombre] AS ubicaciones")
-    fun caminosPosiblesEntre(origen: String, destino: String): List<List<String>>
+    @Query("MATCH (origen:UbicacionNeo4J {nombreUbicacion: ${'$'}ubicacionOrigen})," +
+           "MATCH (destino:UbicacionNeo4J {nombreUbicacion: ${'$'}ubicacionDestino}), " +
+           //"MATCH (origen)-[r]->(destino) WHERE type(r) IN \$caminosCompatibles RETURN r")
+            "path = shortestpath((origen)-[:${'$'}caminosCompatibles}*]->(destino)) " +
+            "RETURN [x in nodes(path) | x];")
+    fun caminoMasCortoParaEntre(ubicacionOrigen: String,
+                                ubicacionDestino: String,
+                                caminosCompatibles: String) : List<String>
 
-    @Query("MATCH (origen: UbicacionNeo4J {nombreUbicacion: ${'$'}ubicacionOrigen})," +
-            "(destino:UbicacionNeo4J {nombreUbicacion: ${'$'}ubicacionDestino}), " +
-            "path = shortestpath((origen)–[:${'$'}caminosPosibles*]->(destino)) " +
-            "RETURN [x in nodes(path) | x.nombre];")
-    fun caminoMasCortoParaEntre(ubicacionOrigen: String, ubicacionDestino: String, caminosCompatibles: List<String>) : List<String>
 }

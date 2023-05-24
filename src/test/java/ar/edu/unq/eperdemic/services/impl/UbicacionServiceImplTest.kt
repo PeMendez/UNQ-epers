@@ -6,6 +6,7 @@ import ar.edu.unq.eperdemic.modelo.Ubicacion
 import ar.edu.unq.eperdemic.modelo.exceptions.*
 import ar.edu.unq.eperdemic.persistencia.dao.Neo4jUbicacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.UbicacionDAO
+import ar.edu.unq.eperdemic.services.UbicacionService
 import ar.edu.unq.eperdemic.utils.DataService
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.extension.ExtendWith
@@ -675,6 +676,38 @@ class UbicacionServiceImplTest {
         //setOf(ubicacionNeo3,ubicacionNeo5).map{u->u.nombre}.toList()))
 
 
+    }
+
+    @Test
+    fun unVectorSeMuevePorElCaminoMasCortoPosibleDeFormaCorrecta(){
+        dataService.eliminarTodo()
+        val ubicacion1 = ubicacionService.crearUbicacion("ubicacion1")
+        val ubicacion2 = ubicacionService.crearUbicacion("ubicacion2")
+        val ubicacion3 = ubicacionService.crearUbicacion("ubicacion3")
+        val ubicacion4 = ubicacionService.crearUbicacion("ubicacion4")
+        val ubicacion5 = ubicacionService.crearUbicacion("ubicacion5")
+        val ubicacion6 = ubicacionService.crearUbicacion("ubicacion6")
+
+        val vector = vectorService.crearVector(TipoDeVector.Insecto,ubicacion1.id!!)
+
+        val ubicacionNeo1 = neo4jUbicacionDAO.findByIdRelacional(ubicacion1.id!!).get()
+        val ubicacionNeo2 = neo4jUbicacionDAO.findByIdRelacional(ubicacion2.id!!).get()
+        val ubicacionNeo3 = neo4jUbicacionDAO.findByIdRelacional(ubicacion3.id!!).get()
+        val ubicacionNeo4 = neo4jUbicacionDAO.findByIdRelacional(ubicacion4.id!!).get()
+        val ubicacionNeo5 = neo4jUbicacionDAO.findByIdRelacional(ubicacion5.id!!).get()
+        val ubicacionNeo6 = neo4jUbicacionDAO.findByIdRelacional(ubicacion6.id!!).get()
+
+        ubicacionService.conectarConQuery(ubicacionNeo1.nombre,ubicacionNeo2.nombre,"Terrestre")
+        ubicacionService.conectarConQuery(ubicacionNeo2.nombre,ubicacionNeo6.nombre,"Maritimo")
+        ubicacionService.conectarConQuery(ubicacionNeo2.nombre,ubicacionNeo3.nombre,"Terrestre")
+        ubicacionService.conectarConQuery(ubicacionNeo3.nombre,ubicacionNeo4.nombre,"Terrestre")
+        ubicacionService.conectarConQuery(ubicacionNeo3.nombre,ubicacionNeo6.nombre,"Aereo")
+        ubicacionService.conectarConQuery(ubicacionNeo4.nombre,ubicacionNeo5.nombre,"Terrestre")
+        ubicacionService.conectarConQuery(ubicacionNeo5.nombre,ubicacionNeo6.nombre,"Terrestre")
+
+        ubicacionService.moverMasCorto(vector.id!!, "ubicacion6")
+
+        Assertions.assertTrue(vector.ubicacion.nombre == "ubicacion6")
     }
 
     //@AfterEach
