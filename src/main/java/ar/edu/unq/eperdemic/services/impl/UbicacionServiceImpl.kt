@@ -124,14 +124,14 @@ class UbicacionServiceImpl(): UbicacionService {
             caminoUpper == "MARITIMO") {
             return caminoUpper
         } else {
-            throw TipoDeCaminoInvalido("El tipo de camino '" + camino +  "' por el que se intenta conectar es inválido.")
+            throw TipoDeCaminoInvalido("El tipo de camino '$camino' por el que se intenta conectar es inválido.")
         }
     }
     private fun esTipoDeCaminoValido(camino: String): Boolean {
         return TipoDeVector.values().map { t -> t.caminosCompatibles() }.toList().flatten().contains(camino)
     }
 
-    fun caminosCompataibles(caminosCompataibles: List<String>, ubicacionOrigen:String,  ubicacionDestino: String):List<List<UbicacionNeo4J>>{
+    fun caminosCompataibles(caminosCompataibles: List<String>, ubicacionOrigen:String,  ubicacionDestino: String): List<List<UbicacionNeo4J>>{
         return neo4jUbicacionDAO.caminosCompatibles(caminosCompataibles, ubicacionOrigen, ubicacionDestino).get()
     }
 
@@ -145,5 +145,23 @@ class UbicacionServiceImpl(): UbicacionService {
             }
         }
     }
+
+    fun moverMasCorto(vectorId:Long, nombreDeUbicacion:String){
+        val vector = vectorDAO.findByIdOrNull(vectorId)?: throw NoExisteElid("No existe el ID del vector")
+        val ubicacionDelVector = vector.ubicacion.nombre
+        existeUbicacionPorNombre(nombreDeUbicacion)
+        //val ubicacionDestino = neo4jUbicacionDAO.recuperarUbicacionPorNombre(nombreDeUbicacion).get().nombre
+        //val caminosPosibles = neo4jUbicacionDAO.caminosPosiblesEntre(ubicacionDelVector, ubicacionDestino)
+        val caminosCompatibles = vector.tipo.caminosCompatibles()
+        val caminoMasCorto = neo4jUbicacionDAO.caminoMasCortoParaEntre(ubicacionDelVector, nombreDeUbicacion, caminosCompatibles)
+
+        caminoMasCorto.forEach { nombre ->
+            val ubicacionAMover = ubicacionDAO.recuperarUbicacionPorNombre(nombre)
+            vector.mover(ubicacionAMover)
+        }
+
+    }
+
+
 }
 

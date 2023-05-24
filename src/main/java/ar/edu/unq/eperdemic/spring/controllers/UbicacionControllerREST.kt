@@ -5,7 +5,6 @@ import ar.edu.unq.eperdemic.modelo.exceptions.NoExisteElid
 import ar.edu.unq.eperdemic.modelo.exceptions.NombreDeUbicacionRepetido
 import ar.edu.unq.eperdemic.services.UbicacionService
 import ar.edu.unq.eperdemic.spring.controllers.dto.UbicacionDTO
-import ar.edu.unq.eperdemic.spring.controllers.dto.VectorDTO
 import org.springframework.data.domain.PageRequest
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
