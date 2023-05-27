@@ -115,7 +115,6 @@ class UbicacionServiceImpl(): UbicacionService {
             throw NoExisteElNombreDeLaUbicacion("Ubicación no encontrada")
         }
     }
-
     //al final borrar lo que no se use
     private fun verificarCaminoValido(camino: String): String {
         val caminoUpper = camino.uppercase()
@@ -130,9 +129,6 @@ class UbicacionServiceImpl(): UbicacionService {
     private fun esTipoDeCaminoValido(camino: String): Boolean {
         return TipoDeVector.values().map { t -> t.caminosCompatibles() }.toList().flatten().contains(camino)
     }
-
-
-
     private fun intentarMover(vector: Vector, ubicacion: Ubicacion) {
         if (vector.ubicacion.id!! != ubicacion.id!!) {
             vector.mover(ubicacion)
@@ -143,23 +139,22 @@ class UbicacionServiceImpl(): UbicacionService {
             }
         }
     }
-
     override fun moverMasCorto(vectorId:Long, nombreDeUbicacion:String){
         val vector = vectorDAO.findByIdOrNull(vectorId)?: throw NoExisteElid("No existe el ID del vector")
         val ubicacionDelVector = vector.nombreDeUbicacionActual()
         existeUbicacionPorNombre(nombreDeUbicacion)
         val caminosCompatibles = vector.caminosCompatibles()
-        val caminoMasCorto = neo4jUbicacionDAO.caminoMasCortoEntre(caminosCompatibles, ubicacionDelVector, nombreDeUbicacion).get()
+        val caminoMasCorto = caminoMasCortoEntre(caminosCompatibles, ubicacionDelVector, nombreDeUbicacion)
 
         caminoMasCorto.forEach { ubicacion ->
-            val ubicacionAMover = ubicacionDAO.recuperarUbicacionPorNombre(ubicacion.nombre)
-            //mover(vectorId, ubicacion.idRelacional!!)
-            vector.mover(ubicacionAMover)
-            vectorDAO.save(vector)
+            //val ubicacionAMover = ubicacionDAO.recuperarUbicacionPorNombre(ubicacion.nombre)
+            mover(vectorId, ubicacion.idRelacional!!)
+            //vector.mover(ubicacionAMover)
+            //vectorDAO.save(vector)
         }
-
     }
-
-
+    private fun caminoMasCortoEntre(caminosCompatibles:List<String>, ubicacionDelVector: String, ubicacionDestino:String):List<UbicacionNeo4J> {
+        return neo4jUbicacionDAO.caminoMasCortoEntre(caminosCompatibles, ubicacionDelVector, ubicacionDestino).get().drop(1)
+    }
 }
 
