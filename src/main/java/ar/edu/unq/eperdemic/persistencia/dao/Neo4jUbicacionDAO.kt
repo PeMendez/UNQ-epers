@@ -43,12 +43,6 @@ interface Neo4jUbicacionDAO : Neo4jRepository<UbicacionNeo4J, Long?> {
             "MATCH caminosMasCortos = allShortestPaths((origen)-[CAMINO*]-(destino))" +
             "WHERE ALL(rel in relationships(caminosMasCortos) WHERE rel.tipoDeCamino IN \$caminosCompatibles) " +
             "RETURN caminosMasCortos")
-    fun caminosCompatibles(caminosCompatibles:List<String>,origenNombre:String,destinoNombre:String): Optional<List<UbicacionNeo4J>>
-    @Query("MATCH (origen:UbicacionNeo4J {nombre: ${'$'}origenNombre})" +
-            "MATCH (destino:UbicacionNeo4J {nombre: ${'$'}destinoNombre})" +
-            "MATCH caminosMasCortos = allShortestPaths((origen)-[CAMINO*]-(destino))" +
-            "WHERE ALL(rel in relationships(caminosMasCortos) WHERE rel.tipoDeCamino IN \$caminosCompatibles) " +
-            "RETURN caminosMasCortos")
     fun caminoMasCortoEntre(caminosCompatibles:List<String>,origenNombre:String,destinoNombre:String): Optional<List<UbicacionNeo4J>>
 
 

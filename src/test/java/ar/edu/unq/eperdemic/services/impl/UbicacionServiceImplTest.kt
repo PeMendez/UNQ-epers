@@ -631,54 +631,6 @@ class UbicacionServiceImplTest {
     }
 
     @Test
-    fun caminosCompatibles() {
-        dataService.eliminarTodo()
-
-        val ubicacion1 = ubicacionService.crearUbicacion("ubicacion1")
-        val ubicacion2 = ubicacionService.crearUbicacion("ubicacion2")
-        val ubicacion3 = ubicacionService.crearUbicacion("ubicacion3")
-        val ubicacion4 = ubicacionService.crearUbicacion("ubicacion4")
-        val ubicacion5 = ubicacionService.crearUbicacion("ubicacion5")
-        val ubicacion6 = ubicacionService.crearUbicacion("ubicacion6")
-
-        val vector = vectorService.crearVector(TipoDeVector.Animal,ubicacion1.id!!)
-
-        val ubicacionNeo1 = neo4jUbicacionDAO.findByIdRelacional(ubicacion1.id!!).get()
-        val ubicacionNeo2 = neo4jUbicacionDAO.findByIdRelacional(ubicacion2.id!!).get()
-        val ubicacionNeo3 = neo4jUbicacionDAO.findByIdRelacional(ubicacion3.id!!).get()
-        val ubicacionNeo4 = neo4jUbicacionDAO.findByIdRelacional(ubicacion4.id!!).get()
-        val ubicacionNeo5 = neo4jUbicacionDAO.findByIdRelacional(ubicacion5.id!!).get()
-        val ubicacionNeo6 = neo4jUbicacionDAO.findByIdRelacional(ubicacion6.id!!).get()
-
-        ubicacionService.conectarConQuery(ubicacionNeo1.nombre,ubicacionNeo2.nombre,"Terrestre")
-        ubicacionService.conectarConQuery(ubicacionNeo2.nombre,ubicacionNeo6.nombre,"Maritimo")
-        ubicacionService.conectarConQuery(ubicacionNeo2.nombre,ubicacionNeo3.nombre,"Terrestre")
-        ubicacionService.conectarConQuery(ubicacionNeo3.nombre,ubicacionNeo4.nombre,"Terrestre")
-        ubicacionService.conectarConQuery(ubicacionNeo4.nombre,ubicacionNeo5.nombre,"Terrestre")
-        ubicacionService.conectarConQuery(ubicacionNeo5.nombre,ubicacionNeo6.nombre,"Terrestre")
-
-        println(ubicacionService.caminosCompatibles(vector.caminosCompatibles(),ubicacion1.nombre,ubicacion6.nombre))
-
-        val caminos = ubicacionService.caminosCompatibles(vector.caminosCompatibles(),ubicacion1.nombre,ubicacion6.nombre)
-        caminos.forEach { c ->
-            println (c.nombre )
-        }
-        //val conectadosConUbicacion1 = ubicacionService.conectados("ubicacion1").map{u->u.nombre}.toList()
-        //val conectadosConUbicacion6 = ubicacionService.conectados("ubicacion6").map{u->u.nombre}.toList()
-
-        //Assertions.assertTrue(conectadosConUbicacion1.containsAll(
-        //setOf(ubicacionNeo3,ubicacionNeo5,ubicacionNeo6).map{u->u.nombre}.toList()))
-        //Assertions.assertTrue(conectadosConUbicacion6.containsAll(setOf(
-        //ubicacionNeo1,ubicacionNeo2,ubicacionNeo4).map{u->u.nombre}.toList()))
-        //Assertions.assertFalse(conectadosConUbicacion1.containsAll(
-        //setOf(ubicacionNeo2,ubicacionNeo4).map{u->u.nombre}.toList()))
-        //Assertions.assertFalse(conectadosConUbicacion6.containsAll(
-        //setOf(ubicacionNeo3,ubicacionNeo5).map{u->u.nombre}.toList()))
-
-
-    }
-
-    @Test
     fun unVectorSeMuevePorElCaminoMasCortoPosibleDeFormaCorrecta(){
         dataService.eliminarTodo()
         val ubicacion1 = ubicacionService.crearUbicacion("ubicacion1")
@@ -709,46 +661,6 @@ class UbicacionServiceImplTest {
         val vectorM = vectorService.recuperarVector(vector.id!!)
 
         Assertions.assertTrue(vectorM.ubicacion.nombre == "ubicacion6")
-    }
-
-    @Test
-    fun testNuevo(){
-        dataService.eliminarTodo()
-
-        val ubicacion1 = ubicacionService.crearUbicacion("ubicacion1")
-        val ubicacion2 = ubicacionService.crearUbicacion("ubicacion2")
-        val ubicacion3 = ubicacionService.crearUbicacion("ubicacion3")
-        val ubicacion4 = ubicacionService.crearUbicacion("ubicacion4")
-        val ubicacion5 = ubicacionService.crearUbicacion("ubicacion5")
-        val ubicacion6 = ubicacionService.crearUbicacion("ubicacion6")
-
-        val vector = vectorService.crearVector(TipoDeVector.Insecto,ubicacion1.id!!)
-
-        val ubicacionNeo1 = neo4jUbicacionDAO.findByIdRelacional(ubicacion1.id!!).get()
-        val ubicacionNeo2 = neo4jUbicacionDAO.findByIdRelacional(ubicacion2.id!!).get()
-        val ubicacionNeo3 = neo4jUbicacionDAO.findByIdRelacional(ubicacion3.id!!).get()
-        val ubicacionNeo4 = neo4jUbicacionDAO.findByIdRelacional(ubicacion4.id!!).get()
-        val ubicacionNeo5 = neo4jUbicacionDAO.findByIdRelacional(ubicacion5.id!!).get()
-        val ubicacionNeo6 = neo4jUbicacionDAO.findByIdRelacional(ubicacion6.id!!).get()
-
-        ubicacionService.conectarConQuery(ubicacionNeo1.nombre,ubicacionNeo2.nombre,"TERRESTRE")
-        ubicacionService.conectarConQuery(ubicacionNeo2.nombre,ubicacionNeo6.nombre,"MARITIMO")
-        ubicacionService.conectarConQuery(ubicacionNeo2.nombre,ubicacionNeo3.nombre,"TERRESTRE")
-        ubicacionService.conectarConQuery(ubicacionNeo3.nombre,ubicacionNeo4.nombre,"TERRESTRE")
-        ubicacionService.conectarConQuery(ubicacionNeo3.nombre,ubicacionNeo6.nombre,"AEREO")
-        ubicacionService.conectarConQuery(ubicacionNeo4.nombre,ubicacionNeo5.nombre,"TERRESTRE")
-        ubicacionService.conectarConQuery(ubicacionNeo5.nombre,ubicacionNeo6.nombre,"TERRESTRE")
-
-
-        println("-----------------------------------------------------------------------------")
-        //println(neo4jUbicacionDAO.buliano(ubicacionNeo1.nombre,ubicacionNeo2.nombre))
-        val caminos = ubicacionService.caminosCompatibles(vector.caminosCompatibles(),ubicacion1.nombre,ubicacion6.nombre)
-        caminos.forEach { c ->
-            println(c.nombre)
-        }
-        //println(paths)
-        println("-----------------------------------------------------------------------------")
-
     }
 
     //@AfterEach

@@ -131,9 +131,7 @@ class UbicacionServiceImpl(): UbicacionService {
         return TipoDeVector.values().map { t -> t.caminosCompatibles() }.toList().flatten().contains(camino)
     }
 
-    fun caminosCompatibles(caminosCompataibles: List<String>, ubicacionOrigen:String,  ubicacionDestino: String): List<UbicacionNeo4J>{
-        return neo4jUbicacionDAO.caminosCompatibles(caminosCompataibles, ubicacionOrigen, ubicacionDestino).get()
-    }
+
 
     private fun intentarMover(vector: Vector, ubicacion: Ubicacion) {
         if (vector.ubicacion.id!! != ubicacion.id!!) {
@@ -151,7 +149,6 @@ class UbicacionServiceImpl(): UbicacionService {
         val ubicacionDelVector = vector.nombreDeUbicacionActual()
         existeUbicacionPorNombre(nombreDeUbicacion)
         val caminosCompatibles = vector.caminosCompatibles()
-        //val caminoMasCorto = caminosCompatibles(caminosCompatibles, ubicacionDelVector, nombreDeUbicacion)
         val caminoMasCorto = neo4jUbicacionDAO.caminoMasCortoEntre(caminosCompatibles, ubicacionDelVector, nombreDeUbicacion).get()
 
         caminoMasCorto.forEach { ubicacion ->
