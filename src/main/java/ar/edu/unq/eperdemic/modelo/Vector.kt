@@ -94,6 +94,10 @@ class Vector(var tipo: TipoDeVector,
     fun caminosCompatibles(): List<String>{
         return tipo.caminosCompatibles()
     }
+
+    fun nombreDeUbicacionActual():String{
+        return this.ubicacion.nombre
+    }
 }
 
 enum class TipoDeVector {

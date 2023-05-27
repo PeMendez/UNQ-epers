@@ -148,7 +148,7 @@ class UbicacionServiceImpl(): UbicacionService {
 
     override fun moverMasCorto(vectorId:Long, nombreDeUbicacion:String){
         val vector = vectorDAO.findByIdOrNull(vectorId)?: throw NoExisteElid("No existe el ID del vector")
-        val ubicacionDelVector = vector.ubicacion.nombre
+        val ubicacionDelVector = vector.nombreDeUbicacionActual()
         existeUbicacionPorNombre(nombreDeUbicacion)
         val caminosCompatibles = vector.caminosCompatibles()
         //val caminoMasCorto = caminosCompatibles(caminosCompatibles, ubicacionDelVector, nombreDeUbicacion)
