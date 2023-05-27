@@ -40,25 +40,16 @@ interface Neo4jUbicacionDAO : Neo4jRepository<UbicacionNeo4J, Long?> {
 
     @Query("MATCH (origen:UbicacionNeo4J {nombre: ${'$'}origenNombre})" +
             "MATCH (destino:UbicacionNeo4J {nombre: ${'$'}destinoNombre})" +
-            "MATCH caminosMasCortos = allShortestPaths((origen)-[c:CAMINO]-(destino))" +
-            "WHERE ALL(rel in relationships(caminosMasCortos) WHERE rel.tipoDeCamino IN (UNWIND \$caminosCompatibles) " +
+            "MATCH caminosMasCortos = allShortestPaths((origen)-[CAMINO*]-(destino))" +
+            "WHERE ALL(rel in relationships(caminosMasCortos) WHERE rel.tipoDeCamino IN \$caminosCompatibles) " +
             "RETURN caminosMasCortos")
-    fun caminosCompatibles(caminosCompatibles:List<String>,origenNombre:String,destinoNombre:String): Optional<List<List<UbicacionNeo4J>>>
-
+    fun caminosCompatibles(caminosCompatibles:List<String>,origenNombre:String,destinoNombre:String): Optional<List<UbicacionNeo4J>>
     @Query("MATCH (origen:UbicacionNeo4J {nombre: ${'$'}origenNombre})" +
             "MATCH (destino:UbicacionNeo4J {nombre: ${'$'}destinoNombre})" +
             "MATCH caminosMasCortos = allShortestPaths((origen)-[CAMINO*]-(destino))" +
             "WHERE ALL(rel in relationships(caminosMasCortos) WHERE rel.tipoDeCamino IN \$caminosCompatibles) " +
             "RETURN caminosMasCortos")
-    fun caminoMasCortoParaEntre(caminosCompatibles:List<String>,origenNombre:String,destinoNombre:String): Optional<List<UbicacionNeo4J>>
+    fun caminoMasCortoEntre(caminosCompatibles:List<String>,origenNombre:String,destinoNombre:String): Optional<List<UbicacionNeo4J>>
 
-    @Query("MATCH (origen:UbicacionNeo4J {nombreUbicacion: ${'$'}ubicacionOrigen})," +
-           "MATCH (destino:UbicacionNeo4J {nombreUbicacion: ${'$'}ubicacionDestino}), " +
-           //"MATCH (origen)-[r]->(destino) WHERE type(r) IN \$caminosCompatibles RETURN r")
-            "path = shortestpath((origen)-[:${'$'}caminosCompatibles}*]->(destino)) " +
-            "RETURN [x in nodes(path) | x];")
-    fun caminoMasCortoParaEntre(ubicacionOrigen: String,
-                                ubicacionDestino: String,
-                                caminosCompatibles: String) : List<String>
 
 }
