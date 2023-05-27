@@ -82,7 +82,7 @@ class UbicacionServiceImpl(): UbicacionService {
         return ubicacionDAO.recuperarVectores(ubicacionId)
     }
 
-    fun conectarConQuery(ubicacionOrigen: String, ubicacionDestino:String, tipoDeCamino:String){
+    fun conectar(ubicacionOrigen: String, ubicacionDestino:String, tipoDeCamino:String){
         existeUbicacionPorNombre(ubicacionOrigen)
         existeUbicacionPorNombre(ubicacionDestino)
         esTipoDeCaminoValido(tipoDeCamino)
