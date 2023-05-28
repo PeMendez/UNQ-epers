@@ -98,6 +98,10 @@ class Vector(var tipo: TipoDeVector,
     fun nombreDeUbicacionActual():String{
         return this.ubicacion.nombre
     }
+
+    fun puedeMoversePorCamino(tipoCamino: String): Boolean{
+        return tipo.puedeMoverseACamino(tipoCamino)
+    }
 }
 
 enum class TipoDeVector {
