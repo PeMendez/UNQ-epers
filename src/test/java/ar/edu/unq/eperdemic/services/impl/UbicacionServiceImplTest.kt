@@ -2,6 +2,7 @@ package ar.edu.unq.eperdemic.services.impl
 
 import ar.edu.unq.eperdemic.modelo.Patogeno
 import ar.edu.unq.eperdemic.modelo.TipoDeVector
+import ar.edu.unq.eperdemic.modelo.Ubicacion
 import ar.edu.unq.eperdemic.modelo.exceptions.*
 import ar.edu.unq.eperdemic.persistencia.dao.Neo4jUbicacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.UbicacionDAO
@@ -122,12 +123,14 @@ class UbicacionServiceImplTest {
 
     @Test
     fun seRecuperanLosVectoresDeUnaUbicacionCorrectamente() {
+        dataService.eliminarTodo()
         val ubicacionCreada1 = ubicacionService.crearUbicacion("testVectores1")
         val ubicacionCreada2 = ubicacionService.crearUbicacion("testVectores2")
         val vectorCreado = vectorService.crearVector(TipoDeVector.Persona, ubicacionCreada2.id!!)
 
         Assertions.assertTrue(ubicacionService.recuperarVectores(ubicacionCreada1.id!!).isEmpty())
 
+        ubicacionService.conectarConQuery(ubicacionCreada2.nombre, ubicacionCreada1.nombre, "Terrestre")
         ubicacionService.mover(vectorCreado.id!!, ubicacionCreada1.id!!)
 
         Assertions.assertTrue(ubicacionService.recuperarVectores(ubicacionCreada1.id!!).size == 1)
@@ -198,6 +201,7 @@ class UbicacionServiceImplTest {
 
     @Test
     fun siUnVectorYaSeEncuentraEnUnaUbicacionEntoncesAlMoverNoSeHaceNada() {
+        dataService.eliminarTodo()
         val ubicacionCreada1 = ubicacionService.crearUbicacion("nombre1")
         val vectorCreado1 = vectorService.crearVector(TipoDeVector.Persona, ubicacionCreada1.id!!)
         val vectorCreado2 = vectorService.crearVector(TipoDeVector.Persona, ubicacionCreada1.id!!)
@@ -205,6 +209,7 @@ class UbicacionServiceImplTest {
         val patogeno = Patogeno("testEspecie")
         val patogenoCreado = patogenoService.crearPatogeno(patogeno)
         val ubicacionCreada2 = ubicacionService.crearUbicacion("ubicacionTestEspecie")
+        ubicacionService.conectarConQuery(ubicacionCreada1.nombre, ubicacionCreada1.nombre, "Terrestre")
         vectorService.crearVector(TipoDeVector.Persona, ubicacionCreada2.id!!)
         val especieCreada =
             patogenoService.agregarEspecie(patogenoCreado.id!!, "cualquierNombre", ubicacionCreada2.id!!)
@@ -214,6 +219,7 @@ class UbicacionServiceImplTest {
         Assertions.assertTrue(vectorCreado1.estaSano())
         Assertions.assertFalse(vectorCreado2.estaSano())
         Assertions.assertEquals(ubicacionService.recuperarVectores(ubicacionCreada1.id!!).size, 2)
+
 
         ubicacionService.mover(vectorCreado2.id!!, ubicacionCreada1.id!!)
 
@@ -228,11 +234,14 @@ class UbicacionServiceImplTest {
 
     @Test
     fun seMueveUnVectorAUnaUbicacionCorrectamente() {
+        dataService.eliminarTodo()
         val ubicacionCreada1 = ubicacionService.crearUbicacion("testMover1")
         val ubicacionCreada2 = ubicacionService.crearUbicacion("testMover2")
         val vectorCreado = vectorService.crearVector(TipoDeVector.Persona, ubicacionCreada1.id!!)
 
         Assertions.assertTrue(vectorCreado.ubicacion.id != ubicacionCreada2.id)
+
+        ubicacionService.conectarConQuery(ubicacionCreada1.nombre, ubicacionCreada2.nombre, "Terrestre")
 
         ubicacionService.mover(vectorCreado.id!!, ubicacionCreada2.id!!)
 
@@ -245,10 +254,12 @@ class UbicacionServiceImplTest {
 
     @Test
     fun alMoverUnVectorInfectadoAUnaUbicacionEntoncesSeInfectaUnVectorAlAzar() {
+        dataService.eliminarTodo()
         val ubicacionCreada1 = ubicacionService.crearUbicacion("testMoverInfectar1")
         val ubicacionCreada2 = ubicacionService.crearUbicacion("testMoverInfectar2")
         val vectorCreado1 = vectorService.crearVector(TipoDeVector.Persona, ubicacionCreada1.id!!)
         val vectorCreado2 = vectorService.crearVector(TipoDeVector.Persona, ubicacionCreada2.id!!)
+        ubicacionService.conectarConQuery(ubicacionCreada2.nombre, ubicacionCreada1.nombre, "Terrestre")
 
         val patogeno = Patogeno("testEspecie")
         val patogenoCreado = patogenoService.crearPatogeno(patogeno)
@@ -274,6 +285,8 @@ class UbicacionServiceImplTest {
 
     @Test
     fun alMoverUnVectorNoInfectadoAUnaUbicacionEntoncesNoSeHaceNada() {
+        dataService.eliminarTodo()
+
         val ubicacionCreada1 = ubicacionService.crearUbicacion("testMover")
         val ubicacionCreada2 = ubicacionService.crearUbicacion("testMover2")
         val vectorNoInfectado1 = vectorService.crearVector(TipoDeVector.Persona, ubicacionCreada2.id!!)
@@ -283,6 +296,7 @@ class UbicacionServiceImplTest {
         Assertions.assertTrue(vectorNoInfectado1.estaSano())
         Assertions.assertTrue(vectorNoInfectado2.tipo.puedeSerInfectado(vectorNoInfectado1.tipo))
 
+        ubicacionService.conectarConQuery(ubicacionCreada2.nombre, ubicacionCreada1.nombre, "Terrestre")
         ubicacionService.mover(vectorNoInfectado1.id!!, ubicacionCreada1.id!!)
 
         val vectorNoInfectado2Actualizado = vectorService.recuperarVector(vectorNoInfectado2.id!!)
@@ -325,6 +339,7 @@ class UbicacionServiceImplTest {
 
     @Test
     fun alIntentarExpandirEnUnaUbicacionConUnVectorContagiadoYOtrosSanosQuePuedenSerInfectadosSeContagian() {
+        dataService.eliminarTodo()
         val ubicacionCreada = ubicacionService.crearUbicacion("testExpandir")
         val vectorCreado1 = vectorService.crearVector(TipoDeVector.Persona, ubicacionCreada.id!!)
         val vectorCreado2 = vectorService.crearVector(TipoDeVector.Persona, ubicacionCreada.id!!)
@@ -358,6 +373,7 @@ class UbicacionServiceImplTest {
 
     @Test
     fun alIntentarExpandirEnUnaUbicacionConVectoresSanosEntoncesNoHaceNada() {
+        dataService.eliminarTodo()
         val ubicacionCreada = ubicacionService.crearUbicacion("testExpandir")
         val vectorCreado1 = vectorService.crearVector(TipoDeVector.Persona, ubicacionCreada.id!!)
         val vectorCreado2 = vectorService.crearVector(TipoDeVector.Persona, ubicacionCreada.id!!)
@@ -432,7 +448,7 @@ class UbicacionServiceImplTest {
         dataService.eliminarTodo()
 
         Assertions.assertThrows(NoExisteElNombreDeLaUbicacion::class.java) {
-            ubicacionService.conectar("nombreNoExistente", "nombreNoExistente2", "Terrestre")
+            ubicacionService.conectarConQuery("nombreNoExistente", "nombreNoExistente2", "Terrestre")
         }
     }
 
@@ -664,6 +680,7 @@ class UbicacionServiceImplTest {
     @Test
     fun unVectorSeMuevePorElCaminoMasCortoPosibleDeFormaCorrectaYMientrasSeMueveContagiaEnTodasLasUbicacionesPorLasQuePasa(){
         dataService.eliminarTodo()
+
         val ubicacion1 = ubicacionService.crearUbicacion("ubicacion1")
         val ubicacion2 = ubicacionService.crearUbicacion("ubicacion2")
         val ubicacion3 = ubicacionService.crearUbicacion("ubicacion3")
