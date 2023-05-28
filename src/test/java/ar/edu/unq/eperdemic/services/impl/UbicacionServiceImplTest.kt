@@ -661,7 +661,55 @@ class UbicacionServiceImplTest {
         Assertions.assertTrue(vectorM.ubicacion.nombre == "ubicacion6")
     }
 
-    //@AfterEach
+    @Test
+    fun unVectorSeMuevePorElCaminoMasCortoPosibleDeFormaCorrectaYMientrasSeMueveContagiaEnTodasLasUbicacionesPorLasQuePasa(){
+        dataService.eliminarTodo()
+        val ubicacion1 = ubicacionService.crearUbicacion("ubicacion1")
+        val ubicacion2 = ubicacionService.crearUbicacion("ubicacion2")
+        val ubicacion3 = ubicacionService.crearUbicacion("ubicacion3")
+        val ubicacion4 = ubicacionService.crearUbicacion("ubicacion4")
+        val ubicacion5 = ubicacionService.crearUbicacion("ubicacion5")
+        val ubicacion6 = ubicacionService.crearUbicacion("ubicacion6")
+
+        val crookshanks = vectorService.crearVector(TipoDeVector.Animal,ubicacion1.id!!)
+        val scabbers = vectorService.crearVector(TipoDeVector.Insecto, ubicacion2.id!!)
+        val hedwig = vectorService.crearVector(TipoDeVector.Insecto, ubicacion6.id!!)
+        val patogeno = Patogeno("Cruciartus")
+        val patogenoP = patogenoService.crearPatogeno(patogeno)
+        val especie = patogenoService.agregarEspecie(patogenoP.id!!, "Imperius", ubicacion1.id!!)
+
+        val crookshanksE = vectorService.recuperarVector(crookshanks.id!!)
+
+        Assertions.assertFalse(crookshanksE.estaSano())
+        Assertions.assertTrue(scabbers.estaSano())
+        Assertions.assertTrue(hedwig.estaSano())
+
+        val ubicacionNeo1 = neo4jUbicacionDAO.findByIdRelacional(ubicacion1.id!!).get()
+        val ubicacionNeo2 = neo4jUbicacionDAO.findByIdRelacional(ubicacion2.id!!).get()
+        val ubicacionNeo3 = neo4jUbicacionDAO.findByIdRelacional(ubicacion3.id!!).get()
+        val ubicacionNeo4 = neo4jUbicacionDAO.findByIdRelacional(ubicacion4.id!!).get()
+        val ubicacionNeo5 = neo4jUbicacionDAO.findByIdRelacional(ubicacion5.id!!).get()
+        val ubicacionNeo6 = neo4jUbicacionDAO.findByIdRelacional(ubicacion6.id!!).get()
+
+        ubicacionService.conectar(ubicacionNeo1.nombre,ubicacionNeo2.nombre,"TERRESTRE")
+        ubicacionService.conectar(ubicacionNeo2.nombre,ubicacionNeo6.nombre,"MARITIMO")
+        ubicacionService.conectar(ubicacionNeo2.nombre,ubicacionNeo3.nombre,"TERRESTRE")
+        ubicacionService.conectar(ubicacionNeo3.nombre,ubicacionNeo4.nombre,"TERRESTRE")
+        ubicacionService.conectar(ubicacionNeo4.nombre,ubicacionNeo5.nombre,"TERRESTRE")
+        ubicacionService.conectar(ubicacionNeo5.nombre,ubicacionNeo6.nombre,"TERRESTRE")
+
+        ubicacionService.moverMasCorto(crookshanks.id!!, "ubicacion6")
+
+        val crookshanksM = vectorService.recuperarVector(crookshanks.id!!)
+        val scabbersE = vectorService.recuperarVector(scabbers.id!!)
+        val hedwigE = vectorService.recuperarVector(hedwig.id!!)
+
+        Assertions.assertFalse(scabbersE.estaSano())
+        Assertions.assertTrue(crookshanksM.nombreDeUbicacionActual() == "ubicacion6")
+        Assertions.assertFalse(hedwigE.estaSano())
+    }
+
+    @AfterEach
     fun clearAll() {
         dataService.eliminarTodo()
     }
