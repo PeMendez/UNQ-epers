@@ -1,6 +1,7 @@
 package ar.edu.unq.eperdemic.services.impl
 
 import ar.edu.unq.eperdemic.modelo.Patogeno
+import ar.edu.unq.eperdemic.modelo.Random
 import ar.edu.unq.eperdemic.modelo.TipoDeVector
 import ar.edu.unq.eperdemic.modelo.Ubicacion
 import ar.edu.unq.eperdemic.modelo.exceptions.*
@@ -38,9 +39,10 @@ class UbicacionServiceImplTest {
     private lateinit var neo4jUbicacionDAO: Neo4jUbicacionDAO
 
 
-    //@BeforeEach
+    @BeforeEach
     fun setUp() {
         dataService.crearSetDeDatosIniciales()
+        Random.switchModo(false)
     }
 
     @Test

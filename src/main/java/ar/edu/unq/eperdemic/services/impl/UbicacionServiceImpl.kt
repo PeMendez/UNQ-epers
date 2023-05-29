@@ -69,14 +69,14 @@ class UbicacionServiceImpl: UbicacionService {
     fun conectar(ubicacionOrigen: String, ubicacionDestino:String, tipoDeCamino:String){
         existeUbicacionPorNombre(ubicacionOrigen)
         existeUbicacionPorNombre(ubicacionDestino)
-        esTipoDeCaminoValido(tipoDeCamino)
+        val caminoVerificado = esTipoDeCaminoValido(tipoDeCamino)
         val ubiOrigen = neo4jUbicacionDAO.recuperarUbicacionPorNombre(ubicacionOrigen).get()
         val ubiDestino = neo4jUbicacionDAO.recuperarUbicacionPorNombre(ubicacionDestino).get()
 
         //comento porque no anduvo////////////////////////////////////////////////////////////
         //ubiOrigen.ubicaciones.add(ubiDestino)
         //neo4jUbicacionDAO.save(ubiOrigen)
-        neo4jUbicacionDAO.conectar(ubiOrigen.idRelacional!!,ubiDestino.idRelacional!!, tipoDeCamino)
+        neo4jUbicacionDAO.conectar(ubiOrigen.idRelacional!!,ubiDestino.idRelacional!!, caminoVerificado)
     }
 
     fun hayConexionDirecta(ubicacionOrigen: String, ubicacionDestino:String): Boolean{
@@ -99,8 +99,17 @@ class UbicacionServiceImpl: UbicacionService {
             throw NoExisteElNombreDeLaUbicacion("Ubicación no encontrada")
         }
     }
-    private fun esTipoDeCaminoValido(camino: String): Boolean {
-        return TipoDeVector.values().map { t -> t.caminosCompatibles() }.toList().flatten().contains(camino)
+    //private fun esTipoDeCaminoValido(camino: String): Boolean {
+    //    return TipoDeVector.values().map { t -> t.caminosCompatibles() }.toList().flatten().contains(camino)
+    //}
+
+    private fun esTipoDeCaminoValido(camino: String): String {
+        val caminoAVerificar = camino.uppercase()
+        if (TipoDeVector.values().flatMap { t -> t.caminosCompatibles() }.contains(caminoAVerificar)) {
+            return caminoAVerificar
+        } else {
+            throw TipoDeCaminoInvalido("El tipo de camino '$camino' no es válido.")
+        }
     }
 
     override fun mover(vectorId: Long, ubicacionid: Long) {
