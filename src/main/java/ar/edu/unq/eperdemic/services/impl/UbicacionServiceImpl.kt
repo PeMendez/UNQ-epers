@@ -66,7 +66,7 @@ class UbicacionServiceImpl: UbicacionService {
         return ubicacionDAO.recuperarVectores(ubicacionId)
     }
 
-    fun conectar(ubicacionOrigen: String, ubicacionDestino:String, tipoDeCamino:String){
+    override fun conectar(ubicacionOrigen: String, ubicacionDestino:String, tipoDeCamino:String){
         existeUbicacionPorNombre(ubicacionOrigen)
         existeUbicacionPorNombre(ubicacionDestino)
         val caminoVerificado = esTipoDeCaminoValido(tipoDeCamino)
@@ -88,7 +88,7 @@ class UbicacionServiceImpl: UbicacionService {
         return neo4jUbicacionDAO.hayConexionDirecta(ubiOrigen.idRelacional!!,ubiDestino.idRelacional!!)
     }
 
-    fun conectados(ubicacionOrigen:String):List<UbicacionNeo4J>{
+    override fun conectados(ubicacionOrigen:String):List<UbicacionNeo4J>{
         existeUbicacionPorNombre(ubicacionOrigen)
         return neo4jUbicacionDAO.conectados(ubicacionOrigen)
     }
