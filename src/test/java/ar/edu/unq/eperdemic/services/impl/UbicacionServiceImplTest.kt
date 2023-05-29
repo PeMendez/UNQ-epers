@@ -1,7 +1,9 @@
 package ar.edu.unq.eperdemic.services.impl
 
 import ar.edu.unq.eperdemic.modelo.Patogeno
+import ar.edu.unq.eperdemic.modelo.Random
 import ar.edu.unq.eperdemic.modelo.TipoDeVector
+import ar.edu.unq.eperdemic.modelo.Ubicacion
 import ar.edu.unq.eperdemic.modelo.exceptions.*
 import ar.edu.unq.eperdemic.persistencia.dao.Neo4jUbicacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.UbicacionDAO
@@ -37,9 +39,10 @@ class UbicacionServiceImplTest {
     private lateinit var neo4jUbicacionDAO: Neo4jUbicacionDAO
 
 
-    //@BeforeEach
+    @BeforeEach
     fun setUp() {
         dataService.crearSetDeDatosIniciales()
+        Random.switchModo(false)
     }
 
     @Test
@@ -129,7 +132,7 @@ class UbicacionServiceImplTest {
 
         Assertions.assertTrue(ubicacionService.recuperarVectores(ubicacionCreada1.id!!).isEmpty())
 
-        ubicacionService.conectarConQuery(ubicacionCreada2.nombre, ubicacionCreada1.nombre, "Terrestre")
+        ubicacionService.conectar(ubicacionCreada2.nombre, ubicacionCreada1.nombre, "Terrestre")
         ubicacionService.mover(vectorCreado.id!!, ubicacionCreada1.id!!)
 
         Assertions.assertTrue(ubicacionService.recuperarVectores(ubicacionCreada1.id!!).size == 1)
@@ -208,7 +211,7 @@ class UbicacionServiceImplTest {
         val patogeno = Patogeno("testEspecie")
         val patogenoCreado = patogenoService.crearPatogeno(patogeno)
         val ubicacionCreada2 = ubicacionService.crearUbicacion("ubicacionTestEspecie")
-        ubicacionService.conectarConQuery(ubicacionCreada1.nombre, ubicacionCreada1.nombre, "Terrestre")
+        ubicacionService.conectar(ubicacionCreada1.nombre, ubicacionCreada1.nombre, "Terrestre")
         vectorService.crearVector(TipoDeVector.Persona, ubicacionCreada2.id!!)
         val especieCreada =
             patogenoService.agregarEspecie(patogenoCreado.id!!, "cualquierNombre", ubicacionCreada2.id!!)
@@ -240,7 +243,7 @@ class UbicacionServiceImplTest {
 
         Assertions.assertTrue(vectorCreado.ubicacion.id != ubicacionCreada2.id)
 
-        ubicacionService.conectarConQuery(ubicacionCreada1.nombre, ubicacionCreada2.nombre, "Terrestre")
+        ubicacionService.conectar(ubicacionCreada1.nombre, ubicacionCreada2.nombre, "Terrestre")
 
         ubicacionService.mover(vectorCreado.id!!, ubicacionCreada2.id!!)
 
@@ -258,7 +261,7 @@ class UbicacionServiceImplTest {
         val ubicacionCreada2 = ubicacionService.crearUbicacion("testMoverInfectar2")
         val vectorCreado1 = vectorService.crearVector(TipoDeVector.Persona, ubicacionCreada1.id!!)
         val vectorCreado2 = vectorService.crearVector(TipoDeVector.Persona, ubicacionCreada2.id!!)
-        ubicacionService.conectarConQuery(ubicacionCreada2.nombre, ubicacionCreada1.nombre, "Terrestre")
+        ubicacionService.conectar(ubicacionCreada2.nombre, ubicacionCreada1.nombre, "Terrestre")
 
         val patogeno = Patogeno("testEspecie")
         val patogenoCreado = patogenoService.crearPatogeno(patogeno)
@@ -295,7 +298,7 @@ class UbicacionServiceImplTest {
         Assertions.assertTrue(vectorNoInfectado1.estaSano())
         Assertions.assertTrue(vectorNoInfectado2.tipo.puedeSerInfectado(vectorNoInfectado1.tipo))
 
-        ubicacionService.conectarConQuery(ubicacionCreada2.nombre, ubicacionCreada1.nombre, "Terrestre")
+        ubicacionService.conectar(ubicacionCreada2.nombre, ubicacionCreada1.nombre, "Terrestre")
         ubicacionService.mover(vectorNoInfectado1.id!!, ubicacionCreada1.id!!)
 
         val vectorNoInfectado2Actualizado = vectorService.recuperarVector(vectorNoInfectado2.id!!)
@@ -447,7 +450,7 @@ class UbicacionServiceImplTest {
         dataService.eliminarTodo()
 
         Assertions.assertThrows(NoExisteElNombreDeLaUbicacion::class.java) {
-            ubicacionService.conectarConQuery("nombreNoExistente", "nombreNoExistente2", "Terrestre")
+            ubicacionService.conectar("nombreNoExistente", "nombreNoExistente2", "Terrestre")
         }
     }
 
@@ -479,16 +482,16 @@ class UbicacionServiceImplTest {
         val ubicacionNeo2 = neo4jUbicacionDAO.findByIdRelacional(ubicacion2.id!!).get()
 
         Assertions.assertThrows(TipoDeCaminoInvalido::class.java) {
-            ubicacionService.conectarConQuery(ubicacionNeo1.nombre, ubicacionNeo2.nombre, "123")
+            ubicacionService.conectar(ubicacionNeo1.nombre, ubicacionNeo2.nombre, "123")
         }
         Assertions.assertThrows(TipoDeCaminoInvalido::class.java) {
-            ubicacionService.conectarConQuery(ubicacionNeo1.nombre, ubicacionNeo2.nombre, "Tierra")
+            ubicacionService.conectar(ubicacionNeo1.nombre, ubicacionNeo2.nombre, "Tierra")
         }
         Assertions.assertThrows(TipoDeCaminoInvalido::class.java) {
-            ubicacionService.conectarConQuery(ubicacionNeo1.nombre, ubicacionNeo2.nombre, "@Terrestre")
+            ubicacionService.conectar(ubicacionNeo1.nombre, ubicacionNeo2.nombre, "@Terrestre")
         }
         Assertions.assertThrows(TipoDeCaminoInvalido::class.java) {
-            ubicacionService.conectarConQuery(ubicacionNeo1.nombre, ubicacionNeo2.nombre, "Maritimo1")
+            ubicacionService.conectar(ubicacionNeo1.nombre, ubicacionNeo2.nombre, "Maritimo1")
         }
     }
 
@@ -501,7 +504,7 @@ class UbicacionServiceImplTest {
         val ubicacionNeo1 = neo4jUbicacionDAO.findByIdRelacional(ubicacion1.id!!).get()
         val ubicacionNeo2 = neo4jUbicacionDAO.findByIdRelacional(ubicacion2.id!!).get()
 
-        ubicacionService.conectarConQuery(ubicacionNeo1.nombre,ubicacionNeo2.nombre,"Terrestre")
+        ubicacionService.conectar(ubicacionNeo1.nombre,ubicacionNeo2.nombre,"Terrestre")
 
         Assertions.assertTrue(ubicacionService.hayConexionDirecta(ubicacionNeo1.nombre,ubicacionNeo2.nombre))
     }
@@ -517,8 +520,8 @@ class UbicacionServiceImplTest {
         val ubicacionNeo2 = neo4jUbicacionDAO.findByIdRelacional(ubicacion2.id!!).get()
         val ubicacionNeo3 = neo4jUbicacionDAO.findByIdRelacional(ubicacion3.id!!).get()
 
-        ubicacionService.conectarConQuery(ubicacionNeo1.nombre,ubicacionNeo2.nombre,"Terrestre")
-        ubicacionService.conectarConQuery(ubicacionNeo2.nombre,ubicacionNeo3.nombre,"Terrestre")
+        ubicacionService.conectar(ubicacionNeo1.nombre,ubicacionNeo2.nombre,"Terrestre")
+        ubicacionService.conectar(ubicacionNeo2.nombre,ubicacionNeo3.nombre,"Terrestre")
 
         Assertions.assertTrue(ubicacionService.hayConexionDirecta(ubicacionNeo1.nombre,ubicacionNeo2.nombre))
         Assertions.assertTrue(ubicacionService.hayConexionDirecta(ubicacionNeo2.nombre,ubicacionNeo3.nombre))
@@ -536,7 +539,7 @@ class UbicacionServiceImplTest {
 
         Assertions.assertFalse(ubicacionService.hayConexionDirecta(ubicacionNeo1.nombre,ubicacionNeo2.nombre))
 
-        ubicacionService.conectarConQuery(ubicacionNeo1.nombre,ubicacionNeo2.nombre,"Terrestre")
+        ubicacionService.conectar(ubicacionNeo1.nombre,ubicacionNeo2.nombre,"Terrestre")
 
         Assertions.assertTrue(ubicacionService.hayConexionDirecta(ubicacionNeo1.nombre,ubicacionNeo2.nombre))
     }
@@ -552,8 +555,8 @@ class UbicacionServiceImplTest {
         val ubicacionNeo2 = neo4jUbicacionDAO.findByIdRelacional(ubicacion2.id!!).get()
         val ubicacionNeo3 = neo4jUbicacionDAO.findByIdRelacional(ubicacion3.id!!).get()
 
-        ubicacionService.conectarConQuery(ubicacionNeo1.nombre,ubicacionNeo3.nombre,"Terrestre")
-        ubicacionService.conectarConQuery(ubicacionNeo1.nombre,ubicacionNeo2.nombre,"Terrestre")
+        ubicacionService.conectar(ubicacionNeo1.nombre,ubicacionNeo3.nombre,"Terrestre")
+        ubicacionService.conectar(ubicacionNeo1.nombre,ubicacionNeo2.nombre,"Terrestre")
 
         val conectadosConUbicacion1 = ubicacionService.conectados(ubicacionNeo1.nombre)
 
@@ -573,8 +576,8 @@ class UbicacionServiceImplTest {
         val ubicacionNeo2 = neo4jUbicacionDAO.findByIdRelacional(ubicacion2.id!!).get()
         val ubicacionNeo3 = neo4jUbicacionDAO.findByIdRelacional(ubicacion3.id!!).get()
 
-        ubicacionService.conectarConQuery(ubicacionNeo1.nombre,ubicacionNeo2.nombre,"Terrestre")
-        ubicacionService.conectarConQuery(ubicacionNeo2.nombre,ubicacionNeo3.nombre,"Terrestre")
+        ubicacionService.conectar(ubicacionNeo1.nombre,ubicacionNeo2.nombre,"Terrestre")
+        ubicacionService.conectar(ubicacionNeo2.nombre,ubicacionNeo3.nombre,"Terrestre")
 
         val conectadosConUbicacion1 = ubicacionService.conectados(ubicacionNeo1.nombre)
 
@@ -603,7 +606,7 @@ class UbicacionServiceImplTest {
         val ubicacionNeo1 = neo4jUbicacionDAO.findByIdRelacional(ubicacionCreada1.id!!).get()
         val ubicacionNeo2 = neo4jUbicacionDAO.findByIdRelacional(ubicacionCreada2.id!!).get()
 
-        ubicacionService.conectarConQuery(ubicacionNeo1.nombre, ubicacionNeo2.nombre,"terrestre")
+        ubicacionService.conectar(ubicacionNeo1.nombre, ubicacionNeo2.nombre,"terrestre")
 
         Assertions.assertTrue(ubicacionService.hayConexionDirecta(ubicacionNeo1.nombre, ubicacionNeo2.nombre))
         Assertions.assertFalse(ubicacionService.hayConexionDirecta(ubicacionNeo2.nombre, ubicacionNeo1.nombre))
@@ -619,7 +622,7 @@ class UbicacionServiceImplTest {
         val ubicacionNeo1 = neo4jUbicacionDAO.findByIdRelacional(ubicacionCreada1.id!!).get()
         val ubicacionNeo2 = neo4jUbicacionDAO.findByIdRelacional(ubicacionCreada2.id!!).get()
 
-        ubicacionService.conectarConQuery(ubicacionNeo1.nombre, ubicacionNeo2.nombre,"Maritimo")
+        ubicacionService.conectar(ubicacionNeo1.nombre, ubicacionNeo2.nombre,"Maritimo")
 
         Assertions.assertThrows(UbicacionNoAlcanzable ::class.java ){
             ubicacionService.mover(vectorCreado1.id!!, ubicacionCreada2.id!!)
@@ -636,13 +639,94 @@ class UbicacionServiceImplTest {
         val ubicacionNeo1 = neo4jUbicacionDAO.findByIdRelacional(ubicacionCreada1.id!!).get()
         val ubicacionNeo2 = neo4jUbicacionDAO.findByIdRelacional(ubicacionCreada2.id!!).get()
 
-        ubicacionService.conectarConQuery(ubicacionNeo1.nombre, ubicacionNeo2.nombre,"Aereo")
+        ubicacionService.conectar(ubicacionNeo1.nombre, ubicacionNeo2.nombre,"Aereo")
 
         Assertions.assertThrows(UbicacionNoAlcanzable ::class.java ){
             ubicacionService.mover(vectorCreado1.id!!, ubicacionCreada2.id!!)
         }
     }
 
+    @Test
+    fun unVectorSeMuevePorElCaminoMasCortoPosibleDeFormaCorrecta(){
+        dataService.eliminarTodo()
+        val ubicacion1 = ubicacionService.crearUbicacion("ubicacion1")
+        val ubicacion2 = ubicacionService.crearUbicacion("ubicacion2")
+        val ubicacion3 = ubicacionService.crearUbicacion("ubicacion3")
+        val ubicacion4 = ubicacionService.crearUbicacion("ubicacion4")
+        val ubicacion5 = ubicacionService.crearUbicacion("ubicacion5")
+        val ubicacion6 = ubicacionService.crearUbicacion("ubicacion6")
+
+        val vector = vectorService.crearVector(TipoDeVector.Animal,ubicacion1.id!!)
+
+        val ubicacionNeo1 = neo4jUbicacionDAO.findByIdRelacional(ubicacion1.id!!).get()
+        val ubicacionNeo2 = neo4jUbicacionDAO.findByIdRelacional(ubicacion2.id!!).get()
+        val ubicacionNeo3 = neo4jUbicacionDAO.findByIdRelacional(ubicacion3.id!!).get()
+        val ubicacionNeo4 = neo4jUbicacionDAO.findByIdRelacional(ubicacion4.id!!).get()
+        val ubicacionNeo5 = neo4jUbicacionDAO.findByIdRelacional(ubicacion5.id!!).get()
+        val ubicacionNeo6 = neo4jUbicacionDAO.findByIdRelacional(ubicacion6.id!!).get()
+
+        ubicacionService.conectar(ubicacionNeo1.nombre,ubicacionNeo2.nombre,"TERRESTRE")
+        ubicacionService.conectar(ubicacionNeo2.nombre,ubicacionNeo6.nombre,"MARITIMO")
+        ubicacionService.conectar(ubicacionNeo2.nombre,ubicacionNeo3.nombre,"TERRESTRE")
+        ubicacionService.conectar(ubicacionNeo3.nombre,ubicacionNeo4.nombre,"TERRESTRE")
+        ubicacionService.conectar(ubicacionNeo4.nombre,ubicacionNeo5.nombre,"TERRESTRE")
+        ubicacionService.conectar(ubicacionNeo5.nombre,ubicacionNeo6.nombre,"TERRESTRE")
+
+        ubicacionService.moverMasCorto(vector.id!!, "ubicacion6")
+
+        val vectorM = vectorService.recuperarVector(vector.id!!)
+
+        Assertions.assertTrue(vectorM.ubicacion.nombre == "ubicacion6")
+    }
+
+    @Test
+    fun unVectorSeMuevePorElCaminoMasCortoPosibleDeFormaCorrectaYMientrasSeMueveContagiaEnTodasLasUbicacionesPorLasQuePasa(){
+        dataService.eliminarTodo()
+
+        val ubicacion1 = ubicacionService.crearUbicacion("ubicacion1")
+        val ubicacion2 = ubicacionService.crearUbicacion("ubicacion2")
+        val ubicacion3 = ubicacionService.crearUbicacion("ubicacion3")
+        val ubicacion4 = ubicacionService.crearUbicacion("ubicacion4")
+        val ubicacion5 = ubicacionService.crearUbicacion("ubicacion5")
+        val ubicacion6 = ubicacionService.crearUbicacion("ubicacion6")
+
+        val crookshanks = vectorService.crearVector(TipoDeVector.Animal,ubicacion1.id!!)
+        val scabbers = vectorService.crearVector(TipoDeVector.Insecto, ubicacion2.id!!)
+        val hedwig = vectorService.crearVector(TipoDeVector.Insecto, ubicacion6.id!!)
+        val patogeno = Patogeno("Cruciartus")
+        val patogenoP = patogenoService.crearPatogeno(patogeno)
+        val especie = patogenoService.agregarEspecie(patogenoP.id!!, "Imperius", ubicacion1.id!!)
+
+        val crookshanksE = vectorService.recuperarVector(crookshanks.id!!)
+
+        Assertions.assertFalse(crookshanksE.estaSano())
+        Assertions.assertTrue(scabbers.estaSano())
+        Assertions.assertTrue(hedwig.estaSano())
+
+        val ubicacionNeo1 = neo4jUbicacionDAO.findByIdRelacional(ubicacion1.id!!).get()
+        val ubicacionNeo2 = neo4jUbicacionDAO.findByIdRelacional(ubicacion2.id!!).get()
+        val ubicacionNeo3 = neo4jUbicacionDAO.findByIdRelacional(ubicacion3.id!!).get()
+        val ubicacionNeo4 = neo4jUbicacionDAO.findByIdRelacional(ubicacion4.id!!).get()
+        val ubicacionNeo5 = neo4jUbicacionDAO.findByIdRelacional(ubicacion5.id!!).get()
+        val ubicacionNeo6 = neo4jUbicacionDAO.findByIdRelacional(ubicacion6.id!!).get()
+
+        ubicacionService.conectar(ubicacionNeo1.nombre,ubicacionNeo2.nombre,"TERRESTRE")
+        ubicacionService.conectar(ubicacionNeo2.nombre,ubicacionNeo6.nombre,"MARITIMO")
+        ubicacionService.conectar(ubicacionNeo2.nombre,ubicacionNeo3.nombre,"TERRESTRE")
+        ubicacionService.conectar(ubicacionNeo3.nombre,ubicacionNeo4.nombre,"TERRESTRE")
+        ubicacionService.conectar(ubicacionNeo4.nombre,ubicacionNeo5.nombre,"TERRESTRE")
+        ubicacionService.conectar(ubicacionNeo5.nombre,ubicacionNeo6.nombre,"TERRESTRE")
+
+        ubicacionService.moverMasCorto(crookshanks.id!!, "ubicacion6")
+
+        val crookshanksM = vectorService.recuperarVector(crookshanks.id!!)
+        val scabbersE = vectorService.recuperarVector(scabbers.id!!)
+        val hedwigE = vectorService.recuperarVector(hedwig.id!!)
+
+        Assertions.assertFalse(scabbersE.estaSano())
+        Assertions.assertTrue(crookshanksM.nombreDeUbicacionActual() == "ubicacion6")
+        Assertions.assertFalse(hedwigE.estaSano())
+    }
 
     @AfterEach
     fun clearAll() {

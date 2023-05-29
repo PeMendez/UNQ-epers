@@ -17,28 +17,12 @@ import org.springframework.transaction.annotation.Transactional
 
 @Service
 @Transactional
-class UbicacionServiceImpl(): UbicacionService {
+class UbicacionServiceImpl: UbicacionService {
 
     @Autowired private lateinit var neo4jUbicacionDAO: Neo4jUbicacionDAO
     @Autowired private lateinit var ubicacionDAO: UbicacionDAO
     @Autowired private lateinit var vectorServiceImpl: VectorServiceImpl
     @Autowired private lateinit var vectorDAO: VectorDAO
-
-    override fun mover(vectorId: Long, ubicacionid: Long) {
-        val ubicacion = ubicacionDAO.findByIdOrNull(ubicacionid)?: throw NoExisteElid("el id de la ubiacion no existe en la base de datos")
-        val vector = vectorServiceImpl.recuperarVector(vectorId)
-        val ubicacionNeo4JAMoverse = neo4jUbicacionDAO.findByIdRelacional(ubicacionid).get()
-        val ubicacionNeo4JActual = neo4jUbicacionDAO.findByIdRelacional(vector.ubicacion.id!!).get()
-        val caminoDeConexionEntreUbicaciones = neo4jUbicacionDAO.conectadosPorCamino(ubicacionNeo4JActual.nombre, ubicacionNeo4JAMoverse.nombre)
-
-        if (!caminoDeConexionEntreUbicaciones.isPresent) {
-            throw UbicacionMuyLejana("La ubicacion '" + ubicacionNeo4JAMoverse.nombre + "' es muy lejana para moverse.")
-        } else if (vector.tipo.puedeMoverseACamino(caminoDeConexionEntreUbicaciones.get())) {
-            intentarMover(vector, ubicacion)
-        } else {
-            throw UbicacionNoAlcanzable("El vector con ID '" + vectorId + "' no puede moverse a la ubicación '" + ubicacionNeo4JAMoverse.nombre + "'")
-        }
-    }
 
     override fun expandir(ubicacionId: Long) {
         val ubicacion = ubicacionDAO.findByIdOrNull(ubicacionId)?: throw NoExisteElid("el id buscado no existe en la base de datos")
@@ -82,7 +66,7 @@ class UbicacionServiceImpl(): UbicacionService {
         return ubicacionDAO.recuperarVectores(ubicacionId)
     }
 
-    fun conectarConQuery(ubicacionOrigen: String, ubicacionDestino:String, tipoDeCamino:String){
+    override fun conectar(ubicacionOrigen: String, ubicacionDestino:String, tipoDeCamino:String){
         existeUbicacionPorNombre(ubicacionOrigen)
         existeUbicacionPorNombre(ubicacionDestino)
         val caminoVerificado = esTipoDeCaminoValido(tipoDeCamino)
@@ -104,7 +88,7 @@ class UbicacionServiceImpl(): UbicacionService {
         return neo4jUbicacionDAO.hayConexionDirecta(ubiOrigen.idRelacional!!,ubiDestino.idRelacional!!)
     }
 
-    fun conectados(ubicacionOrigen:String):List<UbicacionNeo4J>{
+    override fun conectados(ubicacionOrigen:String):List<UbicacionNeo4J>{
         existeUbicacionPorNombre(ubicacionOrigen)
         return neo4jUbicacionDAO.conectados(ubicacionOrigen)
     }
@@ -115,24 +99,9 @@ class UbicacionServiceImpl(): UbicacionService {
             throw NoExisteElNombreDeLaUbicacion("Ubicación no encontrada")
         }
     }
-
-
-
-    fun caminosCompatibles(caminosCompataibles: List<String>, ubicacionOrigen:String, ubicacionDestino: String):List<List<UbicacionNeo4J>>{
-        return neo4jUbicacionDAO.caminosCompatibles(caminosCompataibles, ubicacionOrigen, ubicacionDestino).get()
-    }
-
-    private fun intentarMover(vector: Vector, ubicacion: Ubicacion) {
-        if (vector.ubicacion.id!! != ubicacion.id!!) {
-            vector.mover(ubicacion)
-            val vectoresEnUbicacion = ubicacionDAO.recuperarVectores(ubicacion.id!!)
-            vectorDAO.save(vector)
-            if (!vector.estaSano()) {
-                vectorServiceImpl.contagiar(vector, vectoresEnUbicacion)
-            }
-        }
-    }
-
+    //private fun esTipoDeCaminoValido(camino: String): Boolean {
+    //    return TipoDeVector.values().map { t -> t.caminosCompatibles() }.toList().flatten().contains(camino)
+    //}
 
     private fun esTipoDeCaminoValido(camino: String): String {
         val caminoAVerificar = camino.uppercase()
@@ -143,5 +112,44 @@ class UbicacionServiceImpl(): UbicacionService {
         }
     }
 
+    override fun mover(vectorId: Long, ubicacionid: Long) {
+        val ubicacion = ubicacionDAO.findByIdOrNull(ubicacionid)?: throw NoExisteElid("el id de la ubiacion no existe en la base de datos")
+        val vector = vectorServiceImpl.recuperarVector(vectorId)
+        val ubicacionNeo4JAMoverse = neo4jUbicacionDAO.findByIdRelacional(ubicacionid).get()
+        val ubicacionNeo4JActual = neo4jUbicacionDAO.findByIdRelacional(vector.ubicacion.id!!).get()
+        val caminoDeConexionEntreUbicaciones = neo4jUbicacionDAO.conectadosPorCamino(ubicacionNeo4JActual.nombre, ubicacionNeo4JAMoverse.nombre)
+
+        if (!caminoDeConexionEntreUbicaciones.isPresent) {
+            throw UbicacionMuyLejana("La ubicacion '" + ubicacionNeo4JAMoverse.nombre + "' es muy lejana para moverse.")
+        } else if (vector.puedeMoversePorCamino(caminoDeConexionEntreUbicaciones.get())) {
+            intentarMover(vector, ubicacion)
+        } else {
+            throw UbicacionNoAlcanzable("El vector con ID $vectorId no puede moverse a la ubicación " + ubicacionNeo4JAMoverse.nombre)
+        }
+    }
+    private fun intentarMover(vector: Vector, ubicacion: Ubicacion) {
+        if (vector.ubicacion.id!! != ubicacion.id!!) {
+            vector.mover(ubicacion)
+            val vectoresEnUbicacion = ubicacionDAO.recuperarVectores(ubicacion.id!!)
+            vectorDAO.save(vector)
+            if (!vector.estaSano()) {
+                vectorServiceImpl.contagiar(vector, vectoresEnUbicacion)
+            }
+        }
+    }
+    override fun moverMasCorto(vectorId:Long, nombreDeUbicacion:String){
+        val vector = vectorDAO.findByIdOrNull(vectorId)?: throw NoExisteElid("No existe el ID del vector")
+        val ubicacionDelVector = vector.nombreDeUbicacionActual()
+        existeUbicacionPorNombre(nombreDeUbicacion)
+        val caminosCompatibles = vector.caminosCompatibles()
+        val caminoMasCorto = caminoMasCortoEntre(caminosCompatibles, ubicacionDelVector, nombreDeUbicacion)
+
+        caminoMasCorto.forEach { ubicacion ->
+            mover(vectorId, ubicacion.idRelacional!!)
+        }
+    }
+    private fun caminoMasCortoEntre(caminosCompatibles:List<String>, ubicacionDelVector: String, ubicacionDestino:String):List<UbicacionNeo4J> {
+        return neo4jUbicacionDAO.caminoMasCortoEntre(caminosCompatibles, ubicacionDelVector, ubicacionDestino).get().drop(1)
+    }
 }
 
