@@ -3,7 +3,6 @@ package ar.edu.unq.eperdemic.services.impl
 import ar.edu.unq.eperdemic.modelo.Patogeno
 import ar.edu.unq.eperdemic.modelo.Random
 import ar.edu.unq.eperdemic.modelo.TipoDeVector
-import ar.edu.unq.eperdemic.modelo.Ubicacion
 import ar.edu.unq.eperdemic.modelo.exceptions.*
 import ar.edu.unq.eperdemic.persistencia.dao.Neo4jUbicacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.UbicacionDAO
@@ -12,6 +11,7 @@ import org.junit.jupiter.api.*
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.dao.NonTransientDataAccessResourceException
 import org.springframework.data.domain.PageRequest
 import org.springframework.test.context.junit.jupiter.SpringExtension
 
@@ -429,8 +429,6 @@ class UbicacionServiceImplTest {
         val ubicacionCreada = ubicacionService.crearUbicacion("testNeo")
         val ubicacionRecuperadaOptional = neo4jUbicacionDAO.findByIdRelacional(ubicacionCreada.id!!)
 
-        // Hay un error al recuperar porque crearUbicacion retorna una ubicacion con el ID de Hibernate
-        // y se intenta recuperar la ubicacion en neo4J con el ID de Hibernate (no es el mismo)
         Assertions.assertTrue(ubicacionRecuperadaOptional.isPresent)
 
         val ubicacionRecuperada = ubicacionRecuperadaOptional.get()
@@ -727,6 +725,48 @@ class UbicacionServiceImplTest {
         Assertions.assertTrue(crookshanksM.nombreDeUbicacionActual() == "ubicacion6")
         Assertions.assertFalse(hedwigE.estaSano())
     }
+
+
+    @Test
+    fun noEsPosibleCaminoMasCortoALaMismaUbicacion() {
+        val ubicacion1 = ubicacionService.crearUbicacion("ubicacion1")
+        val vector = vectorService.crearVector(TipoDeVector.Animal,ubicacion1.id!!)
+        val ubicacionNeo1 = neo4jUbicacionDAO.findByIdRelacional(ubicacion1.id!!).get()
+
+        Assertions.assertThrows(NonTransientDataAccessResourceException ::class.java ){
+            ubicacionService.moverMasCorto(vector.id!!, ubicacionNeo1.nombre)
+        }
+    }
+
+
+    @Test
+    fun unVectorNoPuedeMoverseMasCortoPosibleYNoContagiaEnOtrasUbicaciones() {
+        dataService.eliminarTodo()
+
+        val ubicacion1 = ubicacionService.crearUbicacion("ubicacion1")
+        val ubicacion2 = ubicacionService.crearUbicacion("ubicacion2")
+        val ubicacion3 = ubicacionService.crearUbicacion("ubicacion3")
+
+        val persona1 = vectorService.crearVector(TipoDeVector.Persona, ubicacion1.id!!)
+        val persona2 = vectorService.crearVector(TipoDeVector.Insecto, ubicacion2.id!!)
+
+        vectorService.recuperarVector(persona1.id!!)
+
+        Assertions.assertTrue(persona2.estaSano())
+
+        ubicacionService.conectar(ubicacion1.nombre, ubicacion2.nombre, "AEREO")
+
+        ubicacionService.moverMasCorto(persona1.id!!, ubicacion3.nombre)
+
+        val persona1r = vectorService.recuperarVector(persona1.id!!)
+        val persona2r = vectorService.recuperarVector(persona2.id!!)
+
+        Assertions.assertTrue(persona2r.estaSano())
+        Assertions.assertTrue(persona1r.nombreDeUbicacionActual() != ubicacion3.nombre)
+    }
+
+
+
 
     @AfterEach
     fun clearAll() {
