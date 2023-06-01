@@ -12,7 +12,7 @@ interface UbicacionService {
     fun expandir(ubicacionId: Long)
     fun moverMasCorto(vectorId:Long, nombreDeUbicacion:String)
     fun conectar(nombreUbicacion1: String, nombreUbicacion2: String, tipoCamino: String)
-    fun conectados(ubicacionOrigen:String):List<UbicacionNeo4J>
+    fun conectados(ubicacionOrigen:String):List<Ubicacion>
 
     /* Operaciones CRUD*/
     fun crearUbicacion(nombreUbicacion: String): Ubicacion

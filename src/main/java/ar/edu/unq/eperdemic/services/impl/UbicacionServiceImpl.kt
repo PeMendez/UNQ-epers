@@ -85,15 +85,16 @@ class UbicacionServiceImpl: UbicacionService {
         return neo4jUbicacionDAO.hayConexionDirecta(ubiOrigen.idRelacional!!,ubiDestino.idRelacional!!)
     }
 
-    override fun conectados(ubicacionOrigen:String):List<UbicacionNeo4J>{
+    override fun conectados(ubicacionOrigen:String): List<Ubicacion>{
         existeUbicacionPorNombre(ubicacionOrigen)
-        return neo4jUbicacionDAO.conectados(ubicacionOrigen)
+        val ubicacionesConectadas =  neo4jUbicacionDAO.conectados(ubicacionOrigen)
+        return ubicacionesConectadas.map { u -> recuperar(u.idRelacional!!) }
     }
 
     private fun existeUbicacionPorNombre(nombreDeUbicacionABuscar:String){
         if (!neo4jUbicacionDAO.recuperarUbicacionPorNombre(nombreDeUbicacionABuscar).isPresent
             || ubicacionDAO.recuperarUbicacionPorNombre(nombreDeUbicacionABuscar).id == null) {
-            throw NoExisteElNombreDeLaUbicacion("Ubicación no encontrada")
+            throw NoExisteElNombreDeLaUbicacion("La ubicación $nombreDeUbicacionABuscar no existe en la base de datos")
         }
     }
 
@@ -118,7 +119,7 @@ class UbicacionServiceImpl: UbicacionService {
         } else if (vector.puedeMoversePorCamino(caminoDeConexionEntreUbicaciones.get())) {
             intentarMover(vector, ubicacion)
         } else {
-            throw UbicacionNoAlcanzable("El vector con ID $vectorId no puede moverse a la ubicación " + ubicacionNeo4JAMoverse.nombre)
+            throw UbicacionNoAlcanzable("El tipo de vector " + vector.tipo + " no puede moverse por el tipo de camino " + caminoDeConexionEntreUbicaciones.get())
         }
     }
     private fun intentarMover(vector: Vector, ubicacion: Ubicacion) {
