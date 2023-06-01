@@ -560,8 +560,8 @@ class UbicacionServiceImplTest {
 
         val conectadosConUbicacion1 = ubicacionService.conectados(ubicacionNeo1.nombre)
 
-        Assertions.assertNotNull(conectadosConUbicacion1.find { u -> u.idRelacional!! == ubicacionNeo2.idRelacional!! })
-        Assertions.assertNotNull(conectadosConUbicacion1.find { u -> u.idRelacional!! == ubicacionNeo3.idRelacional!! })
+        Assertions.assertNotNull(conectadosConUbicacion1.find { u -> u.id!! == ubicacionNeo2.idRelacional!! })
+        Assertions.assertNotNull(conectadosConUbicacion1.find { u -> u.id!! == ubicacionNeo3.idRelacional!! })
         Assertions.assertTrue(conectadosConUbicacion1.size == 2)
     }
 
@@ -581,7 +581,7 @@ class UbicacionServiceImplTest {
 
         val conectadosConUbicacion1 = ubicacionService.conectados(ubicacionNeo1.nombre)
 
-        Assertions.assertNotNull(conectadosConUbicacion1.find { u -> u.idRelacional!! == ubicacionNeo2.idRelacional!! })
+        Assertions.assertNotNull(conectadosConUbicacion1.find { u -> u.id!! == ubicacionNeo2.idRelacional!! })
         Assertions.assertTrue(conectadosConUbicacion1.size == 1)
     }
 
