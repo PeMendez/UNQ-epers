@@ -726,7 +726,6 @@ class UbicacionServiceImplTest {
         Assertions.assertFalse(hedwigE.estaSano())
     }
 
-
     @Test
     fun noEsPosibleCaminoMasCortoALaMismaUbicacion() {
         val ubicacion1 = ubicacionService.crearUbicacion("ubicacion1")
@@ -737,7 +736,6 @@ class UbicacionServiceImplTest {
             ubicacionService.moverMasCorto(vector.id!!, ubicacionNeo1.nombre)
         }
     }
-
 
     @Test
     fun unVectorNoPuedeMoverseMasCortoPosibleYNoContagiaEnOtrasUbicaciones() {
@@ -765,7 +763,17 @@ class UbicacionServiceImplTest {
         Assertions.assertTrue(persona1r.nombreDeUbicacionActual() != ubicacion3.nombre)
     }
 
+    @Test
+    fun cuandoNoHayConexionEntreDosUbicacionesLaUbicacionEsMuyLejana() {
+        dataService.eliminarTodo()
+        val ubicacion1 = ubicacionService.crearUbicacion("ubicacion1")
+        val vector = vectorService.crearVector(TipoDeVector.Persona,ubicacion1.id!!)
+        val ubicacion3 = ubicacionService.crearUbicacion("ubicacion3")
 
+        Assertions.assertThrows(UbicacionMuyLejana ::class.java ){
+            ubicacionService.mover(vector.id!!, ubicacion3.id!!)
+        }
+    }
 
 
     @AfterEach
