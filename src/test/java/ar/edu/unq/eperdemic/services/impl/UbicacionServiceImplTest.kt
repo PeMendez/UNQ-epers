@@ -693,7 +693,7 @@ class UbicacionServiceImplTest {
         val hedwig = vectorService.crearVector(TipoDeVector.Insecto, ubicacion6.id!!)
         val patogeno = Patogeno("Cruciartus")
         val patogenoP = patogenoService.crearPatogeno(patogeno)
-        val especie = patogenoService.agregarEspecie(patogenoP.id!!, "Imperius", ubicacion1.id!!)
+        patogenoService.agregarEspecie(patogenoP.id!!, "Imperius", ubicacion1.id!!)
 
         val crookshanksE = vectorService.recuperarVector(crookshanks.id!!)
 

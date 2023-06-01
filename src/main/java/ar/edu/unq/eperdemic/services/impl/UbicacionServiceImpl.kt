@@ -140,7 +140,7 @@ class UbicacionServiceImpl: UbicacionService {
         val caminoMasCorto = caminoMasCortoEntre(caminosCompatibles, ubicacionDelVector, nombreDeUbicacion)
 
         if (caminoMasCorto.isEmpty()){
-            throw UbicacionNoAlcanzable("El vector no puede moverse a la ubicacion $nombreDeUbicacion . Ya que el camino o bien no es compatible o no existe una conexión posible.")
+            throw UbicacionNoAlcanzable("El vector no puede moverse a la ubicacion $nombreDeUbicacion. Ya que el camino o bien no es compatible o no existe una conexión posible.")
         } else {
             caminoMasCorto.forEach { ubicacion ->
                 mover(vectorId, ubicacion.idRelacional!!)
