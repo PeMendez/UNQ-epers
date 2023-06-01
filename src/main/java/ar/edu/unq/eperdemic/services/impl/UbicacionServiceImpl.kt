@@ -73,9 +73,6 @@ class UbicacionServiceImpl: UbicacionService {
         val ubiOrigen = neo4jUbicacionDAO.recuperarUbicacionPorNombre(ubicacionOrigen).get()
         val ubiDestino = neo4jUbicacionDAO.recuperarUbicacionPorNombre(ubicacionDestino).get()
 
-        //comento porque no anduvo////////////////////////////////////////////////////////////
-        //ubiOrigen.ubicaciones.add(ubiDestino)
-        //neo4jUbicacionDAO.save(ubiOrigen)
         neo4jUbicacionDAO.conectar(ubiOrigen.idRelacional!!,ubiDestino.idRelacional!!, caminoVerificado)
     }
 
@@ -100,9 +97,6 @@ class UbicacionServiceImpl: UbicacionService {
             throw NoExisteElNombreDeLaUbicacion("La ubicación $nombreDeUbicacionABuscar no existe en la base de datos")
         }
     }
-    //private fun esTipoDeCaminoValido(camino: String): Boolean {
-    //    return TipoDeVector.values().map { t -> t.caminosCompatibles() }.toList().flatten().contains(camino)
-    //}
 
     private fun esTipoDeCaminoValido(camino: String): String {
         val caminoAVerificar = camino.uppercase()
