@@ -738,32 +738,6 @@ class UbicacionServiceImplTest {
     }
 
     @Test
-    fun unVectorNoPuedeMoverseMasCortoPosibleYNoContagiaEnOtrasUbicaciones() {
-        dataService.eliminarTodo()
-
-        val ubicacion1 = ubicacionService.crearUbicacion("ubicacion1")
-        val ubicacion2 = ubicacionService.crearUbicacion("ubicacion2")
-        val ubicacion3 = ubicacionService.crearUbicacion("ubicacion3")
-
-        val persona1 = vectorService.crearVector(TipoDeVector.Persona, ubicacion1.id!!)
-        val persona2 = vectorService.crearVector(TipoDeVector.Insecto, ubicacion2.id!!)
-
-        vectorService.recuperarVector(persona1.id!!)
-
-        Assertions.assertTrue(persona2.estaSano())
-
-        ubicacionService.conectar(ubicacion1.nombre, ubicacion2.nombre, "AEREO")
-
-        ubicacionService.moverMasCorto(persona1.id!!, ubicacion3.nombre)
-
-        val persona1r = vectorService.recuperarVector(persona1.id!!)
-        val persona2r = vectorService.recuperarVector(persona2.id!!)
-
-        Assertions.assertTrue(persona2r.estaSano())
-        Assertions.assertTrue(persona1r.nombreDeUbicacionActual() != ubicacion3.nombre)
-    }
-
-    @Test
     fun cuandoNoHayConexionEntreDosUbicacionesLaUbicacionEsMuyLejana() {
         dataService.eliminarTodo()
         val ubicacion1 = ubicacionService.crearUbicacion("ubicacion1")
@@ -773,6 +747,53 @@ class UbicacionServiceImplTest {
         Assertions.assertThrows(UbicacionMuyLejana ::class.java ){
             ubicacionService.mover(vector.id!!, ubicacion3.id!!)
         }
+    }
+
+
+    @Test
+    fun unVectorNoPuedeMoversePorElCaminoMasCortoSiNoExisteUnaConexionEntreLasUbicacionesDadas(){
+        val ubicacion1 = ubicacionService.crearUbicacion("Hogsmade")
+        ubicacionService.crearUbicacion("PrivetDrive")
+
+
+        val crookshanks = vectorService.crearVector(TipoDeVector.Animal,ubicacion1.id!!)
+
+        Assertions.assertThrows(UbicacionNoAlcanzable ::class.java ){
+            ubicacionService.moverMasCorto(crookshanks.id!!, "PrivetDrive")
+        }
+
+    }
+
+    @Test
+    fun unVectorNoPuedeMoversePorElCaminoMasCortoSiLaConexionEntreCaminosNoEsCompatibleConElTipoDeVector(){
+
+        val ubicacion1 = ubicacionService.crearUbicacion("CallejonDiagon")
+        val ubicacion2 = ubicacionService.crearUbicacion("Durmstrang")
+        val ubicacion3 = ubicacionService.crearUbicacion("Beauxbatons")
+        val ubicacion4 = ubicacionService.crearUbicacion("Hogwarts")
+        val ubicacion5 = ubicacionService.crearUbicacion("Hogsmade")
+        val ubicacion6 = ubicacionService.crearUbicacion("PrivetDrive")
+
+        val ron = vectorService.crearVector(TipoDeVector.Persona,ubicacion1.id!!)
+
+        val ubicacionNeo1 = neo4jUbicacionDAO.findByIdRelacional(ubicacion1.id!!).get()
+        val ubicacionNeo2 = neo4jUbicacionDAO.findByIdRelacional(ubicacion2.id!!).get()
+        val ubicacionNeo3 = neo4jUbicacionDAO.findByIdRelacional(ubicacion3.id!!).get()
+        val ubicacionNeo4 = neo4jUbicacionDAO.findByIdRelacional(ubicacion4.id!!).get()
+        val ubicacionNeo5 = neo4jUbicacionDAO.findByIdRelacional(ubicacion5.id!!).get()
+        val ubicacionNeo6 = neo4jUbicacionDAO.findByIdRelacional(ubicacion6.id!!).get()
+
+        ubicacionService.conectar(ubicacionNeo1.nombre,ubicacionNeo2.nombre,"TERRESTRE")
+        ubicacionService.conectar(ubicacionNeo2.nombre,ubicacionNeo6.nombre,"MARITIMO")
+        ubicacionService.conectar(ubicacionNeo2.nombre,ubicacionNeo3.nombre,"TERRESTRE")
+        ubicacionService.conectar(ubicacionNeo3.nombre,ubicacionNeo4.nombre,"AEREO")
+        ubicacionService.conectar(ubicacionNeo4.nombre,ubicacionNeo5.nombre,"AEREO")
+        ubicacionService.conectar(ubicacionNeo5.nombre,ubicacionNeo6.nombre,"AEREO")
+
+        Assertions.assertThrows(UbicacionNoAlcanzable ::class.java ){
+            ubicacionService.moverMasCorto(ron.id!!, "Hogwarts")
+        }
+
     }
 
 
