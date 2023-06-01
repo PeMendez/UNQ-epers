@@ -139,8 +139,12 @@ class UbicacionServiceImpl: UbicacionService {
         val caminosCompatibles = vector.caminosCompatibles()
         val caminoMasCorto = caminoMasCortoEntre(caminosCompatibles, ubicacionDelVector, nombreDeUbicacion)
 
-        caminoMasCorto.forEach { ubicacion ->
-            mover(vectorId, ubicacion.idRelacional!!)
+        if (caminoMasCorto.isEmpty()){
+            throw UbicacionNoAlcanzable("El vector no puede moverse a la ubicacion $nombreDeUbicacion . Ya que el camino o bien no es compatible o no existe una conexión posible.")
+        } else {
+            caminoMasCorto.forEach { ubicacion ->
+                mover(vectorId, ubicacion.idRelacional!!)
+            }
         }
     }
     private fun caminoMasCortoEntre(caminosCompatibles:List<String>, ubicacionDelVector: String, ubicacionDestino:String):List<UbicacionNeo4J> {
