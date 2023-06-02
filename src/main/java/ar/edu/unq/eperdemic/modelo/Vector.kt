@@ -109,7 +109,6 @@ enum class TipoDeVector {
         override fun puedeSerInfectado(vector: TipoDeVector): Boolean {
             return true
         }
-        //al final borrar lo que no se use
         override fun puedeMoverseACamino(camino: String): Boolean {
             return camino == "MARITIMO" || camino == "TERRESTRE"
         }
@@ -121,7 +120,6 @@ enum class TipoDeVector {
         override fun puedeSerInfectado(vector: TipoDeVector): Boolean {
             return this != vector
         }
-        //al final borrar lo que no se use
         override fun puedeMoverseACamino(camino: String): Boolean {
             return camino == "AEREO" || camino == "TERRESTRE"
         }
@@ -133,7 +131,6 @@ enum class TipoDeVector {
         override fun puedeSerInfectado(vector: TipoDeVector): Boolean {
             return vector == Insecto
         }
-        //al final borrar lo que no se use
         override fun puedeMoverseACamino(camino: String): Boolean {
             return true
         }
@@ -143,8 +140,6 @@ enum class TipoDeVector {
     };
 
     abstract fun puedeSerInfectado(vector: TipoDeVector): Boolean
-
-    //al final borrar lo que no se use
     abstract fun puedeMoverseACamino(camino: String): Boolean
     abstract fun caminosCompatibles(): List<String>
 }

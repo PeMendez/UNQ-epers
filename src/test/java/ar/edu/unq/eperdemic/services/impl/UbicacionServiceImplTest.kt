@@ -445,7 +445,6 @@ class UbicacionServiceImplTest {
 
     @Test
     fun noSePuedeConectarDosUbicacionesConNombresInexistentes() {
-        dataService.eliminarTodo()
 
         Assertions.assertThrows(NoExisteElNombreDeLaUbicacion::class.java) {
             ubicacionService.conectar("nombreNoExistente", "nombreNoExistente2", "Terrestre")
@@ -454,7 +453,6 @@ class UbicacionServiceImplTest {
 
     @Test
     fun noSePuedeObtenerConexionDirectaDeDosUbicacionesConNombresInexistentes() {
-        dataService.eliminarTodo()
 
         Assertions.assertThrows(NoExisteElNombreDeLaUbicacion::class.java) {
             ubicacionService.hayConexionDirecta("nombre1", "nombre2")
@@ -463,7 +461,6 @@ class UbicacionServiceImplTest {
 
     @Test
     fun noSePuedenObtenerLosConectadosDeUnaUbicacionConUnNombreInexistente() {
-        dataService.eliminarTodo()
 
         Assertions.assertThrows(NoExisteElNombreDeLaUbicacion::class.java) {
             ubicacionService.conectados("nombreInexistente")
@@ -472,7 +469,6 @@ class UbicacionServiceImplTest {
 
     @Test
     fun noSePuedeConectarADosUbicacionesPorMedioDeUnCaminoInvalido() {
-        dataService.eliminarTodo()
         val ubicacion1 = ubicacionService.crearUbicacion("testConectarFalso1")
         val ubicacion2 = ubicacionService.crearUbicacion("testConectarFalso2")
 
@@ -495,7 +491,6 @@ class UbicacionServiceImplTest {
 
     @Test
     fun hayConexionDirectaTrue() {
-        dataService.eliminarTodo()
         val ubicacion1 = ubicacionService.crearUbicacion("neoUbicacion1")
         val ubicacion2 = ubicacionService.crearUbicacion("neoUbicacion2")
 
@@ -509,7 +504,6 @@ class UbicacionServiceImplTest {
 
     @Test
     fun hayConexionDirectaFalse() {
-        dataService.eliminarTodo()
         val ubicacion1 = ubicacionService.crearUbicacion("ubicacion123")
         val ubicacion2 = ubicacionService.crearUbicacion("ubicacion234")
         val ubicacion3 = ubicacionService.crearUbicacion("ubicacion345")
@@ -528,7 +522,6 @@ class UbicacionServiceImplTest {
 
     @Test
     fun seConectanDosUbicacionesCorrectamente() {
-        dataService.eliminarTodo()
         val ubicacion1 = ubicacionService.crearUbicacion("nuevaUbicacion1")
         val ubicacion2 = ubicacionService.crearUbicacion("nuevaUbicacion2")
 
@@ -544,7 +537,6 @@ class UbicacionServiceImplTest {
 
     @Test
     fun cuandoUnaUbicacionTieneConectadosEntoncesSeRetornanCorrectamente() {
-        dataService.eliminarTodo()
         val ubicacion1 = ubicacionService.crearUbicacion("nuevaUbicacion1")
         val ubicacion2 = ubicacionService.crearUbicacion("nuevaUbicacion2")
         val ubicacion3 = ubicacionService.crearUbicacion("nuevaUbicacion3")
@@ -565,7 +557,6 @@ class UbicacionServiceImplTest {
 
     @Test
     fun seRetornanUnicamenteLosConectadosAUnPasoDeDistanciaDeUnaUbicacion() {
-        dataService.eliminarTodo()
         val ubicacion1 = ubicacionService.crearUbicacion("nuevaUbicacion1")
         val ubicacion2 = ubicacionService.crearUbicacion("nuevaUbicacion2")
         val ubicacion3 = ubicacionService.crearUbicacion("nuevaUbicacion3")
@@ -585,7 +576,6 @@ class UbicacionServiceImplTest {
 
     @Test
     fun cuandoUnaUbicacionNoTieneConectadosEntoncesSeRetornaUnaListaVacia() {
-        dataService.eliminarTodo()
         val ubicacion1 = ubicacionService.crearUbicacion("nuevaUbicacion1")
 
         val ubicacionNeo1 = neo4jUbicacionDAO.findByIdRelacional(ubicacion1.id!!).get()
@@ -597,7 +587,6 @@ class UbicacionServiceImplTest {
 
     @Test
     fun cuandoSeConectanDosUbicacionesEntoncesSeCreaUnCaminoUnidireccional() {
-        dataService.eliminarTodo()
         val ubicacionCreada1 = ubicacionService.crearUbicacion("testMoverUbicacion")
         val ubicacionCreada2 = ubicacionService.crearUbicacion("testMoverUbicacion2")
 
@@ -612,7 +601,6 @@ class UbicacionServiceImplTest {
 
     @Test
     fun unVectorInsectoNoPuedeMoverseAUnaUbicacionPorUnCaminoMaritimo() {
-        dataService.eliminarTodo()
         val ubicacionCreada1 = ubicacionService.crearUbicacion("testMoverUbicacion")
         val vectorCreado1 = vectorService.crearVector(TipoDeVector.Insecto, ubicacionCreada1.id!!)
         val ubicacionCreada2 = ubicacionService.crearUbicacion("testMoverUbicacion2")
@@ -629,7 +617,6 @@ class UbicacionServiceImplTest {
 
     @Test
     fun unVectorPersonaNoPuedeMoverseAUnaUbicacionPorUnCaminoAereo() {
-        dataService.eliminarTodo()
         val ubicacionCreada1 = ubicacionService.crearUbicacion("testMoverUbicacion")
         val vectorCreado1 = vectorService.crearVector(TipoDeVector.Persona, ubicacionCreada1.id!!)
         val ubicacionCreada2 = ubicacionService.crearUbicacion("testMoverUbicacion2")
@@ -646,13 +633,12 @@ class UbicacionServiceImplTest {
 
     @Test
     fun unVectorSeMuevePorElCaminoMasCortoPosibleDeFormaCorrecta(){
-        dataService.eliminarTodo()
-        val ubicacion1 = ubicacionService.crearUbicacion("ubicacion1")
-        val ubicacion2 = ubicacionService.crearUbicacion("ubicacion2")
-        val ubicacion3 = ubicacionService.crearUbicacion("ubicacion3")
-        val ubicacion4 = ubicacionService.crearUbicacion("ubicacion4")
-        val ubicacion5 = ubicacionService.crearUbicacion("ubicacion5")
-        val ubicacion6 = ubicacionService.crearUbicacion("ubicacion6")
+        val ubicacion1 = ubicacionService.crearUbicacion("ubicacion123")
+        val ubicacion2 = ubicacionService.crearUbicacion("ubicacion223")
+        val ubicacion3 = ubicacionService.crearUbicacion("ubicacion323")
+        val ubicacion4 = ubicacionService.crearUbicacion("ubicacion423")
+        val ubicacion5 = ubicacionService.crearUbicacion("ubicacion523")
+        val ubicacion6 = ubicacionService.crearUbicacion("ubicacion623")
 
         val vector = vectorService.crearVector(TipoDeVector.Animal,ubicacion1.id!!)
 
@@ -670,23 +656,21 @@ class UbicacionServiceImplTest {
         ubicacionService.conectar(ubicacionNeo4.nombre,ubicacionNeo5.nombre,"TERRESTRE")
         ubicacionService.conectar(ubicacionNeo5.nombre,ubicacionNeo6.nombre,"TERRESTRE")
 
-        ubicacionService.moverMasCorto(vector.id!!, "ubicacion6")
+        ubicacionService.moverMasCorto(vector.id!!, "ubicacion623")
 
         val vectorM = vectorService.recuperarVector(vector.id!!)
 
-        Assertions.assertTrue(vectorM.ubicacion.nombre == "ubicacion6")
+        Assertions.assertTrue(vectorM.ubicacion.nombre == "ubicacion623")
     }
 
     @Test
     fun unVectorSeMuevePorElCaminoMasCortoPosibleDeFormaCorrectaYMientrasSeMueveContagiaEnTodasLasUbicacionesPorLasQuePasa(){
-        dataService.eliminarTodo()
-
-        val ubicacion1 = ubicacionService.crearUbicacion("ubicacion1")
-        val ubicacion2 = ubicacionService.crearUbicacion("ubicacion2")
-        val ubicacion3 = ubicacionService.crearUbicacion("ubicacion3")
-        val ubicacion4 = ubicacionService.crearUbicacion("ubicacion4")
-        val ubicacion5 = ubicacionService.crearUbicacion("ubicacion5")
-        val ubicacion6 = ubicacionService.crearUbicacion("ubicacion6")
+        val ubicacion1 = ubicacionService.crearUbicacion("ubicacion123")
+        val ubicacion2 = ubicacionService.crearUbicacion("ubicacion223")
+        val ubicacion3 = ubicacionService.crearUbicacion("ubicacion323")
+        val ubicacion4 = ubicacionService.crearUbicacion("ubicacion423")
+        val ubicacion5 = ubicacionService.crearUbicacion("ubicacion523")
+        val ubicacion6 = ubicacionService.crearUbicacion("ubicacion623")
 
         val crookshanks = vectorService.crearVector(TipoDeVector.Animal,ubicacion1.id!!)
         val scabbers = vectorService.crearVector(TipoDeVector.Insecto, ubicacion2.id!!)
@@ -715,20 +699,20 @@ class UbicacionServiceImplTest {
         ubicacionService.conectar(ubicacionNeo4.nombre,ubicacionNeo5.nombre,"TERRESTRE")
         ubicacionService.conectar(ubicacionNeo5.nombre,ubicacionNeo6.nombre,"TERRESTRE")
 
-        ubicacionService.moverMasCorto(crookshanks.id!!, "ubicacion6")
+        ubicacionService.moverMasCorto(crookshanks.id!!, "ubicacion623")
 
         val crookshanksM = vectorService.recuperarVector(crookshanks.id!!)
         val scabbersE = vectorService.recuperarVector(scabbers.id!!)
         val hedwigE = vectorService.recuperarVector(hedwig.id!!)
 
         Assertions.assertFalse(scabbersE.estaSano())
-        Assertions.assertTrue(crookshanksM.nombreDeUbicacionActual() == "ubicacion6")
+        Assertions.assertTrue(crookshanksM.nombreDeUbicacionActual() == "ubicacion623")
         Assertions.assertFalse(hedwigE.estaSano())
     }
 
     @Test
     fun noEsPosibleCaminoMasCortoALaMismaUbicacion() {
-        val ubicacion1 = ubicacionService.crearUbicacion("ubicacion1")
+        val ubicacion1 = ubicacionService.crearUbicacion("ubicacion123")
         val vector = vectorService.crearVector(TipoDeVector.Animal,ubicacion1.id!!)
         val ubicacionNeo1 = neo4jUbicacionDAO.findByIdRelacional(ubicacion1.id!!).get()
 
@@ -739,10 +723,9 @@ class UbicacionServiceImplTest {
 
     @Test
     fun cuandoNoHayConexionEntreDosUbicacionesLaUbicacionEsMuyLejana() {
-        dataService.eliminarTodo()
-        val ubicacion1 = ubicacionService.crearUbicacion("ubicacion1")
+        val ubicacion1 = ubicacionService.crearUbicacion("ubicacion123")
         val vector = vectorService.crearVector(TipoDeVector.Persona,ubicacion1.id!!)
-        val ubicacion3 = ubicacionService.crearUbicacion("ubicacion3")
+        val ubicacion3 = ubicacionService.crearUbicacion("ubicacion323")
 
         Assertions.assertThrows(UbicacionMuyLejana ::class.java ){
             ubicacionService.mover(vector.id!!, ubicacion3.id!!)
@@ -797,7 +780,7 @@ class UbicacionServiceImplTest {
     }
 
 
-    @AfterEach
+    //@AfterEach
     fun clearAll() {
         dataService.eliminarTodo()
     }
