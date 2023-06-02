@@ -780,7 +780,7 @@ class UbicacionServiceImplTest {
     }
 
 
-    //@AfterEach
+    @AfterEach
     fun clearAll() {
         dataService.eliminarTodo()
     }
