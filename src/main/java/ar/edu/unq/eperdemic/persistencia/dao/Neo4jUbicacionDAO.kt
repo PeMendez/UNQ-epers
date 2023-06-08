@@ -3,6 +3,7 @@ package ar.edu.unq.eperdemic.persistencia.dao
 import ar.edu.unq.eperdemic.modelo.UbicacionNeo4J
 import org.springframework.data.neo4j.repository.query.Query
 import org.springframework.data.neo4j.repository.Neo4jRepository
+import org.springframework.data.repository.query.Param
 import org.springframework.stereotype.Repository
 import java.util.*
 
@@ -39,8 +40,10 @@ interface Neo4jUbicacionDAO : Neo4jRepository<UbicacionNeo4J, Long?> {
 
     @Query("MATCH (origen:UbicacionNeo4J {nombre: ${'$'}origenNombre})" +
             "MATCH (destino:UbicacionNeo4J {nombre: ${'$'}destinoNombre})" +
-            "MATCH caminosMasCortos = allShortestPaths((origen)-[c:CAMINO]-(destino))" +
-            "WHERE ALL(rel in relationships(caminosMasCortos) WHERE rel.tipoDeCamino IN (UNWIND \$caminosCompatibles) " +
+            "MATCH caminosMasCortos = allShortestPaths((origen)-[CAMINO*]-(destino))" +
+            "WHERE ALL(rel in relationships(caminosMasCortos) WHERE rel.tipoDeCamino IN \$caminosCompatibles) " +
             "RETURN caminosMasCortos")
-    fun caminosCompatibles(caminosCompatibles:List<String>,origenNombre:String,destinoNombre:String): Optional<List<List<UbicacionNeo4J>>>
+    fun caminoMasCortoEntre(caminosCompatibles:List<String>,origenNombre:String,destinoNombre:String): Optional<List<UbicacionNeo4J>>
+
+
 }

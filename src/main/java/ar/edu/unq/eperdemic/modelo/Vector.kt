@@ -1,6 +1,5 @@
 package ar.edu.unq.eperdemic.modelo
 
-import ar.edu.unq.eperdemic.Neo4jUbicacionDTO
 import javax.persistence.*
 
 @Entity
@@ -56,10 +55,10 @@ class Vector(var tipo: TipoDeVector,
 
     fun hayContagioPorTipo(especie: Especie, vectorAInfectar: Vector): Boolean {
         val mutacion = this.mutaciones.find { m -> m.esBioalteracionGenetica() && m.especie.sonMismaEspecie(especie)}
-        if (mutacion != null) {
-            return  mutacion.tipoDeVector == vectorAInfectar.tipo || vectorAInfectar.tipo.puedeSerInfectado(this.tipo)
+        return if (mutacion != null) {
+            (mutacion.tipoDeVector == vectorAInfectar.tipo) || vectorAInfectar.tipo.puedeSerInfectado(this.tipo)
         } else {
-            return vectorAInfectar.tipo.puedeSerInfectado(this.tipo)
+            vectorAInfectar.tipo.puedeSerInfectado(this.tipo)
         }
     }
 
@@ -95,6 +94,14 @@ class Vector(var tipo: TipoDeVector,
     fun caminosCompatibles(): List<String>{
         return tipo.caminosCompatibles()
     }
+
+    fun nombreDeUbicacionActual():String{
+        return this.ubicacion.nombre
+    }
+
+    fun puedeMoversePorCamino(tipoCamino: String): Boolean{
+        return tipo.puedeMoverseACamino(tipoCamino)
+    }
 }
 
 enum class TipoDeVector {
@@ -102,7 +109,6 @@ enum class TipoDeVector {
         override fun puedeSerInfectado(vector: TipoDeVector): Boolean {
             return true
         }
-        //al final borrar lo que no se use
         override fun puedeMoverseACamino(camino: String): Boolean {
             return camino == "MARITIMO" || camino == "TERRESTRE"
         }
@@ -114,7 +120,6 @@ enum class TipoDeVector {
         override fun puedeSerInfectado(vector: TipoDeVector): Boolean {
             return this != vector
         }
-        //al final borrar lo que no se use
         override fun puedeMoverseACamino(camino: String): Boolean {
             return camino == "AEREO" || camino == "TERRESTRE"
         }
@@ -126,7 +131,6 @@ enum class TipoDeVector {
         override fun puedeSerInfectado(vector: TipoDeVector): Boolean {
             return vector == Insecto
         }
-        //al final borrar lo que no se use
         override fun puedeMoverseACamino(camino: String): Boolean {
             return true
         }
@@ -136,8 +140,6 @@ enum class TipoDeVector {
     };
 
     abstract fun puedeSerInfectado(vector: TipoDeVector): Boolean
-
-    //al final borrar lo que no se use
     abstract fun puedeMoverseACamino(camino: String): Boolean
     abstract fun caminosCompatibles(): List<String>
 }
