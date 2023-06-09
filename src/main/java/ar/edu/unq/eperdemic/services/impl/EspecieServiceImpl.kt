@@ -12,7 +12,7 @@ import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
-@Service
+/*@Service
 @Transactional
 class EspecieServiceImpl() : EspecieService {
 
@@ -64,5 +64,5 @@ class EspecieServiceImpl() : EspecieService {
         return especieDAO.existeElNombreEnLaBase(nombre)
     }
 
-}
+}*/
 

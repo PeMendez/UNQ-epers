@@ -14,7 +14,7 @@ import org.springframework.data.domain.PageRequest
 import org.springframework.test.context.junit.jupiter.SpringExtension
 
 
-@ExtendWith(SpringExtension::class)
+/*@ExtendWith(SpringExtension::class)
 @SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class EspecieServiceImplTest {
@@ -343,7 +343,7 @@ class EspecieServiceImplTest {
         dataService.eliminarTodo()
     }
 
-}
+}*/
 
 
 

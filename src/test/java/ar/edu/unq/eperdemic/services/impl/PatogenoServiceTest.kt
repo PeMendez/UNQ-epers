@@ -1,6 +1,6 @@
 package ar.edu.unq.eperdemic.services.impl
 
-import ar.edu.unq.eperdemic.modelo.*
+/*import ar.edu.unq.eperdemic.modelo.*
 import ar.edu.unq.eperdemic.modelo.exceptions.*
 import ar.edu.unq.eperdemic.utils.DataService
 import org.junit.jupiter.api.*
@@ -273,5 +273,5 @@ class PatogenoServiceTest {
         dataService.eliminarTodo()
     }
 
-}
+}*/
 

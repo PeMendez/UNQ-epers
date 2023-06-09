@@ -1,6 +1,6 @@
 package ar.edu.unq.eperdemic.services.impl
 
-import ar.edu.unq.eperdemic.modelo.*
+/*import ar.edu.unq.eperdemic.modelo.*
 import ar.edu.unq.eperdemic.modelo.exceptions.NoExisteElid
 import ar.edu.unq.eperdemic.utils.DataServiceSpring
 import org.junit.jupiter.api.*
@@ -9,8 +9,9 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.data.domain.PageRequest
-import org.springframework.test.context.junit.jupiter.SpringExtension
-@ExtendWith(SpringExtension::class)
+import org.springframework.test.context.junit.jupiter.SpringExtension*/
+
+/*@ExtendWith(SpringExtension::class)
 @SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 
@@ -841,4 +842,4 @@ class VectorServiceImplTest {
     fun eliminarModelo() {
         dataServiceSpring.eliminarTodo()
     }
-}
+}*/

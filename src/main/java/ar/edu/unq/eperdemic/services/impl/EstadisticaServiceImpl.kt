@@ -10,7 +10,7 @@ import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
-@Service
+/*@Service
 @Transactional
 class EstadisticaServiceImpl : EstadisticaService {
 
@@ -41,4 +41,4 @@ class EstadisticaServiceImpl : EstadisticaService {
     }
 
 
-}
+}*/

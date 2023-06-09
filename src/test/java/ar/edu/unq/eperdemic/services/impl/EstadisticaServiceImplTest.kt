@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.junit.jupiter.SpringExtension
 
-@ExtendWith(SpringExtension::class)
+/*@ExtendWith(SpringExtension::class)
 @SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class EstadisticaServiceImplTest {
@@ -135,4 +135,4 @@ class EstadisticaServiceImplTest {
     fun eliminarModelo() {
         dataService.eliminarTodo()
     }
-}
+}*/

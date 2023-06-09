@@ -10,16 +10,15 @@ import ar.edu.unq.eperdemic.services.UbicacionService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import ar.edu.unq.eperdemic.services.impl.PatogenoServiceImpl
+//import ar.edu.unq.eperdemic.services.impl.PatogenoServiceImpl
 import ar.edu.unq.eperdemic.services.impl.UbicacionServiceImpl
 import ar.edu.unq.eperdemic.services.impl.VectorServiceImpl
 import org.springframework.data.neo4j.repository.query.Query
 
 
-@Service
+/*@Service
 class DataServiceSpring : DataService {
-
-    @Autowired
+    *@Autowired
     lateinit var ubicacionDAO: UbicacionDAO
     @Autowired
     lateinit var vectorDAO: VectorDAO
@@ -132,7 +131,7 @@ class DataServiceSpring : DataService {
         neo4jUbicacionDAO.detachDelete()
     }
 
-}
+}*/
 
 
 

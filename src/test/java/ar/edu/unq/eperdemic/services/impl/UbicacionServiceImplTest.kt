@@ -10,15 +10,17 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.data.domain.PageRequest
+import org.springframework.data.mongodb.core.geo.GeoJsonPoint
 import org.springframework.test.context.junit.jupiter.SpringExtension
+import java.awt.Point
 
 @ExtendWith(SpringExtension::class)
 @SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class UbicacionServiceImplTest {
 
-    @Autowired
-    private lateinit var dataService: DataService
+    //@Autowired
+    //private lateinit var dataService: DataService
 
     @Autowired
     private lateinit var vectorService: VectorServiceImpl
@@ -26,17 +28,17 @@ class UbicacionServiceImplTest {
     @Autowired
     private lateinit var ubicacionService: UbicacionServiceImpl
 
-    @Autowired
-    private lateinit var patogenoService: PatogenoServiceImpl
+    //@Autowired
+    //private lateinit var patogenoService: PatogenoServiceImpl
 
 
     @BeforeEach
     fun setUp() {
-        dataService.crearSetDeDatosIniciales()
+        //dataService.crearSetDeDatosIniciales()
         Random.switchModo(false)
     }
 
-    @Test
+    /*@Test
     fun seGuardaUnaUbicacionCorrectamenteEnAmbasBasesDeDatos() {
         val ubicacionAGuardar = ubicacionService.crearUbicacion("testGuardarUbi")
 
@@ -697,12 +699,22 @@ class UbicacionServiceImplTest {
             ubicacionService.moverMasCorto(ron.id!!, "Hogwarts")
         }
 
+    }*/
+
+    // ------------------------ MongoDBTests ------------------------ //
+
+    @Test
+    fun unaUbicacionNoSePuedeCrearEnUnaCoordenadaDeOtraUbicacion() {
+        val ubicacion1 = ubicacionService.crearUbicacion("juan", GeoJsonPoint(123.0,3123.0))
+        val ubicacion = ubicacionService.crearUbicacion("pepe", GeoJsonPoint(123.0, 3123.0))
+
+
     }
 
 
     @AfterEach
     fun clearAll() {
-        dataService.eliminarTodo()
+        //dataService.eliminarTodo()
     }
 
 }

@@ -5,6 +5,8 @@ import ar.edu.unq.eperdemic.modelo.UbicacionNeo4J
 import ar.edu.unq.eperdemic.modelo.Vector
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
+import org.springframework.data.mongodb.core.geo.GeoJsonPoint
+import java.awt.Point
 
 interface UbicacionService {
 
@@ -15,7 +17,7 @@ interface UbicacionService {
     fun conectados(ubicacionOrigen:String):List<Ubicacion>
 
     /* Operaciones CRUD*/
-    fun crearUbicacion(nombreUbicacion: String): Ubicacion
+    fun crearUbicacion(nombreUbicacion: String, coordenada: GeoJsonPoint): Ubicacion
     fun recuperarTodos(): List<Ubicacion>
     fun recuperarTodos(page: Pageable): Page<Ubicacion>
     fun recuperar(ubicacionId: Long): Ubicacion

@@ -5,6 +5,7 @@ import ar.edu.unq.eperdemic.modelo.Ubicacion
 import ar.edu.unq.eperdemic.modelo.UbicacionNeo4J
 import ar.edu.unq.eperdemic.modelo.Vector
 import ar.edu.unq.eperdemic.modelo.exceptions.*
+import ar.edu.unq.eperdemic.persistencia.dao.MongoUbicacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.Neo4jUbicacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.UbicacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.VectorDAO
@@ -13,9 +14,11 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
+import org.springframework.data.mongodb.core.geo.GeoJsonPoint
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.awt.Point
 
 
 @Service
@@ -26,6 +29,7 @@ class UbicacionServiceImpl: UbicacionService {
     @Autowired private lateinit var ubicacionDAO: UbicacionDAO
     @Autowired private lateinit var vectorServiceImpl: VectorServiceImpl
     @Autowired private lateinit var vectorDAO: VectorDAO
+    @Autowired private lateinit var mongoUbicacionDAO: MongoUbicacionDAO
 
     override fun expandir(ubicacionId: Long) {
         val ubicacion = ubicacionDAO.findByIdOrNull(ubicacionId)?: throw NoExisteElid("el id buscado no existe en la base de datos")
@@ -37,17 +41,20 @@ class UbicacionServiceImpl: UbicacionService {
         }
     }
 
-    override fun crearUbicacion(nombreUbicacion: String): Ubicacion {
+    override fun crearUbicacion(nombreUbicacion: String, coordenada: GeoJsonPoint): Ubicacion {
         try {
             ubicacionDAO.recuperarUbicacionPorNombre(nombreUbicacion)
             throw NombreDeUbicacionRepetido("Ya existe una ubicacion con ese nombre.")
         } catch (e: EmptyResultDataAccessException) {
+            if (mongoUbicacionDAO.existeUbicacionPorCoordenada(coordenada)) {
+                throw NoExisteElid("Ya existe una ubicación en la coordenada")
+            }
             val nuevaUbicacion = Ubicacion(nombreUbicacion)
             ubicacionDAO.save(nuevaUbicacion)
             neo4jUbicacionDAO.save(nuevaUbicacion.aUbicacionNeo4J())
+            mongoUbicacionDAO.save(nuevaUbicacion.aUbicacionMongo(coordenada))
             return nuevaUbicacion
         }
-
     }
 
     override fun recuperarTodos(): List<Ubicacion> {
@@ -130,7 +137,7 @@ class UbicacionServiceImpl: UbicacionService {
 
     private fun conectadosPorCamino(ubicacionNeoActual:String, ubicacionNeoAMover:String):String {
         return neo4jUbicacionDAO.conectadosPorCamino(ubicacionNeoActual, ubicacionNeoAMover).orElseThrow {
-            UbicacionMuyLejana("La ubicacion '" + ubicacionNeoAMover + "' es muy lejana para moverse.")
+            UbicacionMuyLejana("La ubicacion '$ubicacionNeoAMover' es muy lejana para moverse.")
         }
     }
 
@@ -156,8 +163,10 @@ class UbicacionServiceImpl: UbicacionService {
         if (caminoMasCorto.isEmpty()){
             throw UbicacionNoAlcanzable("El vector no puede moverse a la ubicacion $nombreDeUbicacion. Ya que el camino o bien no es compatible o no existe una conexión posible.")
         } else {
-            caminoMasCorto.forEach { ubicacion ->
-                mover(vectorId, ubicacion.idRelacional!!)
+            val caminosMasCortoUbicaciones = mutableListOf<Ubicacion>()
+            caminoMasCorto.forEach { u -> caminosMasCortoUbicaciones.add(recuperar(u.idRelacional!!)) }
+            caminosMasCortoUbicaciones.forEach { ubicacion ->
+                intentarMover(vector, ubicacion)
             }
         }
     }
