@@ -45,12 +45,14 @@ class UbicacionServiceImplTest {
     }
 
     @Test
-    fun seGuardaUnaUbicacionCorrectamente() {
+    fun seGuardaUnaUbicacionCorrectamenteEnAmbasBasesDeDatos() {
         val ubicacionAGuardar = ubicacionService.crearUbicacion("testGuardarUbi")
 
         val ubicacionRecuperada = ubicacionDAO.recuperarUbicacionPorNombre(ubicacionAGuardar.nombre)
+        val ubicacionNeo4j = neo4jUbicacionDAO.recuperarUbicacionPorNombre(ubicacionAGuardar.nombre)
 
         Assertions.assertNotNull(ubicacionRecuperada.id)
+        Assertions.assertTrue(ubicacionNeo4j.isPresent)
     }
 
     @Test
@@ -438,20 +440,17 @@ class UbicacionServiceImplTest {
         val ubicacion1 = ubicacionService.crearUbicacion("testConectarFalso1")
         val ubicacion2 = ubicacionService.crearUbicacion("testConectarFalso2")
 
-        val ubicacionNeo1 = neo4jUbicacionDAO.findByIdRelacional(ubicacion1.id!!).get()
-        val ubicacionNeo2 = neo4jUbicacionDAO.findByIdRelacional(ubicacion2.id!!).get()
-
         Assertions.assertThrows(TipoDeCaminoInvalido::class.java) {
-            ubicacionService.conectar(ubicacionNeo1.nombre, ubicacionNeo2.nombre, "123")
+            ubicacionService.conectar(ubicacion1.nombre, ubicacion2.nombre, "123")
         }
         Assertions.assertThrows(TipoDeCaminoInvalido::class.java) {
-            ubicacionService.conectar(ubicacionNeo1.nombre, ubicacionNeo2.nombre, "Tierra")
+            ubicacionService.conectar(ubicacion1.nombre, ubicacion2.nombre, "Tierra")
         }
         Assertions.assertThrows(TipoDeCaminoInvalido::class.java) {
-            ubicacionService.conectar(ubicacionNeo1.nombre, ubicacionNeo2.nombre, "@Terrestre")
+            ubicacionService.conectar(ubicacion1.nombre, ubicacion2.nombre, "@Terrestre")
         }
         Assertions.assertThrows(TipoDeCaminoInvalido::class.java) {
-            ubicacionService.conectar(ubicacionNeo1.nombre, ubicacionNeo2.nombre, "Maritimo1")
+            ubicacionService.conectar(ubicacion1.nombre, ubicacion2.nombre, "Maritimo1")
         }
     }
 
@@ -460,12 +459,9 @@ class UbicacionServiceImplTest {
         val ubicacion1 = ubicacionService.crearUbicacion("neoUbicacion1")
         val ubicacion2 = ubicacionService.crearUbicacion("neoUbicacion2")
 
-        val ubicacionNeo1 = neo4jUbicacionDAO.findByIdRelacional(ubicacion1.id!!).get()
-        val ubicacionNeo2 = neo4jUbicacionDAO.findByIdRelacional(ubicacion2.id!!).get()
+        ubicacionService.conectar(ubicacion1.nombre,ubicacion2.nombre,"Terrestre")
 
-        ubicacionService.conectar(ubicacionNeo1.nombre,ubicacionNeo2.nombre,"Terrestre")
-
-        Assertions.assertTrue(ubicacionService.hayConexionDirecta(ubicacionNeo1.nombre,ubicacionNeo2.nombre))
+        Assertions.assertTrue(ubicacionService.hayConexionDirecta(ubicacion1.nombre,ubicacion2.nombre))
     }
 
     @Test
@@ -474,16 +470,12 @@ class UbicacionServiceImplTest {
         val ubicacion2 = ubicacionService.crearUbicacion("ubicacion234")
         val ubicacion3 = ubicacionService.crearUbicacion("ubicacion345")
 
-        val ubicacionNeo1 = neo4jUbicacionDAO.findByIdRelacional(ubicacion1.id!!).get()
-        val ubicacionNeo2 = neo4jUbicacionDAO.findByIdRelacional(ubicacion2.id!!).get()
-        val ubicacionNeo3 = neo4jUbicacionDAO.findByIdRelacional(ubicacion3.id!!).get()
+        ubicacionService.conectar(ubicacion1.nombre,ubicacion2.nombre,"Terrestre")
+        ubicacionService.conectar(ubicacion2.nombre,ubicacion3.nombre,"Terrestre")
 
-        ubicacionService.conectar(ubicacionNeo1.nombre,ubicacionNeo2.nombre,"Terrestre")
-        ubicacionService.conectar(ubicacionNeo2.nombre,ubicacionNeo3.nombre,"Terrestre")
-
-        Assertions.assertTrue(ubicacionService.hayConexionDirecta(ubicacionNeo1.nombre,ubicacionNeo2.nombre))
-        Assertions.assertTrue(ubicacionService.hayConexionDirecta(ubicacionNeo2.nombre,ubicacionNeo3.nombre))
-        Assertions.assertFalse(ubicacionService.hayConexionDirecta(ubicacionNeo1.nombre,ubicacionNeo3.nombre))
+        Assertions.assertTrue(ubicacionService.hayConexionDirecta(ubicacion1.nombre,ubicacion2.nombre))
+        Assertions.assertTrue(ubicacionService.hayConexionDirecta(ubicacion2.nombre,ubicacion3.nombre))
+        Assertions.assertFalse(ubicacionService.hayConexionDirecta(ubicacion1.nombre,ubicacion3.nombre))
     }
 
     @Test
@@ -491,14 +483,11 @@ class UbicacionServiceImplTest {
         val ubicacion1 = ubicacionService.crearUbicacion("nuevaUbicacion1")
         val ubicacion2 = ubicacionService.crearUbicacion("nuevaUbicacion2")
 
-        val ubicacionNeo1 = neo4jUbicacionDAO.findByIdRelacional(ubicacion1.id!!).get()
-        val ubicacionNeo2 = neo4jUbicacionDAO.findByIdRelacional(ubicacion2.id!!).get()
+        Assertions.assertFalse(ubicacionService.hayConexionDirecta(ubicacion1.nombre,ubicacion2.nombre))
 
-        Assertions.assertFalse(ubicacionService.hayConexionDirecta(ubicacionNeo1.nombre,ubicacionNeo2.nombre))
+        ubicacionService.conectar(ubicacion1.nombre,ubicacion2.nombre,"Terrestre")
 
-        ubicacionService.conectar(ubicacionNeo1.nombre,ubicacionNeo2.nombre,"Terrestre")
-
-        Assertions.assertTrue(ubicacionService.hayConexionDirecta(ubicacionNeo1.nombre,ubicacionNeo2.nombre))
+        Assertions.assertTrue(ubicacionService.hayConexionDirecta(ubicacion1.nombre,ubicacion2.nombre))
     }
 
     @Test
@@ -507,17 +496,13 @@ class UbicacionServiceImplTest {
         val ubicacion2 = ubicacionService.crearUbicacion("nuevaUbicacion2")
         val ubicacion3 = ubicacionService.crearUbicacion("nuevaUbicacion3")
 
-        val ubicacionNeo1 = neo4jUbicacionDAO.findByIdRelacional(ubicacion1.id!!).get()
-        val ubicacionNeo2 = neo4jUbicacionDAO.findByIdRelacional(ubicacion2.id!!).get()
-        val ubicacionNeo3 = neo4jUbicacionDAO.findByIdRelacional(ubicacion3.id!!).get()
+        ubicacionService.conectar(ubicacion1.nombre,ubicacion3.nombre,"Terrestre")
+        ubicacionService.conectar(ubicacion1.nombre,ubicacion2.nombre,"Terrestre")
 
-        ubicacionService.conectar(ubicacionNeo1.nombre,ubicacionNeo3.nombre,"Terrestre")
-        ubicacionService.conectar(ubicacionNeo1.nombre,ubicacionNeo2.nombre,"Terrestre")
+        val conectadosConUbicacion1 = ubicacionService.conectados(ubicacion1.nombre)
 
-        val conectadosConUbicacion1 = ubicacionService.conectados(ubicacionNeo1.nombre)
-
-        Assertions.assertNotNull(conectadosConUbicacion1.find { u -> u.id!! == ubicacionNeo2.idRelacional!! })
-        Assertions.assertNotNull(conectadosConUbicacion1.find { u -> u.id!! == ubicacionNeo3.idRelacional!! })
+        Assertions.assertNotNull(conectadosConUbicacion1.find { u -> u.id!! == ubicacion2.id!! })
+        Assertions.assertNotNull(conectadosConUbicacion1.find { u -> u.id!! == ubicacion3.id!! })
         Assertions.assertTrue(conectadosConUbicacion1.size == 2)
     }
 
@@ -527,16 +512,12 @@ class UbicacionServiceImplTest {
         val ubicacion2 = ubicacionService.crearUbicacion("nuevaUbicacion2")
         val ubicacion3 = ubicacionService.crearUbicacion("nuevaUbicacion3")
 
-        val ubicacionNeo1 = neo4jUbicacionDAO.findByIdRelacional(ubicacion1.id!!).get()
-        val ubicacionNeo2 = neo4jUbicacionDAO.findByIdRelacional(ubicacion2.id!!).get()
-        val ubicacionNeo3 = neo4jUbicacionDAO.findByIdRelacional(ubicacion3.id!!).get()
+        ubicacionService.conectar(ubicacion1.nombre,ubicacion2.nombre,"Terrestre")
+        ubicacionService.conectar(ubicacion2.nombre,ubicacion3.nombre,"Terrestre")
 
-        ubicacionService.conectar(ubicacionNeo1.nombre,ubicacionNeo2.nombre,"Terrestre")
-        ubicacionService.conectar(ubicacionNeo2.nombre,ubicacionNeo3.nombre,"Terrestre")
+        val conectadosConUbicacion1 = ubicacionService.conectados(ubicacion1.nombre)
 
-        val conectadosConUbicacion1 = ubicacionService.conectados(ubicacionNeo1.nombre)
-
-        Assertions.assertNotNull(conectadosConUbicacion1.find { u -> u.id!! == ubicacionNeo2.idRelacional!! })
+        Assertions.assertNotNull(conectadosConUbicacion1.find { u -> u.id!! == ubicacion2.id!! })
         Assertions.assertTrue(conectadosConUbicacion1.size == 1)
     }
 
@@ -544,9 +525,8 @@ class UbicacionServiceImplTest {
     fun cuandoUnaUbicacionNoTieneConectadosEntoncesSeRetornaUnaListaVacia() {
         val ubicacion1 = ubicacionService.crearUbicacion("nuevaUbicacion1")
 
-        val ubicacionNeo1 = neo4jUbicacionDAO.findByIdRelacional(ubicacion1.id!!).get()
 
-        val conectadosUbicacion1 = ubicacionService.conectados(ubicacionNeo1.nombre)
+        val conectadosUbicacion1 = ubicacionService.conectados(ubicacion1.nombre)
 
         Assertions.assertTrue(conectadosUbicacion1.isEmpty())
     }
@@ -556,13 +536,11 @@ class UbicacionServiceImplTest {
         val ubicacionCreada1 = ubicacionService.crearUbicacion("testMoverUbicacion")
         val ubicacionCreada2 = ubicacionService.crearUbicacion("testMoverUbicacion2")
 
-        val ubicacionNeo1 = neo4jUbicacionDAO.findByIdRelacional(ubicacionCreada1.id!!).get()
-        val ubicacionNeo2 = neo4jUbicacionDAO.findByIdRelacional(ubicacionCreada2.id!!).get()
 
-        ubicacionService.conectar(ubicacionNeo1.nombre, ubicacionNeo2.nombre,"terrestre")
+        ubicacionService.conectar(ubicacionCreada1.nombre, ubicacionCreada2.nombre,"terrestre")
 
-        Assertions.assertTrue(ubicacionService.hayConexionDirecta(ubicacionNeo1.nombre, ubicacionNeo2.nombre))
-        Assertions.assertFalse(ubicacionService.hayConexionDirecta(ubicacionNeo2.nombre, ubicacionNeo1.nombre))
+        Assertions.assertTrue(ubicacionService.hayConexionDirecta(ubicacionCreada1.nombre, ubicacionCreada2.nombre))
+        Assertions.assertFalse(ubicacionService.hayConexionDirecta(ubicacionCreada2.nombre, ubicacionCreada1.nombre))
     }
 
     @Test
@@ -571,10 +549,7 @@ class UbicacionServiceImplTest {
         val vectorCreado1 = vectorService.crearVector(TipoDeVector.Insecto, ubicacionCreada1.id!!)
         val ubicacionCreada2 = ubicacionService.crearUbicacion("testMoverUbicacion2")
 
-        val ubicacionNeo1 = neo4jUbicacionDAO.findByIdRelacional(ubicacionCreada1.id!!).get()
-        val ubicacionNeo2 = neo4jUbicacionDAO.findByIdRelacional(ubicacionCreada2.id!!).get()
-
-        ubicacionService.conectar(ubicacionNeo1.nombre, ubicacionNeo2.nombre,"Maritimo")
+        ubicacionService.conectar(ubicacionCreada1.nombre, ubicacionCreada2.nombre,"Maritimo")
 
         Assertions.assertThrows(UbicacionNoAlcanzable ::class.java ){
             ubicacionService.mover(vectorCreado1.id!!, ubicacionCreada2.id!!)
@@ -598,6 +573,28 @@ class UbicacionServiceImplTest {
     }
 
     @Test
+    fun noEsPosibleMoverALaMismaUbicacion() {
+        val ubicacion1 = ubicacionService.crearUbicacion("ubicacion123")
+        val vector = vectorService.crearVector(TipoDeVector.Animal,ubicacion1.id!!)
+
+        Assertions.assertThrows(EsMismaUbicacion ::class.java ){
+            ubicacionService.mover(vector.id!!, ubicacion1.id!!)
+        }
+    }
+
+    @Test
+    fun cuandoNoHayConexionEntreDosUbicacionesLaUbicacionEsMuyLejana() {
+        val ubicacion1 = ubicacionService.crearUbicacion("ubicacion123")
+        val vector = vectorService.crearVector(TipoDeVector.Persona,ubicacion1.id!!)
+        val ubicacion3 = ubicacionService.crearUbicacion("ubicacion323")
+
+        Assertions.assertThrows(UbicacionMuyLejana ::class.java ){
+            ubicacionService.mover(vector.id!!, ubicacion3.id!!)
+        }
+    }
+
+
+    @Test
     fun unVectorSeMuevePorElCaminoMasCortoPosibleDeFormaCorrecta(){
         val ubicacion1 = ubicacionService.crearUbicacion("ubicacion123")
         val ubicacion2 = ubicacionService.crearUbicacion("ubicacion223")
@@ -608,19 +605,13 @@ class UbicacionServiceImplTest {
 
         val vector = vectorService.crearVector(TipoDeVector.Animal,ubicacion1.id!!)
 
-        val ubicacionNeo1 = neo4jUbicacionDAO.findByIdRelacional(ubicacion1.id!!).get()
-        val ubicacionNeo2 = neo4jUbicacionDAO.findByIdRelacional(ubicacion2.id!!).get()
-        val ubicacionNeo3 = neo4jUbicacionDAO.findByIdRelacional(ubicacion3.id!!).get()
-        val ubicacionNeo4 = neo4jUbicacionDAO.findByIdRelacional(ubicacion4.id!!).get()
-        val ubicacionNeo5 = neo4jUbicacionDAO.findByIdRelacional(ubicacion5.id!!).get()
-        val ubicacionNeo6 = neo4jUbicacionDAO.findByIdRelacional(ubicacion6.id!!).get()
 
-        ubicacionService.conectar(ubicacionNeo1.nombre,ubicacionNeo2.nombre,"TERRESTRE")
-        ubicacionService.conectar(ubicacionNeo2.nombre,ubicacionNeo6.nombre,"MARITIMO")
-        ubicacionService.conectar(ubicacionNeo2.nombre,ubicacionNeo3.nombre,"TERRESTRE")
-        ubicacionService.conectar(ubicacionNeo3.nombre,ubicacionNeo4.nombre,"TERRESTRE")
-        ubicacionService.conectar(ubicacionNeo4.nombre,ubicacionNeo5.nombre,"TERRESTRE")
-        ubicacionService.conectar(ubicacionNeo5.nombre,ubicacionNeo6.nombre,"TERRESTRE")
+        ubicacionService.conectar(ubicacion1.nombre,ubicacion2.nombre,"TERRESTRE")
+        ubicacionService.conectar(ubicacion2.nombre,ubicacion6.nombre,"MARITIMO")
+        ubicacionService.conectar(ubicacion2.nombre,ubicacion3.nombre,"TERRESTRE")
+        ubicacionService.conectar(ubicacion3.nombre,ubicacion4.nombre,"TERRESTRE")
+        ubicacionService.conectar(ubicacion4.nombre,ubicacion5.nombre,"TERRESTRE")
+        ubicacionService.conectar(ubicacion5.nombre,ubicacion6.nombre,"TERRESTRE")
 
         ubicacionService.moverMasCorto(vector.id!!, "ubicacion623")
 
@@ -651,19 +642,13 @@ class UbicacionServiceImplTest {
         Assertions.assertTrue(scabbers.estaSano())
         Assertions.assertTrue(hedwig.estaSano())
 
-        val ubicacionNeo1 = neo4jUbicacionDAO.findByIdRelacional(ubicacion1.id!!).get()
-        val ubicacionNeo2 = neo4jUbicacionDAO.findByIdRelacional(ubicacion2.id!!).get()
-        val ubicacionNeo3 = neo4jUbicacionDAO.findByIdRelacional(ubicacion3.id!!).get()
-        val ubicacionNeo4 = neo4jUbicacionDAO.findByIdRelacional(ubicacion4.id!!).get()
-        val ubicacionNeo5 = neo4jUbicacionDAO.findByIdRelacional(ubicacion5.id!!).get()
-        val ubicacionNeo6 = neo4jUbicacionDAO.findByIdRelacional(ubicacion6.id!!).get()
 
-        ubicacionService.conectar(ubicacionNeo1.nombre,ubicacionNeo2.nombre,"TERRESTRE")
-        ubicacionService.conectar(ubicacionNeo2.nombre,ubicacionNeo6.nombre,"MARITIMO")
-        ubicacionService.conectar(ubicacionNeo2.nombre,ubicacionNeo3.nombre,"TERRESTRE")
-        ubicacionService.conectar(ubicacionNeo3.nombre,ubicacionNeo4.nombre,"TERRESTRE")
-        ubicacionService.conectar(ubicacionNeo4.nombre,ubicacionNeo5.nombre,"TERRESTRE")
-        ubicacionService.conectar(ubicacionNeo5.nombre,ubicacionNeo6.nombre,"TERRESTRE")
+        ubicacionService.conectar(ubicacion1.nombre,ubicacion2.nombre,"TERRESTRE")
+        ubicacionService.conectar(ubicacion2.nombre,ubicacion6.nombre,"MARITIMO")
+        ubicacionService.conectar(ubicacion2.nombre,ubicacion3.nombre,"TERRESTRE")
+        ubicacionService.conectar(ubicacion3.nombre,ubicacion4.nombre,"TERRESTRE")
+        ubicacionService.conectar(ubicacion4.nombre,ubicacion5.nombre,"TERRESTRE")
+        ubicacionService.conectar(ubicacion5.nombre,ubicacion6.nombre,"TERRESTRE")
 
         ubicacionService.moverMasCorto(crookshanks.id!!, "ubicacion623")
 
@@ -680,34 +665,11 @@ class UbicacionServiceImplTest {
     fun noEsPosibleCaminoMasCortoALaMismaUbicacion() {
         val ubicacion1 = ubicacionService.crearUbicacion("ubicacion123")
         val vector = vectorService.crearVector(TipoDeVector.Animal,ubicacion1.id!!)
-        val ubicacionNeo1 = neo4jUbicacionDAO.findByIdRelacional(ubicacion1.id!!).get()
 
         Assertions.assertThrows(EsMismaUbicacion ::class.java ){
-            ubicacionService.moverMasCorto(vector.id!!, ubicacionNeo1.nombre)
+            ubicacionService.moverMasCorto(vector.id!!, ubicacion1.nombre)
         }
     }
-
-    @Test
-    fun noEsPosibleMoverALaMismaUbicacion() {
-        val ubicacion1 = ubicacionService.crearUbicacion("ubicacion123")
-        val vector = vectorService.crearVector(TipoDeVector.Animal,ubicacion1.id!!)
-
-        Assertions.assertThrows(EsMismaUbicacion ::class.java ){
-            ubicacionService.mover(vector.id!!, ubicacion1.id!!)
-        }
-    }
-
-    @Test
-    fun cuandoNoHayConexionEntreDosUbicacionesLaUbicacionEsMuyLejana() {
-        val ubicacion1 = ubicacionService.crearUbicacion("ubicacion123")
-        val vector = vectorService.crearVector(TipoDeVector.Persona,ubicacion1.id!!)
-        val ubicacion3 = ubicacionService.crearUbicacion("ubicacion323")
-
-        Assertions.assertThrows(UbicacionMuyLejana ::class.java ){
-            ubicacionService.mover(vector.id!!, ubicacion3.id!!)
-        }
-    }
-
 
     @Test
     fun unVectorNoPuedeMoversePorElCaminoMasCortoSiNoExisteUnaConexionEntreLasUbicacionesDadas(){
@@ -735,19 +697,13 @@ class UbicacionServiceImplTest {
 
         val ron = vectorService.crearVector(TipoDeVector.Persona,ubicacion1.id!!)
 
-        val ubicacionNeo1 = neo4jUbicacionDAO.findByIdRelacional(ubicacion1.id!!).get()
-        val ubicacionNeo2 = neo4jUbicacionDAO.findByIdRelacional(ubicacion2.id!!).get()
-        val ubicacionNeo3 = neo4jUbicacionDAO.findByIdRelacional(ubicacion3.id!!).get()
-        val ubicacionNeo4 = neo4jUbicacionDAO.findByIdRelacional(ubicacion4.id!!).get()
-        val ubicacionNeo5 = neo4jUbicacionDAO.findByIdRelacional(ubicacion5.id!!).get()
-        val ubicacionNeo6 = neo4jUbicacionDAO.findByIdRelacional(ubicacion6.id!!).get()
 
-        ubicacionService.conectar(ubicacionNeo1.nombre,ubicacionNeo2.nombre,"TERRESTRE")
-        ubicacionService.conectar(ubicacionNeo2.nombre,ubicacionNeo6.nombre,"MARITIMO")
-        ubicacionService.conectar(ubicacionNeo2.nombre,ubicacionNeo3.nombre,"TERRESTRE")
-        ubicacionService.conectar(ubicacionNeo3.nombre,ubicacionNeo4.nombre,"AEREO")
-        ubicacionService.conectar(ubicacionNeo4.nombre,ubicacionNeo5.nombre,"AEREO")
-        ubicacionService.conectar(ubicacionNeo5.nombre,ubicacionNeo6.nombre,"AEREO")
+        ubicacionService.conectar(ubicacion1.nombre,ubicacion2.nombre,"TERRESTRE")
+        ubicacionService.conectar(ubicacion2.nombre,ubicacion6.nombre,"MARITIMO")
+        ubicacionService.conectar(ubicacion2.nombre,ubicacion3.nombre,"TERRESTRE")
+        ubicacionService.conectar(ubicacion3.nombre,ubicacion4.nombre,"AEREO")
+        ubicacionService.conectar(ubicacion4.nombre,ubicacion5.nombre,"AEREO")
+        ubicacionService.conectar(ubicacion5.nombre,ubicacion6.nombre,"AEREO")
 
         Assertions.assertThrows(UbicacionNoAlcanzable ::class.java ){
             ubicacionService.moverMasCorto(ron.id!!, "Hogwarts")
