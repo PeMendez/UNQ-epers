@@ -10,4 +10,8 @@ class UbicacionNeo4J {
     lateinit var nombre: String
     var idRelacional: Long? = null
 
+
+
+
 }
+

@@ -1,6 +1,9 @@
 package ar.edu.unq.eperdemic.services.impl
 
-import ar.edu.unq.eperdemic.modelo.*
+import ar.edu.unq.eperdemic.modelo.Random
+import ar.edu.unq.eperdemic.modelo.Ubicacion
+import ar.edu.unq.eperdemic.modelo.UbicacionNeo4J
+import ar.edu.unq.eperdemic.modelo.Vector
 import ar.edu.unq.eperdemic.modelo.exceptions.*
 import ar.edu.unq.eperdemic.persistencia.dao.Neo4jUbicacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.UbicacionDAO
@@ -93,7 +96,8 @@ class UbicacionServiceImpl: UbicacionService {
 
     private fun esTipoDeCaminoValido(camino: String): String {
         val caminoAVerificar = camino.uppercase()
-        if (TipoDeVector.values().flatMap { t -> t.caminosCompatibles() }.contains(caminoAVerificar)) {
+        val caminosDisponibles = listOf<String>("TERRESTRE","MARITIMO","AEREO")
+        if (caminosDisponibles.contains(caminoAVerificar)) {
             return caminoAVerificar
         } else {
             throw TipoDeCaminoInvalido("El tipo de camino '$camino' no es válido.")
