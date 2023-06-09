@@ -35,18 +35,16 @@ class UbicacionServiceImpl: UbicacionService {
     }
 
     override fun crearUbicacion(nombreUbicacion: String): Ubicacion {
-        if (neo4jUbicacionDAO.recuperarUbicacionPorNombre(nombreUbicacion).isPresent) {
-            throw NombreDeUbicacionRepetido("Ya existe una ubicacion con ese nombre.")
-        }
         try {
             ubicacionDAO.recuperarUbicacionPorNombre(nombreUbicacion)
+            throw NombreDeUbicacionRepetido("Ya existe una ubicacion con ese nombre.")
         } catch (e: EmptyResultDataAccessException) {
             val nuevaUbicacion = Ubicacion(nombreUbicacion)
             ubicacionDAO.save(nuevaUbicacion)
             neo4jUbicacionDAO.save(nuevaUbicacion.aUbicacionNeo4J())
             return nuevaUbicacion
         }
-        throw NombreDeUbicacionRepetido("Ya existe una ubicacion con ese nombre.")
+
     }
 
     override fun recuperarTodos(): List<Ubicacion> {
@@ -67,35 +65,30 @@ class UbicacionServiceImpl: UbicacionService {
     }
 
     override fun conectar(ubicacionOrigen: String, ubicacionDestino:String, tipoDeCamino:String){
-        existeUbicacionPorNombre(ubicacionOrigen)
-        existeUbicacionPorNombre(ubicacionDestino)
         val caminoVerificado = esTipoDeCaminoValido(tipoDeCamino)
-        val ubiOrigen = neo4jUbicacionDAO.recuperarUbicacionPorNombre(ubicacionOrigen).get()
-        val ubiDestino = neo4jUbicacionDAO.recuperarUbicacionPorNombre(ubicacionDestino).get()
+        val ubiOrigen = recuperarUbicacionPorNombreSiExiste(ubicacionOrigen)
+        val ubiDestino = recuperarUbicacionPorNombreSiExiste(ubicacionDestino)
 
         neo4jUbicacionDAO.conectar(ubiOrigen.idRelacional!!,ubiDestino.idRelacional!!, caminoVerificado)
     }
 
+    private fun recuperarUbicacionPorNombreSiExiste(ubicacion:String):UbicacionNeo4J{
+        return neo4jUbicacionDAO.recuperarUbicacionPorNombre(ubicacion).orElseThrow{
+            NoExisteElNombreDeLaUbicacion("No existe la ubicacion $ubicacion")
+        }
+    }
+
     fun hayConexionDirecta(ubicacionOrigen: String, ubicacionDestino:String): Boolean{
-        existeUbicacionPorNombre(ubicacionOrigen)
-        existeUbicacionPorNombre(ubicacionDestino)
-        val ubiOrigen = neo4jUbicacionDAO.recuperarUbicacionPorNombre(ubicacionOrigen).get()
-        val ubiDestino = neo4jUbicacionDAO.recuperarUbicacionPorNombre(ubicacionDestino).get()
+        val ubiOrigen = recuperarUbicacionPorNombreSiExiste(ubicacionOrigen)
+        val ubiDestino = recuperarUbicacionPorNombreSiExiste(ubicacionDestino)
 
         return neo4jUbicacionDAO.hayConexionDirecta(ubiOrigen.idRelacional!!,ubiDestino.idRelacional!!)
     }
 
     override fun conectados(ubicacionOrigen:String): List<Ubicacion>{
-        existeUbicacionPorNombre(ubicacionOrigen)
+        recuperarUbicacionPorNombreSiExiste(ubicacionOrigen)
         val ubicacionesConectadas =  neo4jUbicacionDAO.conectados(ubicacionOrigen)
         return ubicacionesConectadas.map { u -> recuperar(u.idRelacional!!) }
-    }
-
-    private fun existeUbicacionPorNombre(nombreDeUbicacionABuscar:String){
-        if (!neo4jUbicacionDAO.recuperarUbicacionPorNombre(nombreDeUbicacionABuscar).isPresent
-            || ubicacionDAO.recuperarUbicacionPorNombre(nombreDeUbicacionABuscar).id == null) {
-            throw NoExisteElNombreDeLaUbicacion("La ubicación $nombreDeUbicacionABuscar no existe en la base de datos")
-        }
     }
 
     private fun esTipoDeCaminoValido(camino: String): String {
@@ -113,10 +106,7 @@ class UbicacionServiceImpl: UbicacionService {
         if(vector.ubicacion.id!! == ubicacionid){
             throw EsMismaUbicacion("No podes moverte a la misma ubicacion en la que te encontras")
         }
-        val ubicacionNeo4JAMoverse = neo4jUbicacionDAO.findByIdRelacional(ubicacionid).get()
-        val ubicacionNeo4JActual = neo4jUbicacionDAO.findByIdRelacional(vector.ubicacion.id!!).get()
-        val caminoDeConexionEntreUbicaciones = conectadosPorCamino(ubicacionNeo4JActual.nombre, ubicacionNeo4JAMoverse.nombre)
-
+        val caminoDeConexionEntreUbicaciones = conectadosPorCamino(vector.nombreDeUbicacionActual(), ubicacion.nombre)
         if (neo4jUbicacionDAO.puedeMoversePorCamino(vector.caminosCompatibles(),caminoDeConexionEntreUbicaciones)) {
             intentarMover(vector, ubicacion)
         } else {
@@ -143,7 +133,7 @@ class UbicacionServiceImpl: UbicacionService {
     override fun moverMasCorto(vectorId:Long, nombreDeUbicacion:String){
         val vector = vectorDAO.findByIdOrNull(vectorId)?: throw NoExisteElid("No existe el ID del vector")
         val ubicacionDelVector = vector.nombreDeUbicacionActual()
-        existeUbicacionPorNombre(nombreDeUbicacion)
+        recuperarUbicacionPorNombreSiExiste(nombreDeUbicacion)
         if(ubicacionDelVector == nombreDeUbicacion){
             throw EsMismaUbicacion("No podes moverte a la misma ubicacion en la que te encontras")
         }

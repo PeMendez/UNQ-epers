@@ -14,7 +14,7 @@ object Random {
     fun decidirTipoVector(): TipoDeVector{
         val tipos = TipoDeVector.values()
         return if (esRandom){
-            tipos.get((0..1).random())
+            tipos.get((0..2).random())
         } else {
             tipos.get(1)
         }
