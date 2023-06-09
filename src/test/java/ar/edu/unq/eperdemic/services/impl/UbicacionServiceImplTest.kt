@@ -705,9 +705,11 @@ class UbicacionServiceImplTest {
 
     @Test
     fun unaUbicacionNoSePuedeCrearEnUnaCoordenadaDeOtraUbicacion() {
-        val ubicacion1 = ubicacionService.crearUbicacion("juan", GeoJsonPoint(123.0,3123.0))
-        val ubicacion = ubicacionService.crearUbicacion("pepe", GeoJsonPoint(123.0, 3123.0))
+        ubicacionService.crearUbicacion("pedrito", GeoJsonPoint(124.0,3123.0))
 
+       Assertions.assertThrows(NoExisteElid::class.java){
+           ubicacionService.crearUbicacion("pepe", GeoJsonPoint(124.0, 3123.0))
+       }
 
     }
 

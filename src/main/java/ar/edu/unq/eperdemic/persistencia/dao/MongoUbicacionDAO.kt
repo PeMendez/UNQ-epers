@@ -8,10 +8,7 @@ import java.util.*
 
 interface MongoUbicacionDAO: MongoRepository<UbicacionMongo, String> {
 
-    @Query("{ 'coordenada': { '\$eq': ?0 } }")
-    fun recuperarPorCoordenada(coordenadaABuscar: GeoJsonPoint): Optional<UbicacionMongo>
-
     @Query("{ 'coordenada': ?0 }")
-    fun existeUbicacionPorCoordenada(coordenada: GeoJsonPoint): Optional<UbicacionMongo>
+    fun recuperarPorCoordenada(coordenada: GeoJsonPoint): Optional<UbicacionMongo>
 }
 

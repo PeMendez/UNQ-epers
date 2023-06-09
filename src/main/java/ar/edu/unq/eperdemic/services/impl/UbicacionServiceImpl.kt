@@ -46,7 +46,7 @@ class UbicacionServiceImpl: UbicacionService {
             ubicacionDAO.recuperarUbicacionPorNombre(nombreUbicacion)
             throw NombreDeUbicacionRepetido("Ya existe una ubicacion con ese nombre.")
         } catch (e: EmptyResultDataAccessException) {
-            if (mongoUbicacionDAO.existeUbicacionPorCoordenada(coordenada).isPresent) {
+            if (mongoUbicacionDAO.recuperarPorCoordenada(coordenada).isPresent) {
                 throw NoExisteElid("Ya existe una ubicación en la coordenada")
             }
             val nuevaUbicacion = Ubicacion(nombreUbicacion)
