@@ -116,7 +116,7 @@ class UbicacionServiceImpl: UbicacionService {
 
         if (!caminoDeConexionEntreUbicaciones.isPresent) {
             throw UbicacionMuyLejana("La ubicacion '" + ubicacionNeo4JAMoverse.nombre + "' es muy lejana para moverse.")
-        } else if (vector.puedeMoversePorCamino(caminoDeConexionEntreUbicaciones.get())) {
+        } else if (neo4jUbicacionDAO.puedeMoversePorCamino(vector.caminosCompatibles(),caminoDeConexionEntreUbicaciones.get())) {
             intentarMover(vector, ubicacion)
         } else {
             throw UbicacionNoAlcanzable("El tipo de vector " + vector.tipo + " no puede moverse por el tipo de camino " + caminoDeConexionEntreUbicaciones.get())

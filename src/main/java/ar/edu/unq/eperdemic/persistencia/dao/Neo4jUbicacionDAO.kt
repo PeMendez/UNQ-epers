@@ -1,9 +1,8 @@
 package ar.edu.unq.eperdemic.persistencia.dao
 
 import ar.edu.unq.eperdemic.modelo.UbicacionNeo4J
-import org.springframework.data.neo4j.repository.query.Query
 import org.springframework.data.neo4j.repository.Neo4jRepository
-import org.springframework.data.repository.query.Param
+import org.springframework.data.neo4j.repository.query.Query
 import org.springframework.stereotype.Repository
 import java.util.*
 
@@ -46,4 +45,6 @@ interface Neo4jUbicacionDAO : Neo4jRepository<UbicacionNeo4J, Long?> {
     fun caminoMasCortoEntre(caminosCompatibles:List<String>,origenNombre:String,destinoNombre:String): Optional<List<UbicacionNeo4J>>
 
 
+    @Query("MATCH (n) WHERE \$tipoDeCamino IN \$caminosCompatibles RETURN COUNT(n) > 0")
+    fun puedeMoversePorCamino(caminosCompatibles:List<String>,tipoDeCamino: String): Boolean
 }
