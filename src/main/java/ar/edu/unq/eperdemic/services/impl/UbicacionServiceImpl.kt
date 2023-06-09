@@ -63,6 +63,22 @@ class UbicacionServiceImpl: UbicacionService {
         return ubicacionDAO.findByIdOrNull(ubicacionId)?: throw NoExisteElid("el id buscado no existe en la base de datos")
     }
 
+    override fun recuperarUbicacionPorNombre(nombreUbicacion: String) : Ubicacion {
+        return ubicacionDAO.recuperarUbicacionPorNombre(nombreUbicacion)?: throw NoExisteElNombreDeLaUbicacion("El nombre no existe en la base de datos")
+    }
+
+    fun recuperarUbicacionPorNombreSiExiste(ubicacion:String):UbicacionNeo4J{
+        return neo4jUbicacionDAO.recuperarUbicacionPorNombre(ubicacion).orElseThrow{
+            NoExisteElNombreDeLaUbicacion("No existe la ubicacion $ubicacion")
+        }
+    }
+
+    override fun recuperarUbicacionNeoPorId(idUbicacion:Long) : UbicacionNeo4J {
+        return neo4jUbicacionDAO.findByIdRelacional(idUbicacion).orElseThrow{
+            NoExisteElid("No existe el id $idUbicacion")
+        }
+    }
+
     override fun recuperarVectores(ubicacionId: Long): List<Vector> {
         return ubicacionDAO.recuperarVectores(ubicacionId)
     }
@@ -73,12 +89,6 @@ class UbicacionServiceImpl: UbicacionService {
         val ubiDestino = recuperarUbicacionPorNombreSiExiste(ubicacionDestino)
 
         neo4jUbicacionDAO.conectar(ubiOrigen.idRelacional!!,ubiDestino.idRelacional!!, caminoVerificado)
-    }
-
-    private fun recuperarUbicacionPorNombreSiExiste(ubicacion:String):UbicacionNeo4J{
-        return neo4jUbicacionDAO.recuperarUbicacionPorNombre(ubicacion).orElseThrow{
-            NoExisteElNombreDeLaUbicacion("No existe la ubicacion $ubicacion")
-        }
     }
 
     fun hayConexionDirecta(ubicacionOrigen: String, ubicacionDestino:String): Boolean{

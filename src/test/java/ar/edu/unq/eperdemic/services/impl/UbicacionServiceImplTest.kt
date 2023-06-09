@@ -4,8 +4,6 @@ import ar.edu.unq.eperdemic.modelo.Patogeno
 import ar.edu.unq.eperdemic.modelo.Random
 import ar.edu.unq.eperdemic.modelo.TipoDeVector
 import ar.edu.unq.eperdemic.modelo.exceptions.*
-import ar.edu.unq.eperdemic.persistencia.dao.Neo4jUbicacionDAO
-import ar.edu.unq.eperdemic.persistencia.dao.UbicacionDAO
 import ar.edu.unq.eperdemic.utils.DataService
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.extension.ExtendWith
@@ -31,12 +29,6 @@ class UbicacionServiceImplTest {
     @Autowired
     private lateinit var patogenoService: PatogenoServiceImpl
 
-    @Autowired
-    private lateinit var ubicacionDAO: UbicacionDAO
-
-    @Autowired
-    private lateinit var neo4jUbicacionDAO: Neo4jUbicacionDAO
-
 
     @BeforeEach
     fun setUp() {
@@ -48,11 +40,11 @@ class UbicacionServiceImplTest {
     fun seGuardaUnaUbicacionCorrectamenteEnAmbasBasesDeDatos() {
         val ubicacionAGuardar = ubicacionService.crearUbicacion("testGuardarUbi")
 
-        val ubicacionRecuperada = ubicacionDAO.recuperarUbicacionPorNombre(ubicacionAGuardar.nombre)
-        val ubicacionNeo4j = neo4jUbicacionDAO.recuperarUbicacionPorNombre(ubicacionAGuardar.nombre)
+        val ubicacionRecuperada = ubicacionService.recuperarUbicacionPorNombre(ubicacionAGuardar.nombre)
+        val ubicacionNeo4j = ubicacionService.recuperarUbicacionPorNombreSiExiste(ubicacionAGuardar.nombre)
 
         Assertions.assertNotNull(ubicacionRecuperada.id)
-        Assertions.assertTrue(ubicacionNeo4j.isPresent)
+        Assertions.assertNotNull(ubicacionNeo4j.idRelacional)
     }
 
     @Test
@@ -395,20 +387,18 @@ class UbicacionServiceImplTest {
     @Test
     fun seRecuperaUnaUbicacionDeNeo4jCorrectamente() {
         val ubicacionCreada = ubicacionService.crearUbicacion("testNeo")
-        val ubicacionRecuperadaOptional = neo4jUbicacionDAO.findByIdRelacional(ubicacionCreada.id!!)
+        val ubicacionRecuperadaOptional = ubicacionService.recuperarUbicacionNeoPorId(ubicacionCreada.id!!)
 
-        Assertions.assertTrue(ubicacionRecuperadaOptional.isPresent)
-
-        val ubicacionRecuperada = ubicacionRecuperadaOptional.get()
-
-        Assertions.assertEquals(ubicacionRecuperada.nombre, ubicacionCreada.nombre)
+        Assertions.assertEquals(ubicacionCreada.id, ubicacionRecuperadaOptional.idRelacional)
+        Assertions.assertEquals(ubicacionRecuperadaOptional.nombre, ubicacionCreada.nombre)
     }
 
     @Test
     fun noSePuedeRecuperarUnaUbicacionDeNeo4jConUnIdInexistente() {
-        val ubicacionRecuperada = neo4jUbicacionDAO.findByIdRelacional(-2222)
 
-        Assertions.assertFalse(ubicacionRecuperada.isPresent)
+        Assertions.assertThrows(NoExisteElid::class.java){
+            ubicacionService.recuperarUbicacionNeoPorId(-2222)
+        }
     }
 
     @Test
@@ -562,10 +552,8 @@ class UbicacionServiceImplTest {
         val vectorCreado1 = vectorService.crearVector(TipoDeVector.Persona, ubicacionCreada1.id!!)
         val ubicacionCreada2 = ubicacionService.crearUbicacion("testMoverUbicacion2")
 
-        val ubicacionNeo1 = neo4jUbicacionDAO.findByIdRelacional(ubicacionCreada1.id!!).get()
-        val ubicacionNeo2 = neo4jUbicacionDAO.findByIdRelacional(ubicacionCreada2.id!!).get()
 
-        ubicacionService.conectar(ubicacionNeo1.nombre, ubicacionNeo2.nombre,"Aereo")
+        ubicacionService.conectar(ubicacionCreada1.nombre, ubicacionCreada2.nombre,"Aereo")
 
         Assertions.assertThrows(UbicacionNoAlcanzable ::class.java ){
             ubicacionService.mover(vectorCreado1.id!!, ubicacionCreada2.id!!)
