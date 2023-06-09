@@ -115,16 +115,22 @@ class UbicacionServiceImpl: UbicacionService {
         }
         val ubicacionNeo4JAMoverse = neo4jUbicacionDAO.findByIdRelacional(ubicacionid).get()
         val ubicacionNeo4JActual = neo4jUbicacionDAO.findByIdRelacional(vector.ubicacion.id!!).get()
-        val caminoDeConexionEntreUbicaciones = neo4jUbicacionDAO.conectadosPorCamino(ubicacionNeo4JActual.nombre, ubicacionNeo4JAMoverse.nombre)
+        val caminoDeConexionEntreUbicaciones = conectadosPorCamino(ubicacionNeo4JActual.nombre, ubicacionNeo4JAMoverse.nombre)
 
-        if (!caminoDeConexionEntreUbicaciones.isPresent) {
-            throw UbicacionMuyLejana("La ubicacion '" + ubicacionNeo4JAMoverse.nombre + "' es muy lejana para moverse.")
-        } else if (neo4jUbicacionDAO.puedeMoversePorCamino(vector.caminosCompatibles(),caminoDeConexionEntreUbicaciones.get())) {
+        if (neo4jUbicacionDAO.puedeMoversePorCamino(vector.caminosCompatibles(),caminoDeConexionEntreUbicaciones)) {
             intentarMover(vector, ubicacion)
         } else {
-            throw UbicacionNoAlcanzable("El tipo de vector " + vector.tipo + " no puede moverse por el tipo de camino " + caminoDeConexionEntreUbicaciones.get())
+            throw UbicacionNoAlcanzable("El tipo de vector " + vector.tipo + " no puede moverse por el tipo de camino " + caminoDeConexionEntreUbicaciones)
         }
     }
+
+    private fun conectadosPorCamino(ubicacionNeoActual:String, ubicacionNeoAMover:String):String {
+        return neo4jUbicacionDAO.conectadosPorCamino(ubicacionNeoActual, ubicacionNeoAMover).orElseThrow {
+            UbicacionMuyLejana("La ubicacion '" + ubicacionNeoAMover + "' es muy lejana para moverse.")
+        }
+    }
+
+
     private fun intentarMover(vector: Vector, ubicacion: Ubicacion) {
             vector.mover(ubicacion)
             val vectoresEnUbicacion = ubicacionDAO.recuperarVectores(ubicacion.id!!)
