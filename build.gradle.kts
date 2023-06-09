@@ -27,7 +27,6 @@ repositories {
     mavenCentral()
 }
 dependencies {
-    implementation("org.mongodb:mongodb-driver-sync:4.9.0")
     implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
     implementation("org.springframework.boot:spring-boot-starter-data-neo4j")
     implementation("org.springframework.boot:spring-boot-starter-web")
