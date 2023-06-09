@@ -110,6 +110,9 @@ class UbicacionServiceImpl: UbicacionService {
     override fun mover(vectorId: Long, ubicacionid: Long) {
         val ubicacion = ubicacionDAO.findByIdOrNull(ubicacionid)?: throw NoExisteElid("el id de la ubiacion no existe en la base de datos")
         val vector = vectorServiceImpl.recuperarVector(vectorId)
+        if(vector.ubicacion.id!! == ubicacionid){
+            throw EsMismaUbicacion("No podes moverte a la misma ubicacion en la que te encontras")
+        }
         val ubicacionNeo4JAMoverse = neo4jUbicacionDAO.findByIdRelacional(ubicacionid).get()
         val ubicacionNeo4JActual = neo4jUbicacionDAO.findByIdRelacional(vector.ubicacion.id!!).get()
         val caminoDeConexionEntreUbicaciones = neo4jUbicacionDAO.conectadosPorCamino(ubicacionNeo4JActual.nombre, ubicacionNeo4JAMoverse.nombre)
@@ -123,7 +126,6 @@ class UbicacionServiceImpl: UbicacionService {
         }
     }
     private fun intentarMover(vector: Vector, ubicacion: Ubicacion) {
-        if (vector.ubicacion.id!! != ubicacion.id!!) {
             vector.mover(ubicacion)
             val vectoresEnUbicacion = ubicacionDAO.recuperarVectores(ubicacion.id!!)
             vectorDAO.save(vector)
@@ -131,14 +133,16 @@ class UbicacionServiceImpl: UbicacionService {
                 vectorServiceImpl.contagiar(vector, vectoresEnUbicacion)
             }
         }
-    }
+
     override fun moverMasCorto(vectorId:Long, nombreDeUbicacion:String){
         val vector = vectorDAO.findByIdOrNull(vectorId)?: throw NoExisteElid("No existe el ID del vector")
         val ubicacionDelVector = vector.nombreDeUbicacionActual()
         existeUbicacionPorNombre(nombreDeUbicacion)
+        if(ubicacionDelVector == nombreDeUbicacion){
+            throw EsMismaUbicacion("No podes moverte a la misma ubicacion en la que te encontras")
+        }
         val caminosCompatibles = vector.caminosCompatibles()
         val caminoMasCorto = caminoMasCortoEntre(caminosCompatibles, ubicacionDelVector, nombreDeUbicacion)
-
         if (caminoMasCorto.isEmpty()){
             throw UbicacionNoAlcanzable("El vector no puede moverse a la ubicacion $nombreDeUbicacion. Ya que el camino o bien no es compatible o no existe una conexión posible.")
         } else {

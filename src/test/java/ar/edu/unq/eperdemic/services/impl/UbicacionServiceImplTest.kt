@@ -11,7 +11,6 @@ import org.junit.jupiter.api.*
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.dao.NonTransientDataAccessResourceException
 import org.springframework.data.domain.PageRequest
 import org.springframework.test.context.junit.jupiter.SpringExtension
 
@@ -198,39 +197,6 @@ class UbicacionServiceImplTest {
         Assertions.assertThrows(NoExisteElid::class.java) {
             ubicacionService.mover(204, ubicacionCreada1.id!!)
         }
-    }
-
-
-    @Test
-    fun siUnVectorYaSeEncuentraEnUnaUbicacionEntoncesAlMoverNoSeHaceNada() {
-        dataService.eliminarTodo()
-        val ubicacionCreada1 = ubicacionService.crearUbicacion("nombre1")
-        val vectorCreado1 = vectorService.crearVector(TipoDeVector.Persona, ubicacionCreada1.id!!)
-        val vectorCreado2 = vectorService.crearVector(TipoDeVector.Persona, ubicacionCreada1.id!!)
-
-        val patogeno = Patogeno("testEspecie")
-        val patogenoCreado = patogenoService.crearPatogeno(patogeno)
-        val ubicacionCreada2 = ubicacionService.crearUbicacion("ubicacionTestEspecie")
-        ubicacionService.conectar(ubicacionCreada1.nombre, ubicacionCreada1.nombre, "Terrestre")
-        vectorService.crearVector(TipoDeVector.Persona, ubicacionCreada2.id!!)
-        val especieCreada =
-            patogenoService.agregarEspecie(patogenoCreado.id!!, "cualquierNombre", ubicacionCreada2.id!!)
-
-        vectorService.infectar(vectorCreado2, especieCreada)
-
-        Assertions.assertTrue(vectorCreado1.estaSano())
-        Assertions.assertFalse(vectorCreado2.estaSano())
-        Assertions.assertEquals(ubicacionService.recuperarVectores(ubicacionCreada1.id!!).size, 2)
-
-
-        ubicacionService.mover(vectorCreado2.id!!, ubicacionCreada1.id!!)
-
-        val vectorActualizado1 = vectorService.recuperarVector(vectorCreado1.id!!)
-        val vectorActualizado2 = vectorService.recuperarVector(vectorCreado2.id!!)
-
-        Assertions.assertTrue(vectorActualizado1.estaSano())
-        Assertions.assertEquals(vectorCreado2.especies.size, vectorActualizado2.especies.size)
-        Assertions.assertEquals(ubicacionService.recuperarVectores(ubicacionCreada1.id!!).size, 2)
     }
 
 
@@ -716,8 +682,18 @@ class UbicacionServiceImplTest {
         val vector = vectorService.crearVector(TipoDeVector.Animal,ubicacion1.id!!)
         val ubicacionNeo1 = neo4jUbicacionDAO.findByIdRelacional(ubicacion1.id!!).get()
 
-        Assertions.assertThrows(NonTransientDataAccessResourceException ::class.java ){
+        Assertions.assertThrows(EsMismaUbicacion ::class.java ){
             ubicacionService.moverMasCorto(vector.id!!, ubicacionNeo1.nombre)
+        }
+    }
+
+    @Test
+    fun noEsPosibleMoverALaMismaUbicacion() {
+        val ubicacion1 = ubicacionService.crearUbicacion("ubicacion123")
+        val vector = vectorService.crearVector(TipoDeVector.Animal,ubicacion1.id!!)
+
+        Assertions.assertThrows(EsMismaUbicacion ::class.java ){
+            ubicacionService.mover(vector.id!!, ubicacion1.id!!)
         }
     }
 
