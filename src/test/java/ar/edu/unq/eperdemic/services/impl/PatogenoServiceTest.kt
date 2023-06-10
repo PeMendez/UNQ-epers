@@ -1,6 +1,6 @@
 package ar.edu.unq.eperdemic.services.impl
 
-/*import ar.edu.unq.eperdemic.modelo.*
+import ar.edu.unq.eperdemic.modelo.*
 import ar.edu.unq.eperdemic.modelo.exceptions.*
 import ar.edu.unq.eperdemic.utils.DataService
 import org.junit.jupiter.api.*
@@ -8,6 +8,7 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.data.domain.PageRequest
+import org.springframework.data.mongodb.core.geo.GeoJsonPoint
 import org.springframework.test.context.junit.jupiter.SpringExtension
 
 
@@ -40,9 +41,9 @@ class PatogenoServiceTest {
     fun setUp() {
         dataService.crearSetDeDatosIniciales()
         patogenoMalDeDragon = patogenoService.crearPatogeno(Patogeno("MalDeDragon"))
-        ubicacionPrivateDrive = ubicacionService.crearUbicacion("PrivateDrive")
+        ubicacionPrivateDrive = ubicacionService.crearUbicacion("PrivateDrive", GeoJsonPoint(8.0, 8.0))
         vectorHarryPotter = vectorService.crearVector(TipoDeVector.Persona, ubicacionPrivateDrive.id!!)
-        ubicacionLaMadriguera = ubicacionService.crearUbicacion("ubicacionLaMadriguera")
+        ubicacionLaMadriguera = ubicacionService.crearUbicacion("ubicacionLaMadriguera", GeoJsonPoint(68.0, 76.0))
 
     }
 
@@ -140,7 +141,7 @@ class PatogenoServiceTest {
     fun noSePuedeCrearUnaEspecieConUnPatogenoConIdInvalido() {
         dataService.eliminarTodo()
 
-        val ubicacionHogsmeade = ubicacionService.crearUbicacion("ubicacionHogsmeade")
+        val ubicacionHogsmeade = ubicacionService.crearUbicacion("ubicacionHogsmeade", GeoJsonPoint(218.0, 876.0))
         vectorService.crearVector(TipoDeVector.Persona, ubicacionHogsmeade.id!!)
 
         Assertions.assertThrows(NoExisteElid::class.java) {
@@ -159,9 +160,9 @@ class PatogenoServiceTest {
     fun esPandemiaAfirmativo(){
         dataService.eliminarTodo()
         patogenoMalDeDragon = patogenoService.crearPatogeno(Patogeno("MalDeDragon"))
-        ubicacionPrivateDrive = ubicacionService.crearUbicacion("PrivateDrive")
+        ubicacionPrivateDrive = ubicacionService.crearUbicacion("PrivateDrive", GeoJsonPoint(83.0, 8.0))
         vectorHarryPotter = vectorService.crearVector(TipoDeVector.Persona, ubicacionPrivateDrive.id!!)
-        ubicacionLaMadriguera = ubicacionService.crearUbicacion("ubicacionLaMadriguera")
+        ubicacionLaMadriguera = ubicacionService.crearUbicacion("ubicacionLaMadriguera", GeoJsonPoint(118.0, 8.0))
         vectorRonWeasley = vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionLaMadriguera.id!!)
         val especieImperius = patogenoService.agregarEspecie(patogenoMalDeDragon.id!!, "EspecieImperius", ubicacionPrivateDrive.id!!)
 
@@ -183,7 +184,7 @@ class PatogenoServiceTest {
         dataService.eliminarTodo()
         patogenoMalDeDragon = patogenoService.crearPatogeno(Patogeno("MalDeDragon"))
         patogenoVirusCruciartus = patogenoService.crearPatogeno(Patogeno("VirusCruciartus"))
-        var patogenoAvadaKedavra = patogenoService.crearPatogeno(Patogeno("AvadaKedavra"))
+        val patogenoAvadaKedavra = patogenoService.crearPatogeno(Patogeno("AvadaKedavra"))
 
         val listaDePatogenosRecuperados = patogenoService.recuperarATodosLosPatogenos()
 
@@ -238,7 +239,7 @@ class PatogenoServiceTest {
 
     @Test
     fun alAgregarleUnaEspecieAUnPatogenoSeIntentaInfectarAUnVectorPeroNoHayNingunoEnLaUbicacionDada(){
-        val ubicacionHogwarts = ubicacionService.crearUbicacion("Hogwarts")
+        val ubicacionHogwarts = ubicacionService.crearUbicacion("Hogwarts", GeoJsonPoint(495.0, 8.0))
 
         val ex = assertThrows<NingunVectorAInfectarEnLaUbicacionDada> { patogenoService.agregarEspecie(patogenoMalDeDragon.id!!, "Imperius", ubicacionHogwarts.id!!)  }
 
@@ -273,5 +274,5 @@ class PatogenoServiceTest {
         dataService.eliminarTodo()
     }
 
-}*/
+}
 

@@ -1,6 +1,6 @@
 package ar.edu.unq.eperdemic.services.impl
 
-/*import ar.edu.unq.eperdemic.modelo.*
+import ar.edu.unq.eperdemic.modelo.*
 import ar.edu.unq.eperdemic.modelo.exceptions.NoExisteElid
 import ar.edu.unq.eperdemic.utils.DataServiceSpring
 import org.junit.jupiter.api.*
@@ -9,9 +9,10 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.data.domain.PageRequest
-import org.springframework.test.context.junit.jupiter.SpringExtension*/
+import org.springframework.data.mongodb.core.geo.GeoJsonPoint
+import org.springframework.test.context.junit.jupiter.SpringExtension
 
-/*@ExtendWith(SpringExtension::class)
+@ExtendWith(SpringExtension::class)
 @SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 
@@ -49,8 +50,8 @@ class VectorServiceImplTest {
     fun setUp() {
         Random.switchModo(false)
 
-        ubicacion1 = ubicacionServiceImpl.crearUbicacion("ubicacion1")
-        ubicacion2 = ubicacionServiceImpl.crearUbicacion("ubicacion2")
+        ubicacion1 = ubicacionServiceImpl.crearUbicacion("ubicacion1", GeoJsonPoint(8234.0, 8.0))
+        ubicacion2 = ubicacionServiceImpl.crearUbicacion("ubicacion2", GeoJsonPoint(45428.0, 8.0))
 
         patogeno1 = patogenoService.crearPatogeno(Patogeno("patogeno1"))
 
@@ -151,7 +152,7 @@ class VectorServiceImplTest {
 
     @Test
     fun soloSePuedenContagiarAVectoresAnimalesConVectoresInsectoDeLoContrarioNoSeHaceNada() {
-        val ubicacionCreada1 = ubicacionServiceImpl.crearUbicacion("enfermedadesTest")
+        val ubicacionCreada1 = ubicacionServiceImpl.crearUbicacion("enfermedadesTest", GeoJsonPoint(8.0, 8.0))
         val vectorAnimalCreado1 = vectorServiceImpl.crearVector(TipoDeVector.Animal, ubicacionCreada1.id!!)
         val vectorAnimalCreado2 = vectorServiceImpl.crearVector(TipoDeVector.Animal, ubicacionCreada1.id!!)
         val vectorPersonaCreado = vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada1.id!!)
@@ -253,14 +254,14 @@ class VectorServiceImplTest {
 
     @Test
     fun noSePuedeInfectarAUnVectorInexistenteEnLaBDDConUnaEspecie() {
-        val ubicacionCreada = ubicacionServiceImpl.crearUbicacion("enfermedadesTest")
+        val ubicacionCreada = ubicacionServiceImpl.crearUbicacion("enfermedadesTest", GeoJsonPoint(8.0, 8.0))
         val vectorCreado1 = vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada.id!!)
 
         dataServiceSpring.eliminarTodo()
 
         val patogeno1 = Patogeno("testEspecie")
         val patogenoCreado1 = patogenoService.crearPatogeno(patogeno1)
-        val ubicacionCreada1 = ubicacionServiceImpl.crearUbicacion("ubicacionTestEspecie")
+        val ubicacionCreada1 = ubicacionServiceImpl.crearUbicacion("ubicacionTestEspecie", GeoJsonPoint(8.0, 843.0))
         vectorServiceImpl.crearVector(TipoDeVector.Animal, ubicacionCreada1.id!!)
         val especieCreada1 = patogenoService.agregarEspecie(patogenoCreado1.id!!, "cualquierNombre", ubicacionCreada1.id!!)
 
@@ -275,7 +276,7 @@ class VectorServiceImplTest {
 
         dataServiceSpring.eliminarTodo()
 
-        val ubicacionCreada = ubicacionServiceImpl.crearUbicacion("enfermedadesTest")
+        val ubicacionCreada = ubicacionServiceImpl.crearUbicacion("enfermedadesTest", GeoJsonPoint(8.0, 834.0))
         val vectorCreado = vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada.id!!)
 
         assertThrows(NoExisteElid::class.java) {
@@ -319,7 +320,7 @@ class VectorServiceImplTest {
 
     @Test
     fun seRecuperaUnVectorConTodosSusDatosCorrectamente() {
-        val ubicacionCreada = ubicacionServiceImpl.crearUbicacion("testRecuperarVector")
+        val ubicacionCreada = ubicacionServiceImpl.crearUbicacion("testRecuperarVector", GeoJsonPoint(8.0, 8.0))
         val vectorCreado = vectorServiceImpl.crearVector(TipoDeVector.Insecto, ubicacionCreada.id!!)
         val vectorRecuperado = vectorServiceImpl.recuperarVector(vectorCreado.id!!)
 
@@ -338,7 +339,7 @@ class VectorServiceImplTest {
 
     @Test
     fun seBorraUnVectorCorrectamenteDeLaBDD() {
-        val ubicacionCreada = ubicacionServiceImpl.crearUbicacion("testBorrarVector")
+        val ubicacionCreada = ubicacionServiceImpl.crearUbicacion("testBorrarVector", GeoJsonPoint(8.0, 8.0))
         val vectorCreado = vectorServiceImpl.crearVector(TipoDeVector.Insecto, ubicacionCreada.id!!)
 
         vectorServiceImpl.borrarVector(vectorCreado.id!!)
@@ -359,7 +360,7 @@ class VectorServiceImplTest {
     fun seRecuperanTodosLosVectoresCorrectamente() {
         dataServiceSpring.eliminarTodo()
 
-        val ubicacionCreada1 = ubicacionServiceImpl.crearUbicacion("nombreCualquiera1")
+        val ubicacionCreada1 = ubicacionServiceImpl.crearUbicacion("nombreCualquiera1", GeoJsonPoint(8.0, 8.0))
         val vector1Creado = vectorServiceImpl.crearVector(TipoDeVector.Animal, ubicacionCreada1.id!!)
         val vector2Creado = vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada1.id!!)
 
@@ -380,7 +381,7 @@ class VectorServiceImplTest {
     @Test
     fun seRecuperanTodosLosVectoresConPaginadoCorrectamenteConLaPagina0YSizeDos() {
         dataServiceSpring.eliminarTodo()
-        val ubicacionCreada1 = ubicacionServiceImpl.crearUbicacion("ubicacionTestEspecie")
+        val ubicacionCreada1 = ubicacionServiceImpl.crearUbicacion("ubicacionTestEspecie", GeoJsonPoint(8.0, 8.0))
 
         val vectorCreado1 = vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada1.id!!)
         val vectorCreado2 = vectorServiceImpl.crearVector(TipoDeVector.Insecto, ubicacionCreada1.id!!)
@@ -405,7 +406,7 @@ class VectorServiceImplTest {
     fun cuandoSeContagiaUnVectorConUnaEspecieQueContieneUnaMutacionEntoncesElVectorPuedeContraerla() {
         val patogeno = Patogeno("testEspecie1")
         val patogenoCreado = patogenoService.crearPatogeno(patogeno)
-        val ubicacionCreada1 = ubicacionServiceImpl.crearUbicacion("ubicacionTestEspecie1")
+        val ubicacionCreada1 = ubicacionServiceImpl.crearUbicacion("ubicacionTestEspecie1", GeoJsonPoint(8.0, 8.0))
         vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada1.id!!)
         val especieCreada = patogenoService.agregarEspecie(patogenoCreado.id!!, "cualquierNombre1", ubicacionCreada1.id!!)
         val vectorInfectado = vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada1.id!!)
@@ -432,7 +433,7 @@ class VectorServiceImplTest {
     fun cuandoSeContagiaUnVectorConUnaEspecieSinMutacionesEntoncesElVectorNoContraeMutaciones() {
         val patogeno = Patogeno("testEspecie1")
         val patogenoCreado = patogenoService.crearPatogeno(patogeno)
-        val ubicacionCreada1 = ubicacionServiceImpl.crearUbicacion("ubicacionTestEspecie1")
+        val ubicacionCreada1 = ubicacionServiceImpl.crearUbicacion("ubicacionTestEspecie1",GeoJsonPoint(8.0, 8.0))
         vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada1.id!!)
         val especieCreada = patogenoService.agregarEspecie(patogenoCreado.id!!, "cualquierNombre1", ubicacionCreada1.id!!)
         val vectorInfectado = vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada1.id!!)
@@ -456,7 +457,7 @@ class VectorServiceImplTest {
     fun cuandoSeContagiaUnVectorConUnaEspecieQueContieneMasDeUnaMutacionEntoncesElVectorContraeSoloUna() {
         val patogeno = Patogeno("testEspecie1")
         val patogenoCreado = patogenoService.crearPatogeno(patogeno)
-        val ubicacionCreada1 = ubicacionServiceImpl.crearUbicacion("ubicacionTestEspecie1")
+        val ubicacionCreada1 = ubicacionServiceImpl.crearUbicacion("ubicacionTestEspecie1", GeoJsonPoint(8.0, 8.0))
         vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada1.id!!)
         val especieCreada = patogenoService.agregarEspecie(patogenoCreado.id!!, "cualquierNombre1", ubicacionCreada1.id!!)
         val vectorInfectado = vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada1.id!!)
@@ -488,7 +489,7 @@ class VectorServiceImplTest {
     fun cuandoUnVectorContraeSupresionBiomecanicaSePuedenEliminarLasEspeciesQueTenganMenorNivelDeDefensa() {
         val patogeno = Patogeno("testEspecie1")
         val patogenoCreado = patogenoService.crearPatogeno(patogeno)
-        val ubicacionCreada1 = ubicacionServiceImpl.crearUbicacion("ubicacionTestEspecie1")
+        val ubicacionCreada1 = ubicacionServiceImpl.crearUbicacion("ubicacionTestEspecie1", GeoJsonPoint(8.0, 8.0))
         vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada1.id!!)
         val especieCreadaConMutacion = patogenoService.agregarEspecie(patogenoCreado.id!!, "cualquierNombre1", ubicacionCreada1.id!!)
 
@@ -498,7 +499,7 @@ class VectorServiceImplTest {
         val patogeno2 = Patogeno("testEspecie2")
         patogeno2.capacidadDeDefensa = 0
         val patogenoCreado2 = patogenoService.crearPatogeno(patogeno2)
-        val ubicacionCreada2 = ubicacionServiceImpl.crearUbicacion("ubicacionTestEspecie2")
+        val ubicacionCreada2 = ubicacionServiceImpl.crearUbicacion("ubicacionTestEspecie2", GeoJsonPoint(458.0, 8.0))
         vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada2.id!!)
         val especieCreadaSinMutacion = patogenoService.agregarEspecie(patogenoCreado2.id!!, "cualquierNombre2", ubicacionCreada2.id!!)
 
@@ -523,7 +524,7 @@ class VectorServiceImplTest {
     fun cuandoUnVectorContraeSupresionBiomecanicaLasEspeciesConAltoNivelDeDefensaPuedenNoSerEliminadas() {
         val patogeno = Patogeno("testEspecie1")
         val patogenoCreado = patogenoService.crearPatogeno(patogeno)
-        val ubicacionCreada1 = ubicacionServiceImpl.crearUbicacion("ubicacionTestEspecie1")
+        val ubicacionCreada1 = ubicacionServiceImpl.crearUbicacion("ubicacionTestEspecie1", GeoJsonPoint(8.0, 8.0))
         vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada1.id!!)
         val especieCreadaConMutacion = patogenoService.agregarEspecie(patogenoCreado.id!!, "cualquierNombre1", ubicacionCreada1.id!!)
 
@@ -533,7 +534,7 @@ class VectorServiceImplTest {
         val patogeno2 = Patogeno("testEspecie2")
         patogeno2.capacidadDeDefensa = 200
         val patogenoCreado2 = patogenoService.crearPatogeno(patogeno2)
-        val ubicacionCreada2 = ubicacionServiceImpl.crearUbicacion("ubicacionTestEspecie2")
+        val ubicacionCreada2 = ubicacionServiceImpl.crearUbicacion("ubicacionTestEspecie2", GeoJsonPoint(4328.0, 8.0))
         vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada2.id!!)
         val especieCreadaSinMutacion = patogenoService.agregarEspecie(patogenoCreado2.id!!, "cualquierNombre2", ubicacionCreada2.id!!)
 
@@ -558,7 +559,7 @@ class VectorServiceImplTest {
     fun cuandoUnVectorContrajoSupresionBiomecanicaYSeLoIntentaContagierConUnaEspecieConBajoNivelDeDefensaEntoncesPuedeNoSerContagiado() {
         val patogeno = Patogeno("testEspecie1")
         val patogenoCreado = patogenoService.crearPatogeno(patogeno)
-        val ubicacionCreada1 = ubicacionServiceImpl.crearUbicacion("ubicacionTestEspecie1")
+        val ubicacionCreada1 = ubicacionServiceImpl.crearUbicacion("ubicacionTestEspecie1", GeoJsonPoint(8.0, 8.0))
         vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada1.id!!)
         val especieCreadaConMutacion = patogenoService.agregarEspecie(patogenoCreado.id!!, "cualquierNombre1", ubicacionCreada1.id!!)
 
@@ -568,7 +569,7 @@ class VectorServiceImplTest {
         val patogeno2 = Patogeno("testEspecie2")
         patogeno2.capacidadDeDefensa = 0
         val patogenoCreado2 = patogenoService.crearPatogeno(patogeno2)
-        val ubicacionCreada2 = ubicacionServiceImpl.crearUbicacion("ubicacionTestEspecie2")
+        val ubicacionCreada2 = ubicacionServiceImpl.crearUbicacion("ubicacionTestEspecie2", GeoJsonPoint(1348.0, 8.0))
         vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada2.id!!)
         val especieCreadaDebil = patogenoService.agregarEspecie(patogenoCreado2.id!!, "cualquierNombre2", ubicacionCreada2.id!!)
 
@@ -599,7 +600,7 @@ class VectorServiceImplTest {
     fun cuandoUnVectorContrajoSupresionBiomecanicaYSeLoIntentaContagierConUnaEspecieConAltoNivelDeDefensaEntoncesPuedeSerContagiado() {
         val patogeno = Patogeno("testEspecie1")
         val patogenoCreado = patogenoService.crearPatogeno(patogeno)
-        val ubicacionCreada1 = ubicacionServiceImpl.crearUbicacion("ubicacionTestEspecie1")
+        val ubicacionCreada1 = ubicacionServiceImpl.crearUbicacion("ubicacionTestEspecie1", GeoJsonPoint(8.0, 8.0))
         vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada1.id!!)
         val especieCreadaConMutacion = patogenoService.agregarEspecie(patogenoCreado.id!!, "cualquierNombre1", ubicacionCreada1.id!!)
 
@@ -609,7 +610,7 @@ class VectorServiceImplTest {
         val patogeno2 = Patogeno("testEspecie2")
         patogeno2.capacidadDeDefensa = 200
         val patogenoCreado2 = patogenoService.crearPatogeno(patogeno2)
-        val ubicacionCreada2 = ubicacionServiceImpl.crearUbicacion("ubicacionTestEspecie2")
+        val ubicacionCreada2 = ubicacionServiceImpl.crearUbicacion("ubicacionTestEspecie2", GeoJsonPoint(328.0, 8.0))
         vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada2.id!!)
         val especieCreadaFuerte = patogenoService.agregarEspecie(patogenoCreado2.id!!, "cualquierNombre2", ubicacionCreada2.id!!)
 
@@ -642,7 +643,7 @@ class VectorServiceImplTest {
     fun cuandoUnVectorInsectoContrajoBioalteracionGeneticaInsectoEntoncesPuedeContagiarAVectoresInsectoConLaEnfermedadDeLaMutacion() {
         val patogeno = Patogeno("testEspecie1")
         val patogenoCreado = patogenoService.crearPatogeno(patogeno)
-        val ubicacionCreada1 = ubicacionServiceImpl.crearUbicacion("ubicacionTestEspecie1")
+        val ubicacionCreada1 = ubicacionServiceImpl.crearUbicacion("ubicacionTestEspecie1", GeoJsonPoint(8.0, 8.0))
         vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada1.id!!)
         val especieCreadaConMutacion = patogenoService.agregarEspecie(patogenoCreado.id!!, "cualquierNombre1", ubicacionCreada1.id!!)
 
@@ -675,7 +676,7 @@ class VectorServiceImplTest {
     fun cuandoUnVectorAnimalContrajoBioalteracionGeneticaAnimalEntoncesPuedeContagiarAVectoresAnimalConLaEnfermedadDeLaMutacion() {
         val patogeno = Patogeno("testEspecie1")
         val patogenoCreado = patogenoService.crearPatogeno(patogeno)
-        val ubicacionCreada1 = ubicacionServiceImpl.crearUbicacion("ubicacionTestEspecie1")
+        val ubicacionCreada1 = ubicacionServiceImpl.crearUbicacion("ubicacionTestEspecie1",GeoJsonPoint(8.0, 8.0))
         vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada1.id!!)
         val especieCreadaConMutacion = patogenoService.agregarEspecie(patogenoCreado.id!!, "cualquierNombre1", ubicacionCreada1.id!!)
 
@@ -708,7 +709,7 @@ class VectorServiceImplTest {
     fun cuandoUnVectorPersonaContrajoBioalteracionGeneticaAnimalEntoncesPuedeContagiarAVectoresAnimalConLaEnfermedadDeLaMutacion() {
         val patogeno = Patogeno("testEspecie1")
         val patogenoCreado = patogenoService.crearPatogeno(patogeno)
-        val ubicacionCreada1 = ubicacionServiceImpl.crearUbicacion("ubicacionTestEspecie1")
+        val ubicacionCreada1 = ubicacionServiceImpl.crearUbicacion("ubicacionTestEspecie1", GeoJsonPoint(8.0, 8.0))
         vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada1.id!!)
         val especieCreadaConMutacion = patogenoService.agregarEspecie(patogenoCreado.id!!, "cualquierNombre1", ubicacionCreada1.id!!)
 
@@ -741,7 +742,7 @@ class VectorServiceImplTest {
     fun cuandoUnTipoDeVector1NoPuedeContagiarAOtroTipoDeVector2YMutaConBioalteracionGeneticaDistintaATipoDeVector2EntoncesSigueSinPoderContagiarlo() {
         val patogeno = Patogeno("testEspecie1")
         val patogenoCreado = patogenoService.crearPatogeno(patogeno)
-        val ubicacionCreada1 = ubicacionServiceImpl.crearUbicacion("ubicacionTestEspecie1")
+        val ubicacionCreada1 = ubicacionServiceImpl.crearUbicacion("ubicacionTestEspecie1", GeoJsonPoint(8.0, 8.0))
         vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada1.id!!)
         val especieCreadaConMutacion = patogenoService.agregarEspecie(patogenoCreado.id!!, "cualquierNombre1", ubicacionCreada1.id!!)
 
@@ -774,7 +775,7 @@ class VectorServiceImplTest {
     fun cuandoUnTipoDeVector1NoPuedeContagiarAOtroTipoDeVector2YMutaConBioalteracionGeneticaATipoDeVector2EntoncesSoloPuedeContagiarloConLaEnfermedadDeLaMutacion() {
         val patogeno = Patogeno("testEspecie1")
         val patogenoCreado = patogenoService.crearPatogeno(patogeno)
-        val ubicacionCreada1 = ubicacionServiceImpl.crearUbicacion("ubicacionTestEspecie1")
+        val ubicacionCreada1 = ubicacionServiceImpl.crearUbicacion("ubicacionTestEspecie1",GeoJsonPoint(8.0, 8.0))
         vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada1.id!!)
         val especieCreadaConMutacion = patogenoService.agregarEspecie(patogenoCreado.id!!, "cualquierNombre1", ubicacionCreada1.id!!)
         val especieCreada2 = patogenoService.agregarEspecie(patogenoCreado.id!!, "cualquierNombre2", ubicacionCreada1.id!!)
@@ -813,7 +814,7 @@ class VectorServiceImplTest {
     fun siSeIntentaContraerDosVecesUnaMismaMutacionDeUnaMismaEspecieAUnVectorEntoncesSeContraeSoloUnaVez() {
         val patogeno = Patogeno("testEspecie1")
         val patogenoCreado = patogenoService.crearPatogeno(patogeno)
-        val ubicacionCreada1 = ubicacionServiceImpl.crearUbicacion("ubicacionTestEspecie1")
+        val ubicacionCreada1 = ubicacionServiceImpl.crearUbicacion("ubicacionTestEspecie1", GeoJsonPoint(8.0, 8.0))
         vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada1.id!!)
         val especieCreadaConMutacion = patogenoService.agregarEspecie(patogenoCreado.id!!, "cualquierNombre1", ubicacionCreada1.id!!)
 
@@ -842,4 +843,4 @@ class VectorServiceImplTest {
     fun eliminarModelo() {
         dataServiceSpring.eliminarTodo()
     }
-}*/
+}
