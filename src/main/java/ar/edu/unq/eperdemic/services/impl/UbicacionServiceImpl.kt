@@ -128,7 +128,7 @@ class UbicacionServiceImpl: UbicacionService {
             throw EsMismaUbicacion("No podes moverte a la misma ubicacion en la que te encontras")
         }
         val caminoDeConexionEntreUbicaciones = conectadosPorCamino(vector.nombreDeUbicacionActual(), ubicacion.nombre)
-        if (neo4jUbicacionDAO.puedeMoversePorCamino(vector.caminosCompatibles(),caminoDeConexionEntreUbicaciones)) {
+        if (neo4jUbicacionDAO.puedeMoversePorCamino(vector.caminosCompatibles(),caminoDeConexionEntreUbicaciones) && mongoUbicacionDAO.distanciaEntreUbicaciones(ubicacionid, vector.ubicacion.id!!) <= 100) {
             intentarMover(vector, ubicacion)
         } else {
             throw UbicacionNoAlcanzable("El tipo de vector " + vector.tipo + " no puede moverse por el tipo de camino " + caminoDeConexionEntreUbicaciones)

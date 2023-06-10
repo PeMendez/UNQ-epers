@@ -11,5 +11,7 @@ interface MongoUbicacionDAO: MongoRepository<UbicacionMongo, String> {
     @Query("{ 'coordenada': ?0 }")
     fun recuperarPorCoordenada(coordenada: GeoJsonPoint): Optional<UbicacionMongo>
 
+    @Query
+    fun distanciaEntreUbicaciones(ubicacionIdDestino: Long, ubicacionIdOrigen: Long): Int
 }
 
