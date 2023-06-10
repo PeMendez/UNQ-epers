@@ -8,9 +8,10 @@ import org.junit.jupiter.api.*
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.data.mongodb.core.geo.GeoJsonPoint
 import org.springframework.test.context.junit.jupiter.SpringExtension
 
-/*@ExtendWith(SpringExtension::class)
+@ExtendWith(SpringExtension::class)
 @SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class EstadisticaServiceImplTest {
@@ -38,9 +39,9 @@ class EstadisticaServiceImplTest {
     fun unaEspecieEsEspecieLiderInfectandoPersonas() {
         dataService.eliminarTodo()
 
-        var paraguay = ubicacionService.crearUbicacion("Paraguay")
-        var virus = Patogeno("Virus")
-        var patogeno = patogenoService.crearPatogeno(virus)
+        val paraguay = ubicacionService.crearUbicacion("Paraguay", GeoJsonPoint(8.0, 8.0))
+        val virus = Patogeno("Virus")
+        val patogeno = patogenoService.crearPatogeno(virus)
         val unVector = vectorServiceImpl.crearVector(TipoDeVector.Persona, paraguay.id!!)
         val especieQueMasInfecto =  patogenoService.agregarEspecie(patogeno.id!!, "enterovirus", paraguay.id!!)
 
@@ -53,21 +54,21 @@ class EstadisticaServiceImplTest {
     fun lideresQueInfectaronLaMayorCantidadDeHumanosYAnimales() {
         dataService.eliminarTodo()
 
-        var ubicacion1 = ubicacionService.crearUbicacion("Ubicacion1")
-        var ubicacion2 = ubicacionService.crearUbicacion("Ubicacion2")
-        val ubicacion3 = ubicacionService.crearUbicacion("Chile")
-        val ubicacion4 = ubicacionService.crearUbicacion("Brasil")
-        val ubicacion5 = ubicacionService.crearUbicacion("Uruguay")
-        val ubicacion6 = ubicacionService.crearUbicacion("Paraguay")
-        val ubicacion7 = ubicacionService.crearUbicacion("Venezuela")
-        val ubicacion8 = ubicacionService.crearUbicacion("Irlanda")
-        val ubicacion9 = ubicacionService.crearUbicacion("Japon")
-        val ubicacion10 = ubicacionService.crearUbicacion("China")
-        val ubicacion11 = ubicacionService.crearUbicacion("Korea")
-        val ubicacion12 = ubicacionService.crearUbicacion("Romania")
+        val ubicacion1 = ubicacionService.crearUbicacion("Ubicacion1",GeoJsonPoint(85.0, 8.0))
+        val ubicacion2 = ubicacionService.crearUbicacion("Ubicacion2", GeoJsonPoint(842.0, 8.0))
+        val ubicacion3 = ubicacionService.crearUbicacion("Chile", GeoJsonPoint(81.0, 8.0))
+        val ubicacion4 = ubicacionService.crearUbicacion("Brasil", GeoJsonPoint(4328.0, 8.0))
+        val ubicacion5 = ubicacionService.crearUbicacion("Uruguay", GeoJsonPoint(8978.0, 8.0))
+        val ubicacion6 = ubicacionService.crearUbicacion("Paraguay", GeoJsonPoint(458.0, 8.0))
+        val ubicacion7 = ubicacionService.crearUbicacion("Venezuela", GeoJsonPoint(708.0, 8.0))
+        val ubicacion8 = ubicacionService.crearUbicacion("Irlanda", GeoJsonPoint(768.0, 8.0))
+        val ubicacion9 = ubicacionService.crearUbicacion("Japon", GeoJsonPoint(428.0, 8.0))
+        val ubicacion10 = ubicacionService.crearUbicacion("China", GeoJsonPoint(138.0, 8.0))
+        val ubicacion11 = ubicacionService.crearUbicacion("Korea", GeoJsonPoint(798.0, 8.0))
+        val ubicacion12 = ubicacionService.crearUbicacion("Romania", GeoJsonPoint(5368.0, 8.0))
 
-        var patogenoModelo = Patogeno("patogeno")
-        var patogeno = patogenoService.crearPatogeno(patogenoModelo)
+        val patogenoModelo = Patogeno("patogeno")
+        val patogeno = patogenoService.crearPatogeno(patogenoModelo)
 
         vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacion1.id!!)
         vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacion3.id!!)
@@ -110,11 +111,11 @@ class EstadisticaServiceImplTest {
 
     @Test
     fun reporteDeContagios() {
-        var patogenoModelo = Patogeno("patogeno")
-        var patogeno = patogenoService.crearPatogeno(patogenoModelo)
-        var ubicacion1 = ubicacionService.crearUbicacion("Argentina")
+        val patogenoModelo = Patogeno("patogeno")
+        val patogeno = patogenoService.crearPatogeno(patogenoModelo)
+        val ubicacion1 = ubicacionService.crearUbicacion("Argentina", GeoJsonPoint(8.0, 8.0))
         vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacion1.id!!)
-        var especie = patogenoService.agregarEspecie(patogeno.id!!, "Coxsackie", ubicacion1.id!!)
+        val especie = patogenoService.agregarEspecie(patogeno.id!!, "Coxsackie", ubicacion1.id!!)
 
         val reporte = estadisticaService.reporteDeContagios(ubicacion1.nombre)
         Assertions.assertEquals(reporte.vectoresInfectados, 1)
@@ -135,4 +136,4 @@ class EstadisticaServiceImplTest {
     fun eliminarModelo() {
         dataService.eliminarTodo()
     }
-}*/
+}
