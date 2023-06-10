@@ -1,9 +1,6 @@
 package ar.edu.unq.eperdemic.services.impl
 
-import ar.edu.unq.eperdemic.modelo.Random
-import ar.edu.unq.eperdemic.modelo.Ubicacion
-import ar.edu.unq.eperdemic.modelo.UbicacionNeo4J
-import ar.edu.unq.eperdemic.modelo.Vector
+import ar.edu.unq.eperdemic.modelo.*
 import ar.edu.unq.eperdemic.modelo.exceptions.*
 import ar.edu.unq.eperdemic.persistencia.dao.MongoUbicacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.Neo4jUbicacionDAO
@@ -47,7 +44,7 @@ class UbicacionServiceImpl: UbicacionService {
             throw NombreDeUbicacionRepetido("Ya existe una ubicacion con ese nombre.")
         } catch (e: EmptyResultDataAccessException) {
             if (mongoUbicacionDAO.recuperarPorCoordenada(coordenada).isPresent) {
-                throw NoExisteElid("Ya existe una ubicación en la coordenada")
+                throw CoordenadaInvalida("Ya existe una ubicación en la coordenada $coordenada")
             }
             val nuevaUbicacion = Ubicacion(nombreUbicacion)
             ubicacionDAO.save(nuevaUbicacion)
@@ -82,6 +79,12 @@ class UbicacionServiceImpl: UbicacionService {
 
     override fun recuperarUbicacionNeoPorId(idUbicacion:Long) : UbicacionNeo4J {
         return neo4jUbicacionDAO.findByIdRelacional(idUbicacion).orElseThrow{
+            NoExisteElid("No existe el id $idUbicacion")
+        }
+    }
+
+    override fun recuperarUbicacionMongoPorId(idUbicacion: Long): UbicacionMongo {
+        return mongoUbicacionDAO.findByIdRelacional(idUbicacion).orElseThrow {
             NoExisteElid("No existe el id $idUbicacion")
         }
     }
@@ -127,8 +130,11 @@ class UbicacionServiceImpl: UbicacionService {
         if(vector.ubicacion.id!! == ubicacionid){
             throw EsMismaUbicacion("No podes moverte a la misma ubicacion en la que te encontras")
         }
+        /*if(!distanciaAlcanzableEntreUbicaciones(ubicacionid, vector.ubicacion.id!!)) {
+            throw NoExisteElid("error")
+        }*/
         val caminoDeConexionEntreUbicaciones = conectadosPorCamino(vector.nombreDeUbicacionActual(), ubicacion.nombre)
-        if (neo4jUbicacionDAO.puedeMoversePorCamino(vector.caminosCompatibles(),caminoDeConexionEntreUbicaciones) && mongoUbicacionDAO.distanciaEntreUbicaciones(ubicacionid, vector.ubicacion.id!!) <= 100) {
+        if (neo4jUbicacionDAO.puedeMoversePorCamino(vector.caminosCompatibles(),caminoDeConexionEntreUbicaciones)) {
             intentarMover(vector, ubicacion)
         } else {
             throw UbicacionNoAlcanzable("El tipo de vector " + vector.tipo + " no puede moverse por el tipo de camino " + caminoDeConexionEntreUbicaciones)
@@ -141,6 +147,9 @@ class UbicacionServiceImpl: UbicacionService {
         }
     }
 
+    /*private fun distanciaAlcanzableEntreUbicaciones(ubicacionAMoverseId: Long, ubicacionActualId: Long): Boolean {
+        return mongoUbicacionDAO.distanciaAlcanzableEntreUbicaciones(ubicacionAMoverseId, ubicacionActualId)
+    }*/
 
     private fun intentarMover(vector: Vector, ubicacion: Ubicacion) {
             vector.mover(ubicacion)

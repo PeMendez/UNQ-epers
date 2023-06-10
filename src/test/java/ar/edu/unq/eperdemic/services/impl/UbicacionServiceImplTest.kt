@@ -702,15 +702,37 @@ class UbicacionServiceImplTest {
     // ------------------------ MongoDBTests ------------------------ //
 
     @Test
-    fun unaUbicacionNoSePuedeCrearEnUnaCoordenadaDeOtraUbicacion() {
-        ubicacionService.crearUbicacion("pedrito", GeoJsonPoint(124.0,3123.0))
+    fun seCreaYSeRecuperaUnaUbicacionEnMongoCorrectamente() {
+        val coordenadaEsperada = GeoJsonPoint(12.2,213.5)
+        val ubicacionCreada = ubicacionService.crearUbicacion("nuevaUbicacion", coordenadaEsperada)
+        val ubicacionMongo = ubicacionService.recuperarUbicacionMongoPorId(ubicacionCreada.id!!)
 
-       Assertions.assertThrows(NoExisteElid::class.java){
-           ubicacionService.crearUbicacion("pepe", GeoJsonPoint(124.0, 3123.0))
-       }
-
+        Assertions.assertEquals(ubicacionCreada.id!!, ubicacionMongo.idRelacional)
+        Assertions.assertEquals(ubicacionCreada.nombre, ubicacionMongo.nombre)
+        Assertions.assertEquals(coordenadaEsperada, ubicacionMongo.coordenada)
     }
 
+    @Test
+    fun noSePuedeRecuperarUnaUbicacionMongoConUnIdRelacionalInexistente() {
+        Assertions.assertThrows(NoExisteElid::class.java) {
+            ubicacionService.recuperarUbicacionMongoPorId(-232)
+        }
+    }
+
+    @Test
+    fun unaUbicacionNoSePuedeCrearEnUnaCoordenadaDeOtraUbicacion() {
+        val mismaCoordenada = GeoJsonPoint(124.0,3123.0)
+        ubicacionService.crearUbicacion("ubicacionConCoordenada", mismaCoordenada)
+
+       Assertions.assertThrows(CoordenadaInvalida::class.java){
+           ubicacionService.crearUbicacion("ubicacionConMismaCoordenada", mismaCoordenada)
+       }
+    }
+
+    @Test
+    fun seCalculaLaDistanciaEntreDosUbicacionesAPartirDeSusCoordenadasCorrectamente() {
+
+    }
 
     @AfterEach
     fun clearAll() {

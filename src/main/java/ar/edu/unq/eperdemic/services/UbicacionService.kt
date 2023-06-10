@@ -1,6 +1,7 @@
 package ar.edu.unq.eperdemic.services
 
 import ar.edu.unq.eperdemic.modelo.Ubicacion
+import ar.edu.unq.eperdemic.modelo.UbicacionMongo
 import ar.edu.unq.eperdemic.modelo.UbicacionNeo4J
 import ar.edu.unq.eperdemic.modelo.Vector
 import org.springframework.data.domain.Page
@@ -24,4 +25,5 @@ interface UbicacionService {
     fun recuperarVectores(ubicacionId: Long): List<Vector>
     fun recuperarUbicacionPorNombre(nombreUbicacion: String): Ubicacion
     fun recuperarUbicacionNeoPorId(idUbicacion:Long) : UbicacionNeo4J
+    fun recuperarUbicacionMongoPorId(idUbicacion: Long) : UbicacionMongo
 }
