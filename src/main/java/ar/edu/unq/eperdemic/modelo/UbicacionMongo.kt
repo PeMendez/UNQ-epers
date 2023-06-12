@@ -1,10 +1,8 @@
 package ar.edu.unq.eperdemic.modelo
+
 import org.springframework.data.annotation.Id
-import org.springframework.data.mongodb.core.geo.GeoJson
 import org.springframework.data.mongodb.core.geo.GeoJsonPoint
 import org.springframework.data.mongodb.core.mapping.Document
-import java.awt.Point
-
 
 @Document("Ubicacion")
 class UbicacionMongo {
