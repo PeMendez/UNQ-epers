@@ -38,6 +38,9 @@ class DataServiceSpring : DataService {
     @Autowired
     lateinit var mongoUbicacionDAO: MongoUbicacionDAO
 
+    @Autowired
+    lateinit var distritoDAO: DistritoDAO
+
 
     val patogeno1 = Patogeno("tipo1")
     val patogeno2 = Patogeno("tipo2")
@@ -130,6 +133,8 @@ class DataServiceSpring : DataService {
         neo4jUbicacionDAO.detachDelete()
 
         mongoUbicacionDAO.deleteAll()
+
+        distritoDAO.deleteAll()
 
     }
 
