@@ -729,9 +729,16 @@ class UbicacionServiceImplTest {
        }
     }
 
-    @Test
-    fun seCalculaLaDistanciaEntreDosUbicacionesAPartirDeSusCoordenadasCorrectamente() {
 
+    //tambien habria q modificar esto
+    @Test
+    fun seCalculaLaDistanciaEntreDosCoordenadasCorrectamente() {
+        val coordenadas = GeoJsonPoint(124.0,3123.0)
+        val coordenadas2 = GeoJsonPoint(127.0,3100.0)
+
+        val distancia = ubicacionService.distanciaEntreDosCoordenadas(coordenadas, coordenadas2)
+
+        Assertions.assertEquals(distancia, 1514.5258466526664)
     }
 
     @AfterEach

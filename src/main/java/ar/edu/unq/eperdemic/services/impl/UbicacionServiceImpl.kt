@@ -15,6 +15,7 @@ import org.springframework.data.mongodb.core.geo.GeoJsonPoint
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.lang.Math.*
 
 
 @Service
@@ -180,6 +181,30 @@ class UbicacionServiceImpl: UbicacionService {
     }
     private fun caminoMasCortoEntre(caminosCompatibles:List<String>, ubicacionDelVector: String, ubicacionDestino:String):List<UbicacionNeo4J> {
         return neo4jUbicacionDAO.caminoMasCortoEntre(caminosCompatibles, ubicacionDelVector, ubicacionDestino).get().drop(1)
+    }
+
+
+    //lo dejo asi x ahora, lo ideal seria hacerlo con geonear
+    fun distanciaEntreDosCoordenadas(ubicacion1: GeoJsonPoint, ubicacion2: GeoJsonPoint): Double {
+
+        val lat1 = ubicacion1.x
+        val lon1 = ubicacion1.y
+        val lat2 = ubicacion2.x
+        val lon2 = ubicacion2.y
+
+        val radioTierraKm = 6371.0 // Radio de la Tierra en kilómetros
+
+        val dLat = Math.toRadians(lat2 - lat1)
+        val dLon = Math.toRadians(lon2 - lon1)
+
+        val a = sin(dLat / 2) * sin(dLat / 2) +
+                cos(Math.toRadians(lat1)) * cos(Math.toRadians(lat2)) *
+                sin(dLon / 2) * sin(dLon / 2)
+        val c = 2 * atan2(sqrt(a), sqrt(1 - a))
+
+        val distancia = radioTierraKm * c
+
+        return distancia
     }
 
 
