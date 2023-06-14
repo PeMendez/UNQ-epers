@@ -1,13 +1,10 @@
 package ar.edu.unq.eperdemic.services.impl
 
 import ar.edu.unq.eperdemic.modelo.Distrito
+import ar.edu.unq.eperdemic.modelo.exceptions.CoordenadasParaUnDistritoRepetidas
 import ar.edu.unq.eperdemic.modelo.exceptions.NombreDeDistritoRepetido
 import ar.edu.unq.eperdemic.utils.DataService
-import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.Assertions
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.TestInstance
+import org.junit.jupiter.api.*
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -54,8 +51,19 @@ class DistritoServiceImplTest {
 
     @Test
     fun noPuedenExistirDosDistritosConLasMismasCoordenadas(){
+        val coordenadas = listOf(GeoJsonPoint(23.5,44.0), GeoJsonPoint(35.5,44.0),GeoJsonPoint(28.0,14.0))
+        val distrito = Distrito("Revenclaw", coordenadas)
+        val distrito2 = Distrito("Hogsmeade", coordenadas)
+
+        distritoServiceImpl.crear(distrito)
+
+        Assertions.assertThrows(CoordenadasParaUnDistritoRepetidas::class.java){
+            distritoServiceImpl.crear(distrito2)
+        }
 
     }
+
+
 
     @Test
     fun seObtieneElDistritoConMasUbicacionesInfectadas(){

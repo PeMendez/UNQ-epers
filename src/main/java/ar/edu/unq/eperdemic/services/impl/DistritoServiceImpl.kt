@@ -17,11 +17,10 @@ class DistritoServiceImpl: DistritoService {
     @Autowired
     private lateinit var distritoDAO: DistritoDAO
     override fun crear(distrito: Distrito): Distrito {
-
-        if(distritoDAO.recuperarPorNombre(distrito.nombre).isPresent){
+        if (distritoDAO.recuperarPorNombre(distrito.nombre).isPresent) {
             throw NombreDeDistritoRepetido("Ya existe un distrito con el nombre dado")
-        //} else if (distritoDAO.existeDistritoEnCoordenadas(distrito.coordenadas)){
-        //    throw CoordenadasParaUnDistritoRepetidas("Ya existe un distrito con las coordenadas dadas")
+        } else if (distritoDAO.existeDistritoEnCoordenadas(distrito.coordenadas)) {
+            throw CoordenadasParaUnDistritoRepetidas("Ya existe un distrito con las coordenadas dadas")
         } else {
             return distritoDAO.save(distrito)
         }

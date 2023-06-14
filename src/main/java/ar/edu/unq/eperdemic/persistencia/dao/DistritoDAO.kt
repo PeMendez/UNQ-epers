@@ -12,6 +12,8 @@ interface DistritoDAO: MongoRepository<Distrito, String> {
     fun recuperarPorNombre(nombre: String): Optional<Distrito>
 
 
-    //@Query("{ 'coordenadas' : { $geoIntersects : { $geometry : { type: 'GeoJsonPoint', coordinates: ?0 } } } }")
-    //fun existeDistritoEnCoordenadas(coordenadas: List<GeoJsonPoint>): Boolean
+    @Query("{'coordenadas' : { \$in: ?0 }}", exists = true)
+    fun existeDistritoEnCoordenadas(coordenadas: List<GeoJsonPoint>): Boolean
+
+
 }

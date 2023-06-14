@@ -15,7 +15,6 @@ import org.springframework.data.mongodb.core.geo.GeoJsonPoint
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import java.awt.Point
 
 
 @Service
@@ -182,5 +181,9 @@ class UbicacionServiceImpl: UbicacionService {
     private fun caminoMasCortoEntre(caminosCompatibles:List<String>, ubicacionDelVector: String, ubicacionDestino:String):List<UbicacionNeo4J> {
         return neo4jUbicacionDAO.caminoMasCortoEntre(caminosCompatibles, ubicacionDelVector, ubicacionDestino).get().drop(1)
     }
+
+
+
+
 }
 
