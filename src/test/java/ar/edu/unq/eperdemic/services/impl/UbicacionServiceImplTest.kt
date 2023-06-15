@@ -732,13 +732,32 @@ class UbicacionServiceImplTest {
 
     //tambien habria q modificar esto
     @Test
-    fun seCalculaLaDistanciaEntreDosCoordenadasCorrectamente() {
-        val coordenadas = GeoJsonPoint(124.0,3123.0)
-        val coordenadas2 = GeoJsonPoint(127.0,3100.0)
+    fun ubicacionesCercanasAUnaUbicacion() {
+        val coordenadas = GeoJsonPoint(12.34, 56.60)
+        val coordenadas2 = GeoJsonPoint(27.20, 60.10)
+        val coordenadas3 = GeoJsonPoint(40.0, 70.0)
 
-        val distancia = ubicacionService.distanciaEntreDosCoordenadas(coordenadas, coordenadas2)
+        val ubi1 = ubicacionService.crearUbicacion("Ubicacion1", coordenadas)
+        val ubi1Mongo = ubi1.aUbicacionMongo(coordenadas)
 
-        Assertions.assertEquals(distancia, 1514.5258466526664)
+        val ubi2 = ubicacionService.crearUbicacion("ubicacion2", coordenadas2)
+        val ubi2Mongo = ubi2.aUbicacionMongo(coordenadas2)
+
+        ubicacionService.crearUbicacion("ubicacion3", coordenadas3)
+
+
+        val minLongitude = minOf(ubi1Mongo.coordenada.x, ubi2Mongo.coordenada.x)
+        val maxLongitude = maxOf(ubi1Mongo.coordenada.x, ubi2Mongo.coordenada.x)
+        val minLatitude = minOf(ubi1Mongo.coordenada.y, ubi2Mongo.coordenada.y)
+        val maxLatitude = maxOf(ubi1Mongo.coordenada.y, ubi2Mongo.coordenada.y)
+        val ubicacionesCercanas = ubicacionService.findUbicacionesCercanas(minLongitude, minLatitude, maxLongitude, maxLatitude)
+
+
+        Assertions.assertNotNull(ubicacionesCercanas)
+
+        Assertions.assertEquals(1, ubicacionesCercanas.size)
+
+
     }
 
     @AfterEach

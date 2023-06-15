@@ -18,6 +18,8 @@ interface MongoUbicacionDAO: MongoRepository<UbicacionMongo, String> {
     fun distanciaAlcanzableEntreUbicaciones(ubicacionAMoverseId: Long, ubicacionActualId: Long): Boolean*/
 
 
+    @Query("{ 'coordenada' : { \$geoWithin : { \$box : [ [ ?0, ?1 ], [ ?2, ?3 ] ] } }, \$and: [ { 'coordenada' : { \$ne : { 'type' : 'Point', 'coordinates' : [ ?4, ?5 ] } } } ] }")
+    fun findUbicacionesCercanas(minLongitude: Double, minLatitude: Double, maxLongitude: Double, maxLatitude: Double, excludedLongitude: Double, excludedLatitude: Double): List<UbicacionMongo>
 
 
 }
