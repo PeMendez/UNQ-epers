@@ -760,6 +760,18 @@ class UbicacionServiceImplTest {
 
     }
 
+    @Test
+    fun testPablo() {
+        val coodenadas1 = GeoJsonPoint(12.34, 56.60)
+        val coordenadas2 = GeoJsonPoint(27.20, 60.10)
+
+        val ubi1 = ubicacionService.crearUbicacion("Ubicacion1", coodenadas1)
+
+        val ubi2 = ubicacionService.crearUbicacion("ubicacion2", coordenadas2)
+
+        Assertions.assertTrue(ubicacionService.distanciaAlcanzableEntreUbicacionesPablo(ubi1.id!!,ubi2.id!!,100))
+    }
+
     @AfterEach
     fun clearAll() {
         dataService.eliminarTodo()

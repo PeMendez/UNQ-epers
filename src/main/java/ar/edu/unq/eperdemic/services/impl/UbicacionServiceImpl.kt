@@ -188,7 +188,9 @@ class UbicacionServiceImpl: UbicacionService {
         return mongoUbicacionDAO.findUbicacionesCercanas(longitude, latitude, maxLongitude, maxLatitude, longitude,latitude)
     }
 
-
+    fun distanciaAlcanzableEntreUbicacionesPablo(ubicacionOrigen: Long,ubicacionDestino: Long,radio:Int):Boolean{
+        return mongoUbicacionDAO.distanciaAlcanzableEntreUbicacionesPablo3(ubicacionOrigen,ubicacionDestino,radio)
+    }
 
 
 }
