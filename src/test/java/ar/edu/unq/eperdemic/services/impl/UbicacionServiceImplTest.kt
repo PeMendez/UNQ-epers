@@ -729,61 +729,6 @@ class UbicacionServiceImplTest {
        }
     }
 
-
-    //tambien habria q modificar esto
-    @Test
-    fun ubicacionesCercanasAUnaUbicacion() {
-        val coordenadas = GeoJsonPoint(12.34, 56.60)
-        val coordenadas2 = GeoJsonPoint(12.32, 56.56)
-        val coordenadas3 = GeoJsonPoint(271.21, 360.11)
-
-        val ubi1 = ubicacionService.crearUbicacion("Ubicacion1", coordenadas)
-        val ubi1Mongo = ubi1.aUbicacionMongo(coordenadas)
-
-        ubicacionService.crearUbicacion("ubicacion2", coordenadas2)
-        ubicacionService.crearUbicacion("ubicacion3", coordenadas3)
-
-
-        val ubicacionesCercanas = ubicacionService.findUbicacionesCercanas(ubi1Mongo.coordenada.x, ubi1Mongo.coordenada.y)
-
-        Assertions.assertNotNull(ubicacionesCercanas)
-        Assertions.assertEquals(1, ubicacionesCercanas.size)
-
-    }
-
-    @Test
-    fun testPabloTrue() {
-        val coordenadas1 = GeoJsonPoint(0.0, 0.0)
-        val coordenadas2 = GeoJsonPoint(50.0, 50.0)
-
-        val ubi1 = ubicacionService.crearUbicacion("Ubicacion1", coordenadas1)
-        val ubi2 = ubicacionService.crearUbicacion("ubicacion2", coordenadas2)
-
-        Assertions.assertTrue(ubicacionService.distanciaAlcanzableEntreUbicacionesPablo(ubi1.id!!, ubi2.id!!, 100.toDouble()))
-    }
-
-    @Test
-    fun testPabloBordeTrue() {
-        val coordenadas1 = GeoJsonPoint(0.0, 0.0)
-        val coordenadas2 = GeoJsonPoint(100.0, 0.0)
-
-        val ubi1 = ubicacionService.crearUbicacion("Ubicacion1", coordenadas1)
-        val ubi2 = ubicacionService.crearUbicacion("ubicacion2", coordenadas2)
-
-        Assertions.assertTrue(ubicacionService.distanciaAlcanzableEntreUbicacionesPablo(ubi1.id!!, ubi2.id!!, 100.toDouble()))
-    }
-
-    @Test
-    fun testPablofalse() {
-        val coordenadas1 = GeoJsonPoint(0.0, 0.0)
-        val coordenadas2 = GeoJsonPoint(101.0, 0.0)
-
-        val ubi1 = ubicacionService.crearUbicacion("Ubicacion1", coordenadas1)
-        val ubi2 = ubicacionService.crearUbicacion("ubicacion2", coordenadas2)
-
-        Assertions.assertFalse(ubicacionService.distanciaAlcanzableEntreUbicacionesPablo(ubi1.id!!, ubi2.id!!, 100.toDouble()))
-    }
-
     @Test
     fun testDistanciaMenorA100kmMetodoFranco() {
         val coordenadas1 = GeoJsonPoint(0.0, 0.0)

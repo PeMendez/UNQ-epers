@@ -48,7 +48,8 @@ class UbicacionServiceImpl: UbicacionService {
             val nuevaUbicacion = Ubicacion(nombreUbicacion)
             ubicacionDAO.save(nuevaUbicacion)
             neo4jUbicacionDAO.save(nuevaUbicacion.aUbicacionNeo4J())
-            mongoUbicacionDAO.save(nuevaUbicacion.aUbicacionMongo(coordenada))
+            val distritoDeUbicacion = mongoUbicacionDAO.distritoDeCoordenadas(coordenada.x,coordenada.y).get()
+            mongoUbicacionDAO.save(nuevaUbicacion.aUbicacionMongo(coordenada, distritoDeUbicacion, hayVectorEnfermoEnUbicacion(nuevaUbicacion.id!!)))
             return nuevaUbicacion
         }
     }
@@ -182,19 +183,8 @@ class UbicacionServiceImpl: UbicacionService {
         return neo4jUbicacionDAO.caminoMasCortoEntre(caminosCompatibles, ubicacionDelVector, ubicacionDestino).get().drop(1)
     }
 
-
-    //lo dejo asi x ahora, lo ideal seria hacerlo con geonear
-    fun findUbicacionesCercanas(longitude: Double, latitude: Double): List<UbicacionMongo>{
-        return mongoUbicacionDAO.findUbicacionesCercanas(longitude, latitude)
-    }
-
     fun seEncuentraADistanciaAlcanzable(longitude: Double, latitude: Double, idRelacionalAMoverse: Long): Boolean{
         return mongoUbicacionDAO.seEncuentraADistanciaAlcanzable(longitude, latitude, idRelacionalAMoverse).isPresent
-    }
-
-    fun distanciaAlcanzableEntreUbicacionesPablo(ubicacionOrigen: Long,ubicacionDestino: Long,radio:Double):Boolean{
-        val ubiMongo = mongoUbicacionDAO.findByIdRelacional(ubicacionDestino).get()
-        return mongoUbicacionDAO.distanciaAlcanzableEntreUbicacionesPablo5(ubicacionOrigen,ubiMongo.coordenada.x,ubiMongo.coordenada.y,radio).isPresent
     }
 
     fun hayVectorEnfermoEnUbicacion(ubicacionId: Long) : Boolean{
