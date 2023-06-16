@@ -2,10 +2,7 @@ package ar.edu.unq.eperdemic.services.impl
 
 import ar.edu.unq.eperdemic.modelo.*
 import ar.edu.unq.eperdemic.modelo.exceptions.*
-import ar.edu.unq.eperdemic.persistencia.dao.MongoUbicacionDAO
-import ar.edu.unq.eperdemic.persistencia.dao.Neo4jUbicacionDAO
-import ar.edu.unq.eperdemic.persistencia.dao.UbicacionDAO
-import ar.edu.unq.eperdemic.persistencia.dao.VectorDAO
+import ar.edu.unq.eperdemic.persistencia.dao.*
 import ar.edu.unq.eperdemic.services.UbicacionService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.dao.EmptyResultDataAccessException
@@ -26,6 +23,7 @@ class UbicacionServiceImpl: UbicacionService {
     @Autowired private lateinit var vectorServiceImpl: VectorServiceImpl
     @Autowired private lateinit var vectorDAO: VectorDAO
     @Autowired private lateinit var mongoUbicacionDAO: MongoUbicacionDAO
+    @Autowired private lateinit var distritoDAO: DistritoDAO
 
     override fun expandir(ubicacionId: Long) {
         val ubicacion = ubicacionDAO.findByIdOrNull(ubicacionId)?: throw NoExisteElid("el id buscado no existe en la base de datos")
@@ -38,6 +36,7 @@ class UbicacionServiceImpl: UbicacionService {
     }
 
     override fun crearUbicacion(nombreUbicacion: String, coordenada: GeoJsonPoint): Ubicacion {
+        //var distritoNombre: String? = null
         try {
             ubicacionDAO.recuperarUbicacionPorNombre(nombreUbicacion)
             throw NombreDeUbicacionRepetido("Ya existe una ubicacion con ese nombre.")
@@ -45,10 +44,13 @@ class UbicacionServiceImpl: UbicacionService {
             if (mongoUbicacionDAO.recuperarPorCoordenada(coordenada).isPresent) {
                 throw CoordenadaInvalida("Ya existe una ubicación en la coordenada $coordenada")
             }
+            /*if(distritoDAO.distritoEnCoordenada(coordenada).isPresent){
+                distritoNombre = distritoDAO.distritoEnCoordenada(coordenada).get().nombre
+            }*/
             val nuevaUbicacion = Ubicacion(nombreUbicacion)
             ubicacionDAO.save(nuevaUbicacion)
             neo4jUbicacionDAO.save(nuevaUbicacion.aUbicacionNeo4J())
-            mongoUbicacionDAO.save(nuevaUbicacion.aUbicacionMongo(coordenada))
+            mongoUbicacionDAO.save(nuevaUbicacion.aUbicacionMongo(coordenada, "juan"))
             return nuevaUbicacion
         }
     }

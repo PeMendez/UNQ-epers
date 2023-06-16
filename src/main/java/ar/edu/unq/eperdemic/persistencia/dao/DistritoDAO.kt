@@ -15,5 +15,8 @@ interface DistritoDAO: MongoRepository<Distrito, String> {
     @Query("{'coordenadas' : { \$in: ?0 }}", exists = true)
     fun existeDistritoEnCoordenadas(coordenadas: List<GeoJsonPoint>): Boolean
 
+    @Query("{ 'distrito.geometry' : { \$geoIntersects: { \$geometry: ?0 } } }")
+    fun distritoEnCoordenada(coordenada: GeoJsonPoint): Optional<Distrito>
+
 
 }

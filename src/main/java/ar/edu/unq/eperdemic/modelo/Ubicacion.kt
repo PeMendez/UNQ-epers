@@ -29,7 +29,7 @@ class Ubicacion() {
         return nuevaUbicacionNeo4J
     }
 
-    fun aUbicacionMongo(coordenada: GeoJsonPoint): UbicacionMongo {
-         return UbicacionMongo(id!!, nombre, coordenada)
+    fun aUbicacionMongo(coordenada: GeoJsonPoint, distrito: String): UbicacionMongo {
+         return UbicacionMongo(id!!, nombre, coordenada, distrito)
     }
 }

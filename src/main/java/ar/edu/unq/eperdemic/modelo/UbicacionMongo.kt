@@ -11,16 +11,16 @@ class UbicacionMongo {
     var idRelacional: Long? = null
     lateinit var nombre: String
     lateinit var coordenada: GeoJsonPoint
+    var estaInfectada = false
+    var distrito: String? = null
 
-
-    //Se necesita un constructor vacio para que jackson pueda
-    //convertir de JSON a este objeto.
     protected constructor() {
     }
-    constructor(idRelacional: Long, nombre: String, coordenada: GeoJsonPoint) {
+    constructor(idRelacional: Long, nombre: String, coordenada: GeoJsonPoint, distrito: String) {
         this.idRelacional = idRelacional
         this.nombre = nombre
         this.coordenada = coordenada
+        this.distrito = distrito
     }
 
 }
