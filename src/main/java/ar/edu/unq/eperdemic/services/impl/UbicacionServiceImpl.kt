@@ -184,8 +184,8 @@ class UbicacionServiceImpl: UbicacionService {
 
 
     //lo dejo asi x ahora, lo ideal seria hacerlo con geonear
-    fun findUbicacionesCercanas(longitude: Double, latitude: Double, maxLongitude: Double, maxLatitude:Double): List<UbicacionMongo>{
-        return mongoUbicacionDAO.findUbicacionesCercanas(longitude, latitude, maxLongitude, maxLatitude, longitude,latitude)
+    fun findUbicacionesCercanas(longitude: Double, latitude: Double): List<UbicacionMongo>{
+        return mongoUbicacionDAO.findUbicacionesCercanas(longitude, latitude)
     }
 
     fun distanciaAlcanzableEntreUbicacionesPablo(ubicacionOrigen: Long,ubicacionDestino: Long,radio:Double):Boolean{

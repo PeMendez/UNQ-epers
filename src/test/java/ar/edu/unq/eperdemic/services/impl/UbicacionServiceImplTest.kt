@@ -734,29 +734,20 @@ class UbicacionServiceImplTest {
     @Test
     fun ubicacionesCercanasAUnaUbicacion() {
         val coordenadas = GeoJsonPoint(12.34, 56.60)
-        val coordenadas2 = GeoJsonPoint(27.20, 60.10)
-        val coordenadas3 = GeoJsonPoint(40.0, 70.0)
+        val coordenadas2 = GeoJsonPoint(12.32, 56.56)
+        val coordenadas3 = GeoJsonPoint(271.21, 360.11)
 
         val ubi1 = ubicacionService.crearUbicacion("Ubicacion1", coordenadas)
         val ubi1Mongo = ubi1.aUbicacionMongo(coordenadas)
 
-        val ubi2 = ubicacionService.crearUbicacion("ubicacion2", coordenadas2)
-        val ubi2Mongo = ubi2.aUbicacionMongo(coordenadas2)
-
+        ubicacionService.crearUbicacion("ubicacion2", coordenadas2)
         ubicacionService.crearUbicacion("ubicacion3", coordenadas3)
 
 
-        val minLongitude = minOf(ubi1Mongo.coordenada.x, ubi2Mongo.coordenada.x)
-        val maxLongitude = maxOf(ubi1Mongo.coordenada.x, ubi2Mongo.coordenada.x)
-        val minLatitude = minOf(ubi1Mongo.coordenada.y, ubi2Mongo.coordenada.y)
-        val maxLatitude = maxOf(ubi1Mongo.coordenada.y, ubi2Mongo.coordenada.y)
-        val ubicacionesCercanas = ubicacionService.findUbicacionesCercanas(minLongitude, minLatitude, maxLongitude, maxLatitude)
-
+        val ubicacionesCercanas = ubicacionService.findUbicacionesCercanas(ubi1Mongo.coordenada.x, ubi1Mongo.coordenada.y)
 
         Assertions.assertNotNull(ubicacionesCercanas)
-
         Assertions.assertEquals(1, ubicacionesCercanas.size)
-
 
     }
 
