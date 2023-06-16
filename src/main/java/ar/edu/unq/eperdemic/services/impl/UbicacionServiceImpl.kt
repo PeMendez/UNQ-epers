@@ -47,8 +47,8 @@ class UbicacionServiceImpl: UbicacionService {
             val nuevaUbicacion = Ubicacion(nombreUbicacion)
             ubicacionDAO.save(nuevaUbicacion)
             neo4jUbicacionDAO.save(nuevaUbicacion.aUbicacionNeo4J())
-            if(distritoDAO.distritoEnCoordenada(coordenada).isPresent){
-                distritoNombre = distritoDAO.distritoEnCoordenada(coordenada).get().nombre
+            if(distritoDAO.distritoEnPoligono(coordenada).isPresent){
+                distritoNombre = distritoDAO.distritoEnPoligono(coordenada).get().nombre
                 mongoUbicacionDAO.save(nuevaUbicacion.aUbicacionMongo(coordenada, distritoNombre))
             }
             mongoUbicacionDAO.save(nuevaUbicacion.aUbicacionMongoSinNombre(coordenada))

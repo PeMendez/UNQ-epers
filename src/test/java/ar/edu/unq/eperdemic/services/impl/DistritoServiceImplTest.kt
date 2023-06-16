@@ -8,7 +8,9 @@ import org.junit.jupiter.api.*
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.data.geo.Point
 import org.springframework.data.mongodb.core.geo.GeoJsonPoint
+import org.springframework.data.mongodb.core.geo.GeoJsonPolygon
 import org.springframework.test.context.junit.jupiter.SpringExtension
 
 @ExtendWith(SpringExtension::class)
@@ -28,7 +30,7 @@ class DistritoServiceImplTest {
 
     @Test
     fun seCreaUnDistritoDeFormaCorrecta(){
-        val coordenadas = listOf(GeoJsonPoint(23.5,44.0), GeoJsonPoint(35.5,44.0),GeoJsonPoint(28.0,14.0))
+        val coordenadas = GeoJsonPolygon(listOf(GeoJsonPoint(23.5,44.0), GeoJsonPoint(35.5,44.0),GeoJsonPoint(28.0,14.0)))
         val distrito = Distrito("Revenclaw", coordenadas)
 
         val distritoCreado = distritoServiceImpl.crear(distrito)
@@ -38,7 +40,7 @@ class DistritoServiceImplTest {
 
     @Test
     fun noPuedenExistirDosDistritosConElMismoNombre(){
-        val coordenadas = listOf(GeoJsonPoint(23.5,44.0), GeoJsonPoint(35.5,44.0),GeoJsonPoint(28.0,14.0))
+        val coordenadas = GeoJsonPolygon(listOf(GeoJsonPoint(23.5,44.0), GeoJsonPoint(35.5,44.0),GeoJsonPoint(28.0,14.0)))
         val distrito = Distrito("Revenclaw", coordenadas)
 
         distritoServiceImpl.crear(distrito)
@@ -51,7 +53,7 @@ class DistritoServiceImplTest {
 
     @Test
     fun noPuedenExistirDosDistritosConLasMismasCoordenadas(){
-        val coordenadas = listOf(GeoJsonPoint(23.5,44.0), GeoJsonPoint(35.5,44.0),GeoJsonPoint(28.0,14.0))
+        val coordenadas = GeoJsonPolygon(mutableListOf( Point(23.5,44.0), Point(35.5,44.0),Point(28.0,14.0)))
         val distrito = Distrito("Revenclaw", coordenadas)
         val distrito2 = Distrito("Hogsmeade", coordenadas)
 
@@ -75,7 +77,7 @@ class DistritoServiceImplTest {
         
     }
 
-    @AfterEach
+    //@AfterEach
     fun eliminarModelo() {
         dataService.eliminarTodo()
     }

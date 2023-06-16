@@ -11,7 +11,9 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.data.domain.PageRequest
+import org.springframework.data.geo.Point
 import org.springframework.data.mongodb.core.geo.GeoJsonPoint
+import org.springframework.data.mongodb.core.geo.GeoJsonPolygon
 import org.springframework.test.context.junit.jupiter.SpringExtension
 
 @ExtendWith(SpringExtension::class)
@@ -35,7 +37,7 @@ class UbicacionServiceImplTest {
 
     @BeforeEach
     fun setUp() {
-        dataService.crearSetDeDatosIniciales()
+        //dataService.crearSetDeDatosIniciales()
         Random.switchModo(false)
     }
 
@@ -785,7 +787,7 @@ class UbicacionServiceImplTest {
 
     @Test
     fun crearUbicacionConDistritoOK(){
-        val coordenadas = listOf(GeoJsonPoint(0.0,0.0), GeoJsonPoint(0.0,1.0),GeoJsonPoint(1.0,1.0), GeoJsonPoint(1.0,0.0), GeoJsonPoint(0.0,0.0))
+        val coordenadas = GeoJsonPolygon(mutableListOf(Point(0.0,0.0), Point(0.0,1.0),Point(1.0,1.0), Point(1.0,0.0), Point(0.0,0.0)))
         val distrito = Distrito("Revenclaw", coordenadas)
 
         distritoServiceImpl.crear(distrito)
