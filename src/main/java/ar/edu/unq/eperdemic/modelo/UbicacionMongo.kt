@@ -14,6 +14,9 @@ class UbicacionMongo {
     var estaInfectada = false
     var distrito: String? = null
 
+
+    //Se necesita un constructor vacio para que jackson pueda
+    //convertir de JSON a este objeto.
     protected constructor() {
     }
     constructor(idRelacional: Long, nombre: String, coordenada: GeoJsonPoint, distrito: String) {
