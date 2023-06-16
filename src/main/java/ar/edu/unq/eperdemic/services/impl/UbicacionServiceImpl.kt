@@ -127,12 +127,13 @@ class UbicacionServiceImpl: UbicacionService {
     override fun mover(vectorId: Long, ubicacionid: Long) {
         val ubicacion = ubicacionDAO.findByIdOrNull(ubicacionid)?: throw NoExisteElid("el id de la ubiacion no existe en la base de datos")
         val vector = vectorServiceImpl.recuperarVector(vectorId)
+        val ubicacionMongo = mongoUbicacionDAO.findByIdRelacional(vector.ubicacion.id!!).get()
         if(vector.ubicacion.id!! == ubicacionid){
             throw EsMismaUbicacion("No podes moverte a la misma ubicacion en la que te encontras")
         }
-        /*if(!distanciaAlcanzableEntreUbicaciones(ubicacionid, vector.ubicacion.id!!)) {
-            throw NoExisteElid("error")
-        }*/
+        if(!seEncuentraADistanciaAlcanzable(ubicacionMongo.coordenada.x, ubicacionMongo.coordenada.y, ubicacionid)) {
+            throw UbicacionMuyLejana("La ubicacion se encuentra a más de 100km de distancia")
+        }
         val caminoDeConexionEntreUbicaciones = conectadosPorCamino(vector.nombreDeUbicacionActual(), ubicacion.nombre)
         if (neo4jUbicacionDAO.puedeMoversePorCamino(vector.caminosCompatibles(),caminoDeConexionEntreUbicaciones)) {
             intentarMover(vector, ubicacion)

@@ -26,7 +26,7 @@ interface UbicacionDAO: PagingAndSortingRepository<Ubicacion, Long> {
         """ SELECT CASE WHEN COUNT(v) > 0 THEN true ELSE false END
             FROM Vector v
             WHERE v.ubicacion.id = :ubicacionId
-              AND v.especies IS EMPTY
+              AND v.especies IS NOT EMPTY
         """
     )
     fun hayVectorEnfermoEnUbicacion(ubicacionId: Long): Boolean
