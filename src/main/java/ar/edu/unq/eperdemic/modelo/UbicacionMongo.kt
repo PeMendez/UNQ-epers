@@ -25,5 +25,10 @@ class UbicacionMongo {
         this.coordenada = coordenada
         this.distrito = distrito
     }
+    constructor(idRelacional: Long, nombre: String, coordenada: GeoJsonPoint) {
+        this.idRelacional = idRelacional
+        this.nombre = nombre
+        this.coordenada = coordenada
+    }
 
 }

@@ -71,15 +71,15 @@ class DataServiceSpring : DataService {
     }
 
     private fun crearUbicaciones(): List<Ubicacion> {
-        val ubicacion1Creada = ubicacionService.crearUbicacion(ubicacion1.nombre, GeoJsonPoint(848.0, 834.30))
-        val ubicacion2Creada = ubicacionService.crearUbicacion(ubicacion2.nombre, GeoJsonPoint(83452.0, 864.0))
-        val ubicacion3Creada = ubicacionService.crearUbicacion(ubicacion3.nombre, GeoJsonPoint(8874.0, 8232.0))
-        val ubicacion4Creada = ubicacionService.crearUbicacion("ubicacionPrimera", GeoJsonPoint(826.0, 88.0))
-        val ubicacion5Creada = ubicacionService.crearUbicacion("ubicacionSegunda", GeoJsonPoint(883.0, 658.0))
-        val ubicacion6Creada = ubicacionService.crearUbicacion("ubicacionTercera", GeoJsonPoint(538.0, 896.560))
-        val ubicacion7Creada = ubicacionService.crearUbicacion("ubicacionCuarta", GeoJsonPoint(9868.0, 8568.0))
-        val ubicacion8Creada = ubicacionService.crearUbicacion("ubicacionQuinta", GeoJsonPoint(1348.0, 880.0))
-        val ubicacion9Creada = ubicacionService.crearUbicacion("ubicacionSexta", GeoJsonPoint(878.0, 834.0))
+        val ubicacion1Creada = ubicacionService.crearUbicacion(ubicacion1.nombre, GeoJsonPoint(6.0, 6.3))
+        val ubicacion2Creada = ubicacionService.crearUbicacion(ubicacion2.nombre, GeoJsonPoint(2.0, 2.1))
+        val ubicacion3Creada = ubicacionService.crearUbicacion(ubicacion3.nombre, GeoJsonPoint(4.0, 4.0))
+        val ubicacion4Creada = ubicacionService.crearUbicacion("ubicacionPrimera", GeoJsonPoint(7.0, 7.0))
+        val ubicacion5Creada = ubicacionService.crearUbicacion("ubicacionSegunda", GeoJsonPoint(3.0, 3.0))
+        val ubicacion6Creada = ubicacionService.crearUbicacion("ubicacionTercera", GeoJsonPoint(5.0, 5.0))
+        val ubicacion7Creada = ubicacionService.crearUbicacion("ubicacionCuarta", GeoJsonPoint(9.0, 9.0))
+        val ubicacion8Creada = ubicacionService.crearUbicacion("ubicacionQuinta", GeoJsonPoint(1.0, 1.0))
+        val ubicacion9Creada = ubicacionService.crearUbicacion("ubicacionSexta", GeoJsonPoint(8.3, 8.2))
         return listOf(
             ubicacion1Creada, ubicacion2Creada, ubicacion3Creada,
             ubicacion4Creada, ubicacion5Creada, ubicacion6Creada,

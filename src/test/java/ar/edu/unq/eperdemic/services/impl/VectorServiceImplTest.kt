@@ -50,8 +50,8 @@ class VectorServiceImplTest {
     fun setUp() {
         Random.switchModo(false)
 
-        ubicacion1 = ubicacionServiceImpl.crearUbicacion("ubicacion1", GeoJsonPoint(8234.0, 8.0))
-        ubicacion2 = ubicacionServiceImpl.crearUbicacion("ubicacion2", GeoJsonPoint(45428.0, 8.0))
+        ubicacion1 = ubicacionServiceImpl.crearUbicacion("ubicacion1", GeoJsonPoint(8.1, 8.1))
+        ubicacion2 = ubicacionServiceImpl.crearUbicacion("ubicacion2", GeoJsonPoint(8.2, 8.0))
 
         patogeno1 = patogenoService.crearPatogeno(Patogeno("patogeno1"))
 
@@ -261,7 +261,7 @@ class VectorServiceImplTest {
 
         val patogeno1 = Patogeno("testEspecie")
         val patogenoCreado1 = patogenoService.crearPatogeno(patogeno1)
-        val ubicacionCreada1 = ubicacionServiceImpl.crearUbicacion("ubicacionTestEspecie", GeoJsonPoint(8.0, 843.0))
+        val ubicacionCreada1 = ubicacionServiceImpl.crearUbicacion("ubicacionTestEspecie", GeoJsonPoint(8.1, 8.1))
         vectorServiceImpl.crearVector(TipoDeVector.Animal, ubicacionCreada1.id!!)
         val especieCreada1 = patogenoService.agregarEspecie(patogenoCreado1.id!!, "cualquierNombre", ubicacionCreada1.id!!)
 
@@ -276,7 +276,7 @@ class VectorServiceImplTest {
 
         dataServiceSpring.eliminarTodo()
 
-        val ubicacionCreada = ubicacionServiceImpl.crearUbicacion("enfermedadesTest", GeoJsonPoint(8.0, 834.0))
+        val ubicacionCreada = ubicacionServiceImpl.crearUbicacion("enfermedadesTest", GeoJsonPoint(8.0, 8.1))
         val vectorCreado = vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada.id!!)
 
         assertThrows(NoExisteElid::class.java) {
@@ -499,7 +499,7 @@ class VectorServiceImplTest {
         val patogeno2 = Patogeno("testEspecie2")
         patogeno2.capacidadDeDefensa = 0
         val patogenoCreado2 = patogenoService.crearPatogeno(patogeno2)
-        val ubicacionCreada2 = ubicacionServiceImpl.crearUbicacion("ubicacionTestEspecie2", GeoJsonPoint(458.0, 8.0))
+        val ubicacionCreada2 = ubicacionServiceImpl.crearUbicacion("ubicacionTestEspecie2", GeoJsonPoint(4.0, 4.1))
         vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada2.id!!)
         val especieCreadaSinMutacion = patogenoService.agregarEspecie(patogenoCreado2.id!!, "cualquierNombre2", ubicacionCreada2.id!!)
 
@@ -534,7 +534,7 @@ class VectorServiceImplTest {
         val patogeno2 = Patogeno("testEspecie2")
         patogeno2.capacidadDeDefensa = 200
         val patogenoCreado2 = patogenoService.crearPatogeno(patogeno2)
-        val ubicacionCreada2 = ubicacionServiceImpl.crearUbicacion("ubicacionTestEspecie2", GeoJsonPoint(4328.0, 8.0))
+        val ubicacionCreada2 = ubicacionServiceImpl.crearUbicacion("ubicacionTestEspecie2", GeoJsonPoint(8.1, 8.0))
         vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada2.id!!)
         val especieCreadaSinMutacion = patogenoService.agregarEspecie(patogenoCreado2.id!!, "cualquierNombre2", ubicacionCreada2.id!!)
 
@@ -569,7 +569,7 @@ class VectorServiceImplTest {
         val patogeno2 = Patogeno("testEspecie2")
         patogeno2.capacidadDeDefensa = 0
         val patogenoCreado2 = patogenoService.crearPatogeno(patogeno2)
-        val ubicacionCreada2 = ubicacionServiceImpl.crearUbicacion("ubicacionTestEspecie2", GeoJsonPoint(1348.0, 8.0))
+        val ubicacionCreada2 = ubicacionServiceImpl.crearUbicacion("ubicacionTestEspecie2", GeoJsonPoint(8.1, 8.0))
         vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada2.id!!)
         val especieCreadaDebil = patogenoService.agregarEspecie(patogenoCreado2.id!!, "cualquierNombre2", ubicacionCreada2.id!!)
 
@@ -610,7 +610,7 @@ class VectorServiceImplTest {
         val patogeno2 = Patogeno("testEspecie2")
         patogeno2.capacidadDeDefensa = 200
         val patogenoCreado2 = patogenoService.crearPatogeno(patogeno2)
-        val ubicacionCreada2 = ubicacionServiceImpl.crearUbicacion("ubicacionTestEspecie2", GeoJsonPoint(328.0, 8.0))
+        val ubicacionCreada2 = ubicacionServiceImpl.crearUbicacion("ubicacionTestEspecie2", GeoJsonPoint(3.0, 3.1))
         vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada2.id!!)
         val especieCreadaFuerte = patogenoService.agregarEspecie(patogenoCreado2.id!!, "cualquierNombre2", ubicacionCreada2.id!!)
 

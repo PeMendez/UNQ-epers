@@ -35,7 +35,7 @@ class UbicacionServiceImplTest {
 
     @BeforeEach
     fun setUp() {
-        //.crearSetDeDatosIniciales()
+        dataService.crearSetDeDatosIniciales()
         Random.switchModo(false)
     }
 
@@ -70,20 +70,20 @@ class UbicacionServiceImplTest {
     fun noSePuedeCrearUnaUbicacionConUnStringVacio() {
 
         Assertions.assertThrows(NoPuedeEstarVacioOContenerCaracteresEspeciales::class.java) {
-            ubicacionService.crearUbicacion("", GeoJsonPoint(1.0, 1.0))
+            ubicacionService.crearUbicacion("", GeoJsonPoint(8.0, 1.0))
         }
     }
 
     @Test
     fun noSePuedeCrearUnaUbicacionConCaracteresEspeciales() {
         Assertions.assertThrows(NoPuedeEstarVacioOContenerCaracteresEspeciales::class.java) {
-            ubicacionService.crearUbicacion("ubicacion#1", GeoJsonPoint(5.0, 5.0))
+            ubicacionService.crearUbicacion("ubicacion#1", GeoJsonPoint(5.1, 5.0))
         }
         Assertions.assertThrows(NoPuedeEstarVacioOContenerCaracteresEspeciales::class.java) {
-            ubicacionService.crearUbicacion("ubicacion-2", GeoJsonPoint(6.0, 6.0))
+            ubicacionService.crearUbicacion("ubicacion-2", GeoJsonPoint(6.0, 6.1))
         }
         Assertions.assertThrows(NoPuedeEstarVacioOContenerCaracteresEspeciales::class.java) {
-            ubicacionService.crearUbicacion("@ubicacion3", GeoJsonPoint(7.0, 7.0))
+            ubicacionService.crearUbicacion("@ubicacion3", GeoJsonPoint(7.0, 7.1))
         }
     }
     @Test
@@ -430,7 +430,7 @@ class UbicacionServiceImplTest {
     @Test
     fun noSePuedeConectarADosUbicacionesPorMedioDeUnCaminoInvalido() {
         val ubicacion1 = ubicacionService.crearUbicacion("testConectarFalso1", GeoJsonPoint(8.0, 8.0))
-        val ubicacion2 = ubicacionService.crearUbicacion("testConectarFalso2", GeoJsonPoint(8.0, 831.0))
+        val ubicacion2 = ubicacionService.crearUbicacion("testConectarFalso2", GeoJsonPoint(8.0, 8.1))
 
         Assertions.assertThrows(TipoDeCaminoInvalido::class.java) {
             ubicacionService.conectar(ubicacion1.nombre, ubicacion2.nombre, "123")
@@ -576,7 +576,7 @@ class UbicacionServiceImplTest {
     fun cuandoNoHayConexionEntreDosUbicacionesLaUbicacionEsMuyLejana() {
         val ubicacion1 = ubicacionService.crearUbicacion("ubicacion123", GeoJsonPoint(8.0, 8.0))
         val vector = vectorService.crearVector(TipoDeVector.Persona,ubicacion1.id!!)
-        val ubicacion3 = ubicacionService.crearUbicacion("ubicacion323", GeoJsonPoint(865.0, 8.0))
+        val ubicacion3 = ubicacionService.crearUbicacion("ubicacion323", GeoJsonPoint(5.1, 5.0))
 
         Assertions.assertThrows(UbicacionMuyLejana ::class.java ){
             ubicacionService.mover(vector.id!!, ubicacion3.id!!)
@@ -664,7 +664,7 @@ class UbicacionServiceImplTest {
     @Test
     fun unVectorNoPuedeMoversePorElCaminoMasCortoSiNoExisteUnaConexionEntreLasUbicacionesDadas(){
         val ubicacion1 = ubicacionService.crearUbicacion("Hogsmade", GeoJsonPoint(8.0, 8.0))
-        ubicacionService.crearUbicacion("PrivetDrive", GeoJsonPoint(846.0, 8.0))
+        ubicacionService.crearUbicacion("PrivetDrive", GeoJsonPoint(8.1, 8.0))
 
 
         val crookshanks = vectorService.crearVector(TipoDeVector.Animal,ubicacion1.id!!)
@@ -731,28 +731,6 @@ class UbicacionServiceImplTest {
        }
     }
 
-
-    //tambien habria q modificar esto
-    /*@Test
-    fun ubicacionesCercanasAUnaUbicacion() {
-        val coordenadas = GeoJsonPoint(12.34, 56.60)
-        val coordenadas2 = GeoJsonPoint(12.32, 56.56)
-        val coordenadas3 = GeoJsonPoint(271.21, 360.11)
-
-        val ubi1 = ubicacionService.crearUbicacion("Ubicacion1", coordenadas)
-         ubi1Mongo = ubi1.aUbicacionMongo(coordenadas)
-
-        ubicacionService.crearUbicacion("ubicacion2", coordenadas2)
-        ubicacionService.crearUbicacion("ubicacion3", coordenadas3)
-
-
-        val ubicacionesCercanas = ubicacionService.findUbicacionesCercanas(ubi1Mongo.coordenada.x, ubi1Mongo.coordenada.y)
-
-        Assertions.assertNotNull(ubicacionesCercanas)
-        Assertions.assertEquals(1, ubicacionesCercanas.size)
-
-    }*/
-
     @Test
     fun testDistanciaMenorA100kmMetodoFranco() {
         val coordenadas1 = GeoJsonPoint(0.0, 0.0)
@@ -805,17 +783,17 @@ class UbicacionServiceImplTest {
 
     }
 
-    //@Test
+    @Test
     fun crearUbicacionConDistritoOK(){
         val coordenadas = listOf(GeoJsonPoint(0.0,0.0), GeoJsonPoint(0.0,1.0),GeoJsonPoint(1.0,1.0), GeoJsonPoint(1.0,0.0), GeoJsonPoint(0.0,0.0))
         val distrito = Distrito("Revenclaw", coordenadas)
 
         distritoServiceImpl.crear(distrito)
-        val ubicacion1 = ubicacionService.crearUbicacion("CallejonDiagon", GeoJsonPoint(0.5, 0.5))
+        val ubicacion1 = ubicacionService.crearUbicacion("CallejonDiagon", GeoJsonPoint(0.0, 0.0))
 
         val ubiConDistrito = ubicacionService.recuperarUbicacionMongoPorId(ubicacion1.id!!)
 
-        Assertions.assertTrue(ubiConDistrito.distrito == "Revenclaw")
+        Assertions.assertEquals(ubiConDistrito.distrito, "Revenclaw")
 
     }
 

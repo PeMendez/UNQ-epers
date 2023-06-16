@@ -36,7 +36,7 @@ class UbicacionServiceImpl: UbicacionService {
     }
 
     override fun crearUbicacion(nombreUbicacion: String, coordenada: GeoJsonPoint): Ubicacion {
-        //var distritoNombre: String? = null
+        val distritoNombre: String?
         try {
             ubicacionDAO.recuperarUbicacionPorNombre(nombreUbicacion)
             throw NombreDeUbicacionRepetido("Ya existe una ubicacion con ese nombre.")
@@ -44,13 +44,15 @@ class UbicacionServiceImpl: UbicacionService {
             if (mongoUbicacionDAO.recuperarPorCoordenada(coordenada).isPresent) {
                 throw CoordenadaInvalida("Ya existe una ubicación en la coordenada $coordenada")
             }
-            /*if(distritoDAO.distritoEnCoordenada(coordenada).isPresent){
-                distritoNombre = distritoDAO.distritoEnCoordenada(coordenada).get().nombre
-            }*/
             val nuevaUbicacion = Ubicacion(nombreUbicacion)
             ubicacionDAO.save(nuevaUbicacion)
             neo4jUbicacionDAO.save(nuevaUbicacion.aUbicacionNeo4J())
-            mongoUbicacionDAO.save(nuevaUbicacion.aUbicacionMongo(coordenada, "juan"))
+            if(distritoDAO.distritoEnCoordenada(coordenada).isPresent){
+                distritoNombre = distritoDAO.distritoEnCoordenada(coordenada).get().nombre
+                mongoUbicacionDAO.save(nuevaUbicacion.aUbicacionMongo(coordenada, distritoNombre))
+            }
+            mongoUbicacionDAO.save(nuevaUbicacion.aUbicacionMongoSinNombre(coordenada))
+
             return nuevaUbicacion
         }
     }

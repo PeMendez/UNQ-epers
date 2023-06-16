@@ -32,4 +32,8 @@ class Ubicacion() {
     fun aUbicacionMongo(coordenada: GeoJsonPoint, distrito: String): UbicacionMongo {
          return UbicacionMongo(id!!, nombre, coordenada, distrito)
     }
+
+    fun aUbicacionMongoSinNombre(coordenada: GeoJsonPoint): UbicacionMongo{
+        return UbicacionMongo(id!!, nombre, coordenada)
+    }
 }

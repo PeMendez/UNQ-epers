@@ -141,7 +141,7 @@ class PatogenoServiceTest {
     fun noSePuedeCrearUnaEspecieConUnPatogenoConIdInvalido() {
         dataService.eliminarTodo()
 
-        val ubicacionHogsmeade = ubicacionService.crearUbicacion("ubicacionHogsmeade", GeoJsonPoint(218.0, 876.0))
+        val ubicacionHogsmeade = ubicacionService.crearUbicacion("ubicacionHogsmeade", GeoJsonPoint(8.0, 8.0))
         vectorService.crearVector(TipoDeVector.Persona, ubicacionHogsmeade.id!!)
 
         Assertions.assertThrows(NoExisteElid::class.java) {
@@ -239,7 +239,7 @@ class PatogenoServiceTest {
 
     @Test
     fun alAgregarleUnaEspecieAUnPatogenoSeIntentaInfectarAUnVectorPeroNoHayNingunoEnLaUbicacionDada(){
-        val ubicacionHogwarts = ubicacionService.crearUbicacion("Hogwarts", GeoJsonPoint(495.0, 8.0))
+        val ubicacionHogwarts = ubicacionService.crearUbicacion("Hogwarts", GeoJsonPoint(8.1, 8.1))
 
         val ex = assertThrows<NingunVectorAInfectarEnLaUbicacionDada> { patogenoService.agregarEspecie(patogenoMalDeDragon.id!!, "Imperius", ubicacionHogwarts.id!!)  }
 
