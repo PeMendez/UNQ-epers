@@ -3,6 +3,7 @@ package ar.edu.unq.eperdemic.services.impl
 import ar.edu.unq.eperdemic.modelo.Patogeno
 import ar.edu.unq.eperdemic.modelo.Random
 import ar.edu.unq.eperdemic.modelo.TipoDeVector
+import ar.edu.unq.eperdemic.modelo.Distrito
 import ar.edu.unq.eperdemic.modelo.exceptions.*
 import ar.edu.unq.eperdemic.utils.DataService
 import org.junit.jupiter.api.*
@@ -751,39 +752,6 @@ class UbicacionServiceImplTest {
         Assertions.assertEquals(1, ubicacionesCercanas.size)
 
     }*/
-
-    @Test
-    fun testPabloTrue() {
-        val coordenadas1 = GeoJsonPoint(0.0, 0.0)
-        val coordenadas2 = GeoJsonPoint(50.0, 50.0)
-
-        val ubi1 = ubicacionService.crearUbicacion("Ubicacion1", coordenadas1)
-        val ubi2 = ubicacionService.crearUbicacion("ubicacion2", coordenadas2)
-
-        Assertions.assertTrue(ubicacionService.distanciaAlcanzableEntreUbicacionesPablo(ubi1.id!!, ubi2.id!!, 100.toDouble()))
-    }
-
-    @Test
-    fun testPabloBordeTrue() {
-        val coordenadas1 = GeoJsonPoint(0.0, 0.0)
-        val coordenadas2 = GeoJsonPoint(100.0, 0.0)
-
-        val ubi1 = ubicacionService.crearUbicacion("Ubicacion1", coordenadas1)
-        val ubi2 = ubicacionService.crearUbicacion("ubicacion2", coordenadas2)
-
-        Assertions.assertTrue(ubicacionService.distanciaAlcanzableEntreUbicacionesPablo(ubi1.id!!, ubi2.id!!, 100.toDouble()))
-    }
-
-    @Test
-    fun testPablofalse() {
-        val coordenadas1 = GeoJsonPoint(0.0, 0.0)
-        val coordenadas2 = GeoJsonPoint(101.0, 0.0)
-
-        val ubi1 = ubicacionService.crearUbicacion("Ubicacion1", coordenadas1)
-        val ubi2 = ubicacionService.crearUbicacion("ubicacion2", coordenadas2)
-
-        Assertions.assertFalse(ubicacionService.distanciaAlcanzableEntreUbicacionesPablo(ubi1.id!!, ubi2.id!!, 100.toDouble()))
-    }
 
     @Test
     fun testDistanciaMenorA100kmMetodoFranco() {
