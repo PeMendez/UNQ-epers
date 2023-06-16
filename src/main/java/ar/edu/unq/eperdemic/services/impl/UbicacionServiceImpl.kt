@@ -197,6 +197,10 @@ class UbicacionServiceImpl: UbicacionService {
         return mongoUbicacionDAO.distanciaAlcanzableEntreUbicacionesPablo5(ubicacionOrigen,ubiMongo.coordenada.x,ubiMongo.coordenada.y,radio).isPresent
     }
 
+    fun hayVectorEnfermoEnUbicacion(ubicacionId: Long) : Boolean{
+        return ubicacionDAO.hayVectorEnfermoEnUbicacion(ubicacionId)
+    }
+
 
 }
 

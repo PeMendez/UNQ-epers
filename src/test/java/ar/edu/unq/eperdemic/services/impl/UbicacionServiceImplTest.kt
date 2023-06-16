@@ -806,6 +806,23 @@ class UbicacionServiceImplTest {
         Assertions.assertFalse(ubicacionService.seEncuentraADistanciaAlcanzable(coordenadas1.x, coordenadas1.y, ubi2.id!!))
     }
 
+    @Test
+    fun unaUbicacionPuedeResponderSiHayUnVectorEnfermoEnEllaTrue() {
+
+        val ubicacion1 = ubicacionService.crearUbicacion("CallejonDiagon", GeoJsonPoint(854.0, 8.0))
+
+        val ron = vectorService.crearVector(TipoDeVector.Persona,ubicacion1.id!!)
+        val patogeno = Patogeno("Cruciartus")
+        val patogenoP = patogenoService.crearPatogeno(patogeno)
+        patogenoService.agregarEspecie(patogenoP.id!!, "Imperius", ubicacion1.id!!)
+
+        val ronE = vectorService.recuperarVector(ron.id!!)
+        Assertions.assertFalse(ronE.estaSano())
+
+        Assertions.assertTrue(ubicacionService.hayVectorEnfermoEnUbicacion(ubicacion1.id!!))
+
+    }
+
     @AfterEach
     fun clearAll() {
         dataService.eliminarTodo()
