@@ -784,6 +784,28 @@ class UbicacionServiceImplTest {
         Assertions.assertFalse(ubicacionService.distanciaAlcanzableEntreUbicacionesPablo(ubi1.id!!, ubi2.id!!, 100.toDouble()))
     }
 
+    @Test
+    fun testDistanciaMenorA100kmMetodoFranco() {
+        val coordenadas1 = GeoJsonPoint(0.0, 0.0)
+        val coordenadas2 = GeoJsonPoint(0.1, 0.1)
+
+        ubicacionService.crearUbicacion("Ubicacion1", coordenadas1)
+        val ubi2 = ubicacionService.crearUbicacion("ubicacion2", coordenadas2)
+
+        Assertions.assertTrue(ubicacionService.seEncuentraADistanciaAlcanzable(coordenadas1.x, coordenadas1.y, ubi2.id!!))
+    }
+
+    @Test
+    fun testDistanciaMayorA100kmMetodoFranco() {
+        val coordenadas1 = GeoJsonPoint(0.0, 0.0)
+        val coordenadas2 = GeoJsonPoint(12.2, 12.2)
+
+        ubicacionService.crearUbicacion("Ubicacion1", coordenadas1)
+        val ubi2 = ubicacionService.crearUbicacion("ubicacion2", coordenadas2)
+
+        Assertions.assertFalse(ubicacionService.seEncuentraADistanciaAlcanzable(coordenadas1.x, coordenadas1.y, ubi2.id!!))
+    }
+
     @AfterEach
     fun clearAll() {
         dataService.eliminarTodo()

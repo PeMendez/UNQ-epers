@@ -188,6 +188,10 @@ class UbicacionServiceImpl: UbicacionService {
         return mongoUbicacionDAO.findUbicacionesCercanas(longitude, latitude)
     }
 
+    fun seEncuentraADistanciaAlcanzable(longitude: Double, latitude: Double, idRelacionalAMoverse: Long): Boolean{
+        return mongoUbicacionDAO.seEncuentraADistanciaAlcanzable(longitude, latitude, idRelacionalAMoverse).isPresent
+    }
+
     fun distanciaAlcanzableEntreUbicacionesPablo(ubicacionOrigen: Long,ubicacionDestino: Long,radio:Double):Boolean{
         val ubiMongo = mongoUbicacionDAO.findByIdRelacional(ubicacionDestino).get()
         return mongoUbicacionDAO.distanciaAlcanzableEntreUbicacionesPablo5(ubicacionOrigen,ubiMongo.coordenada.x,ubiMongo.coordenada.y,radio).isPresent
