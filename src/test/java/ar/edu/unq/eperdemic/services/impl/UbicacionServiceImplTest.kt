@@ -120,7 +120,7 @@ class UbicacionServiceImplTest {
     fun seRecuperanLosVectoresDeUnaUbicacionCorrectamente() {
         dataService.eliminarTodo()
         val ubicacionCreada1 = ubicacionService.crearUbicacion("testVectores1", GeoJsonPoint(8.0, 8.0))
-        val ubicacionCreada2 = ubicacionService.crearUbicacion("testVectores2", GeoJsonPoint(9.0, 8.0))
+        val ubicacionCreada2 = ubicacionService.crearUbicacion("testVectores2", GeoJsonPoint(8.1, 8.1))
         val vectorCreado = vectorService.crearVector(TipoDeVector.Persona, ubicacionCreada2.id!!)
 
         Assertions.assertTrue(ubicacionService.recuperarVectores(ubicacionCreada1.id!!).isEmpty())
@@ -198,7 +198,7 @@ class UbicacionServiceImplTest {
     fun seMueveUnVectorAUnaUbicacionCorrectamente() {
         dataService.eliminarTodo()
         val ubicacionCreada1 = ubicacionService.crearUbicacion("testMover1", GeoJsonPoint(8.0, 8.0))
-        val ubicacionCreada2 = ubicacionService.crearUbicacion("testMover2", GeoJsonPoint(832.0, 8.0))
+        val ubicacionCreada2 = ubicacionService.crearUbicacion("testMover2", GeoJsonPoint(8.1, 8.1))
         val vectorCreado = vectorService.crearVector(TipoDeVector.Persona, ubicacionCreada1.id!!)
 
         Assertions.assertTrue(vectorCreado.ubicacion.id != ubicacionCreada2.id)
@@ -218,7 +218,7 @@ class UbicacionServiceImplTest {
     fun alMoverUnVectorInfectadoAUnaUbicacionEntoncesSeInfectaUnVectorAlAzar() {
         dataService.eliminarTodo()
         val ubicacionCreada1 = ubicacionService.crearUbicacion("testMoverInfectar1", GeoJsonPoint(8.0, 8.0))
-        val ubicacionCreada2 = ubicacionService.crearUbicacion("testMoverInfectar2", GeoJsonPoint(348.0, 8.0))
+        val ubicacionCreada2 = ubicacionService.crearUbicacion("testMoverInfectar2", GeoJsonPoint(8.1, 8.1))
         val vectorCreado1 = vectorService.crearVector(TipoDeVector.Persona, ubicacionCreada1.id!!)
         val vectorCreado2 = vectorService.crearVector(TipoDeVector.Persona, ubicacionCreada2.id!!)
         ubicacionService.conectar(ubicacionCreada2.nombre, ubicacionCreada1.nombre, "Terrestre")
@@ -250,7 +250,7 @@ class UbicacionServiceImplTest {
         dataService.eliminarTodo()
 
         val ubicacionCreada1 = ubicacionService.crearUbicacion("testMover", GeoJsonPoint(8.0, 8.0))
-        val ubicacionCreada2 = ubicacionService.crearUbicacion("testMover2", GeoJsonPoint(8.0, 83.0))
+        val ubicacionCreada2 = ubicacionService.crearUbicacion("testMover2", GeoJsonPoint(8.1, 8.1))
         val vectorNoInfectado1 = vectorService.crearVector(TipoDeVector.Persona, ubicacionCreada2.id!!)
         val vectorNoInfectado2 = vectorService.crearVector(TipoDeVector.Persona, ubicacionCreada1.id!!)
 
@@ -537,7 +537,7 @@ class UbicacionServiceImplTest {
     fun unVectorInsectoNoPuedeMoverseAUnaUbicacionPorUnCaminoMaritimo() {
         val ubicacionCreada1 = ubicacionService.crearUbicacion("testMoverUbicacion", GeoJsonPoint(8.0, 8.0))
         val vectorCreado1 = vectorService.crearVector(TipoDeVector.Insecto, ubicacionCreada1.id!!)
-        val ubicacionCreada2 = ubicacionService.crearUbicacion("testMoverUbicacion2", GeoJsonPoint(834.0, 8.0))
+        val ubicacionCreada2 = ubicacionService.crearUbicacion("testMoverUbicacion2", GeoJsonPoint(8.1, 8.1))
 
         ubicacionService.conectar(ubicacionCreada1.nombre, ubicacionCreada2.nombre,"Maritimo")
 
@@ -550,7 +550,7 @@ class UbicacionServiceImplTest {
     fun unVectorPersonaNoPuedeMoverseAUnaUbicacionPorUnCaminoAereo() {
         val ubicacionCreada1 = ubicacionService.crearUbicacion("testMoverUbicacion", GeoJsonPoint(8.0, 8.0))
         val vectorCreado1 = vectorService.crearVector(TipoDeVector.Persona, ubicacionCreada1.id!!)
-        val ubicacionCreada2 = ubicacionService.crearUbicacion("testMoverUbicacion2", GeoJsonPoint(8543.0, 8.0))
+        val ubicacionCreada2 = ubicacionService.crearUbicacion("testMoverUbicacion2", GeoJsonPoint(8.1, 8.1))
 
 
         ubicacionService.conectar(ubicacionCreada1.nombre, ubicacionCreada2.nombre,"Aereo")
