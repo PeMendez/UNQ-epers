@@ -823,6 +823,20 @@ class UbicacionServiceImplTest {
 
     }
 
+    @Test
+    fun unaUbicacionPuedeResponderSiHayUnVectorEnfermoEnEllaFalse() {
+
+        val ubicacion1 = ubicacionService.crearUbicacion("CallejonDiagon", GeoJsonPoint(854.0, 8.0))
+
+        val ron = vectorService.crearVector(TipoDeVector.Persona,ubicacion1.id!!)
+
+        Assertions.assertTrue(ron.estaSano())
+
+        Assertions.assertFalse(ubicacionService.hayVectorEnfermoEnUbicacion(ubicacion1.id!!))
+
+    }
+
+
     @AfterEach
     fun clearAll() {
         dataService.eliminarTodo()
