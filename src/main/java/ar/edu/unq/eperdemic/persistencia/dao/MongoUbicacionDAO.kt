@@ -31,5 +31,15 @@ interface MongoUbicacionDAO: MongoRepository<UbicacionMongo, String> {
             "}")
     fun distanciaAlcanzableEntreUbicacionesPablo4(ubicacionAMoverseId: Long, ubicacionActualId: Long, radius: Double): Optional<UbicacionMongo>
 //[{"idRelacional": ?1},{"coordenada":1}]
+
+    @Query("{" +
+            "  \"coordenada\": {" +
+            "    \"\$geoWithin\": {" +
+            "      \"\$center\": [[?1,?2], ?3]" +
+            "    }" +
+            "  }," +
+            "  \"idRelacional\": ?0" +
+            "}")
+    fun distanciaAlcanzableEntreUbicacionesPablo5(ubicacionAMoverseId: Long, latitud: Double, longitud: Double, radio: Double): Optional<UbicacionMongo>
 }
 
