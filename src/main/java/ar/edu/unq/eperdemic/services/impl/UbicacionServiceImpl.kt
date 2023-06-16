@@ -192,6 +192,10 @@ class UbicacionServiceImpl: UbicacionService {
         return ubicacionDAO.hayVectorEnfermoEnUbicacion(ubicacionId)
     }
 
+    fun actualizarUbicacionInfectada(ubicacionId: Long) {
+        val ubiMongo = mongoUbicacionDAO.findByIdRelacional(ubicacionId).get()
+    }
+
 
 }
 
