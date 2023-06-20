@@ -860,6 +860,15 @@ class UbicacionServiceImplTest {
         Assertions.assertEquals(distrito1.nombre, distritoMasEnfermo.nombre)
     }
 
+    @Test
+    fun cuandoNoHayDistritoMasEnfermoEntoncesSeLanzaUnaExcepcion() {
+        dataService.eliminarTodo()
+
+        Assertions.assertThrows(NoHayUnDistritoMasEnfermo::class.java) {
+            distritoServiceImpl.distritoMasEnfermo()
+        }
+    }
+
 
     @AfterEach
     fun clearAll() {

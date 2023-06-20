@@ -2,8 +2,10 @@ package ar.edu.unq.eperdemic.services.impl
 
 import ar.edu.unq.eperdemic.modelo.Distrito
 import ar.edu.unq.eperdemic.modelo.exceptions.CoordenadasParaUnDistritoRepetidas
+import ar.edu.unq.eperdemic.modelo.exceptions.NoHayUnDistritoMasEnfermo
 import ar.edu.unq.eperdemic.modelo.exceptions.NombreDeDistritoRepetido
 import ar.edu.unq.eperdemic.persistencia.dao.DistritoDAO
+import ar.edu.unq.eperdemic.persistencia.dao.MongoUbicacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.UbicacionDAO
 import ar.edu.unq.eperdemic.services.DistritoService
 import org.springframework.beans.factory.annotation.Autowired
@@ -19,6 +21,8 @@ class DistritoServiceImpl: DistritoService {
     private lateinit var distritoDAO: DistritoDAO
     @Autowired
     private lateinit var ubicacionDAO: UbicacionDAO
+    @Autowired
+    private lateinit var mongoUbicacionDAO: MongoUbicacionDAO
 
     override fun crear(distrito: Distrito): Distrito {
         if (distritoDAO.recuperarPorNombre(distrito.nombre).isPresent) {
@@ -32,12 +36,13 @@ class DistritoServiceImpl: DistritoService {
 
     override fun distritoMasEnfermo(): Distrito {
         val idsDeUbicacionesEnfermas = ubicacionDAO.idsDeUbicacionesEnfermas()
-        val distritoMasEnfermo = distritoDAO.distritoMasEnfermo(idsDeUbicacionesEnfermas)
+        val distritoMasEnfermo = mongoUbicacionDAO.nombreDeDistritoMasEnfermo(idsDeUbicacionesEnfermas)
         if (distritoMasEnfermo.isPresent) {
-            return distritoMasEnfermo.get()
+            return distritoDAO.recuperarPorNombre(distritoMasEnfermo.get()).get()
         } else {
-            throw NombreDeDistritoRepetido("no hay distrito mas enfermo")
+           throw NoHayUnDistritoMasEnfermo("No hay distrito mas enfermo")
         }
+
     }
 
 }
