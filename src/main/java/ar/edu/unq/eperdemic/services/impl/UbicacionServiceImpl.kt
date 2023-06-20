@@ -36,7 +36,6 @@ class UbicacionServiceImpl: UbicacionService {
     }
 
     override fun crearUbicacion(nombreUbicacion: String, coordenada: GeoJsonPoint): Ubicacion {
-        val distritoNombre: String?
         try {
             ubicacionDAO.recuperarUbicacionPorNombre(nombreUbicacion)
             throw NombreDeUbicacionRepetido("Ya existe una ubicacion con ese nombre.")
@@ -47,11 +46,14 @@ class UbicacionServiceImpl: UbicacionService {
             val nuevaUbicacion = Ubicacion(nombreUbicacion)
             ubicacionDAO.save(nuevaUbicacion)
             neo4jUbicacionDAO.save(nuevaUbicacion.aUbicacionNeo4J())
-            if(distritoDAO.distritoEnPoligono(coordenada).isPresent){
-                distritoNombre = distritoDAO.distritoEnPoligono(coordenada).get().nombre
-                mongoUbicacionDAO.save(nuevaUbicacion.aUbicacionMongo(coordenada, distritoNombre))
+            val coordenadas2 = coordenada.coordinates
+            val distritoNombre = distritoDAO.distritoEnCoordenada(coordenadas2)
+            if(distritoNombre.isPresent){
+                val distritoNombreGet = distritoNombre.get().nombre
+                mongoUbicacionDAO.save(nuevaUbicacion.aUbicacionMongo(coordenada, distritoNombreGet))
+            } else {
+                mongoUbicacionDAO.save(nuevaUbicacion.aUbicacionMongoSinNombre(coordenada))
             }
-            mongoUbicacionDAO.save(nuevaUbicacion.aUbicacionMongoSinNombre(coordenada))
 
             return nuevaUbicacion
         }
@@ -151,9 +153,6 @@ class UbicacionServiceImpl: UbicacionService {
         }
     }
 
-    /*private fun distanciaAlcanzableEntreUbicaciones(ubicacionAMoverseId: Long, ubicacionActualId: Long): Boolean {
-        return mongoUbicacionDAO.distanciaAlcanzableEntreUbicaciones(ubicacionAMoverseId, ubicacionActualId)
-    }*/
 
     private fun intentarMover(vector: Vector, ubicacion: Ubicacion) {
             vector.mover(ubicacion)
@@ -199,6 +198,9 @@ class UbicacionServiceImpl: UbicacionService {
         val ubiMongo = mongoUbicacionDAO.findByIdRelacional(ubicacionId).get()
     }
 
+    fun idsDeUbicacionesEnfermas(): List<Long> {
+        return ubicacionDAO.idsDeUbicacionesEnfermas()
+    }
 
 }
 

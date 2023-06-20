@@ -4,6 +4,7 @@ import ar.edu.unq.eperdemic.modelo.Distrito
 import ar.edu.unq.eperdemic.modelo.exceptions.CoordenadasParaUnDistritoRepetidas
 import ar.edu.unq.eperdemic.modelo.exceptions.NombreDeDistritoRepetido
 import ar.edu.unq.eperdemic.persistencia.dao.DistritoDAO
+import ar.edu.unq.eperdemic.persistencia.dao.UbicacionDAO
 import ar.edu.unq.eperdemic.services.DistritoService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -16,6 +17,9 @@ class DistritoServiceImpl: DistritoService {
 
     @Autowired
     private lateinit var distritoDAO: DistritoDAO
+    @Autowired
+    private lateinit var ubicacionDAO: UbicacionDAO
+
     override fun crear(distrito: Distrito): Distrito {
         if (distritoDAO.recuperarPorNombre(distrito.nombre).isPresent) {
             throw NombreDeDistritoRepetido("Ya existe un distrito con el nombre dado")
@@ -27,6 +31,13 @@ class DistritoServiceImpl: DistritoService {
     }
 
     override fun distritoMasEnfermo(): Distrito {
-        TODO("Not yet implemented")
+        val idsDeUbicacionesEnfermas = ubicacionDAO.idsDeUbicacionesEnfermas()
+        val distritoMasEnfermo = distritoDAO.distritoMasEnfermo(idsDeUbicacionesEnfermas)
+        if (distritoMasEnfermo.isPresent) {
+            return distritoMasEnfermo.get()
+        } else {
+            throw NombreDeDistritoRepetido("no hay distrito mas enfermo")
+        }
     }
+
 }

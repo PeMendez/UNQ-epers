@@ -31,4 +31,11 @@ interface UbicacionDAO: PagingAndSortingRepository<Ubicacion, Long> {
     )
     fun hayVectorEnfermoEnUbicacion(ubicacionId: Long): Boolean
 
+    @Query(
+        """SELECT DISTINCT v.ubicacion.id
+           FROM Vector v 
+           WHERE v.especies.size > 0  
+        """
+    )
+    fun idsDeUbicacionesEnfermas(): List<Long>
 }

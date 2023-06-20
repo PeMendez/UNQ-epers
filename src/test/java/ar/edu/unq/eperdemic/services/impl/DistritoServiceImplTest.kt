@@ -25,12 +25,12 @@ class DistritoServiceImplTest {
 
     @BeforeEach
     fun crearModelo() {
-        dataService.crearSetDeDatosIniciales()
+       // dataService.crearSetDeDatosIniciales()
     }
 
     @Test
     fun seCreaUnDistritoDeFormaCorrecta(){
-        val coordenadas = GeoJsonPolygon(listOf(GeoJsonPoint(23.5,44.0), GeoJsonPoint(35.5,44.0),GeoJsonPoint(28.0,14.0)))
+        val coordenadas = GeoJsonPolygon(listOf(Point(23.5,44.0), Point(35.5,44.0),Point(28.0,14.0)))
         val distrito = Distrito("Revenclaw", coordenadas)
 
         val distritoCreado = distritoServiceImpl.crear(distrito)
@@ -40,7 +40,7 @@ class DistritoServiceImplTest {
 
     @Test
     fun noPuedenExistirDosDistritosConElMismoNombre(){
-        val coordenadas = GeoJsonPolygon(listOf(GeoJsonPoint(23.5,44.0), GeoJsonPoint(35.5,44.0),GeoJsonPoint(28.0,14.0)))
+        val coordenadas = GeoJsonPolygon(mutableListOf(Point(23.5,44.0), Point(35.5,44.0),Point(28.0,14.0)))
         val distrito = Distrito("Revenclaw", coordenadas)
 
         distritoServiceImpl.crear(distrito)
@@ -54,8 +54,8 @@ class DistritoServiceImplTest {
     @Test
     fun noPuedenExistirDosDistritosConLasMismasCoordenadas(){
         val coordenadas = GeoJsonPolygon(mutableListOf( Point(23.5,44.0), Point(35.5,44.0),Point(28.0,14.0)))
-        val distrito = Distrito("Revenclaw", coordenadas)
-        val distrito2 = Distrito("Hogsmeade", coordenadas)
+        val distrito = Distrito("Revenclaw2", coordenadas)
+        val distrito2 = Distrito("Hogsmeade2", coordenadas)
 
         distritoServiceImpl.crear(distrito)
 
@@ -77,7 +77,7 @@ class DistritoServiceImplTest {
         
     }
 
-    //@AfterEach
+    @AfterEach
     fun eliminarModelo() {
         dataService.eliminarTodo()
     }

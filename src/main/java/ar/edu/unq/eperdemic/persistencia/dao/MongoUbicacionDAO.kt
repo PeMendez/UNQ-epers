@@ -18,8 +18,5 @@ interface MongoUbicacionDAO: MongoRepository<UbicacionMongo, String> {
     @Query("{ \$and: [ { 'coordenada' : { \$geoWithin : { \$centerSphere : [ [ ?0, ?1 ], 0.0156702 ] } } }, { 'coordenada.coordinates' : { \$ne : [ ?0, ?1 ] } }, { 'idRelacional' : ?2 } ] }")
     fun seEncuentraADistanciaAlcanzable(longitude: Double, latitude: Double, id: Long): Optional<UbicacionMongo>
 
-    @Query("{ \$and: [ { 'coordenada' : { \$geoWithin : { \$centerSphere : [ [ ?0, ?1 ], 0.0156702 ] } } }, { 'coordenada.coordinates' : { \$ne : [ ?0, ?1 ] } }, { 'idRelacional' : ?2 } ] }")
-    fun distritoDeCoordenadas(longitude: Double, latitude: Double): Optional<Distrito>
-
 }
 

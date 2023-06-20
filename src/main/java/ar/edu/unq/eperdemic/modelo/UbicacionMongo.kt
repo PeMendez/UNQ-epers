@@ -11,7 +11,6 @@ class UbicacionMongo {
     var idRelacional: Long? = null
     lateinit var nombre: String
     lateinit var coordenada: GeoJsonPoint
-    var estaInfectada = false
     var distrito: String? = null
 
 

@@ -703,6 +703,30 @@ class UbicacionServiceImplTest {
 
     }
 
+    @Test
+    fun seRetornanLosIdsDeLasUbicacionesEnfermasCorrectamente() {
+        dataService.eliminarTodo()
+        val ubicacionEnferma1 = ubicacionService.crearUbicacion("testUbiEnfermas", GeoJsonPoint(1.0, 1.1))
+        val ubicacionEnferma2 = ubicacionService.crearUbicacion("testUbiEnfermas2", GeoJsonPoint(1.1, 1.2))
+        val ubicacionNoEnferma = ubicacionService.crearUbicacion("testUbiEnfermas3", GeoJsonPoint(1.2, 1.3))
+        vectorService.crearVector(TipoDeVector.Persona, ubicacionEnferma1.id!!)
+        val vectorEnfermo2 = vectorService.crearVector(TipoDeVector.Persona, ubicacionEnferma2.id!!)
+        vectorService.crearVector(TipoDeVector.Persona, ubicacionNoEnferma.id!!)
+
+        val patogeno = Patogeno("testEnfermas")
+        val patogenoCreado = patogenoService.crearPatogeno(patogeno)
+        val especieCreada = patogenoService.agregarEspecie(patogenoCreado.id!!,"cualquierNombre", ubicacionEnferma1.id!!)
+
+        vectorService.infectar(vectorEnfermo2, especieCreada)
+
+        val ubicacionesEnfermas = ubicacionService.idsDeUbicacionesEnfermas()
+
+        Assertions.assertEquals(2, ubicacionesEnfermas.size)
+        Assertions.assertTrue(ubicacionesEnfermas.contains(ubicacionEnferma1.id!!))
+        Assertions.assertTrue(ubicacionesEnfermas.contains(ubicacionEnferma2.id!!))
+        Assertions.assertFalse(ubicacionesEnfermas.contains(ubicacionNoEnferma.id!!))
+    }
+
     // ------------------------ MongoDBTests ------------------------ //
 
     @Test
@@ -725,11 +749,11 @@ class UbicacionServiceImplTest {
 
     @Test
     fun unaUbicacionNoSePuedeCrearEnUnaCoordenadaDeOtraUbicacion() {
-        val mismaCoordenada = GeoJsonPoint(2.0,3.0)
-        ubicacionService.crearUbicacion("ubicacionConCoordenada", mismaCoordenada)
+        val mismaCoordenada = GeoJsonPoint(1.0,2.0)
+        ubicacionService.crearUbicacion("ubicacionConCoordenada3", mismaCoordenada)
 
        Assertions.assertThrows(CoordenadaInvalida::class.java){
-           ubicacionService.crearUbicacion("ubicacionConMismaCoordenada", mismaCoordenada)
+           ubicacionService.crearUbicacion("ubicacionConMismaCoordenada3", mismaCoordenada)
        }
     }
 
@@ -786,7 +810,7 @@ class UbicacionServiceImplTest {
     }
 
     @Test
-    fun crearUbicacionConDistritoOK(){
+    fun seCreaUnaUbicacionPertenecienteAUnDistritoCorrectamente(){
         val coordenadas = GeoJsonPolygon(mutableListOf(Point(0.0,0.0), Point(0.0,1.0),Point(1.0,1.0), Point(1.0,0.0), Point(0.0,0.0)))
         val distrito = Distrito("Revenclaw", coordenadas)
 
@@ -795,8 +819,45 @@ class UbicacionServiceImplTest {
 
         val ubiConDistrito = ubicacionService.recuperarUbicacionMongoPorId(ubicacion1.id!!)
 
-        Assertions.assertEquals(ubiConDistrito.distrito, "Revenclaw")
+        Assertions.assertEquals(ubiConDistrito.distrito, distrito.nombre)
+    }
 
+    @Test
+    fun seObtieneElDistritoMasEnfermoCorrectamente() {
+        dataService.eliminarTodo()
+        val coordenadas1 = GeoJsonPolygon(mutableListOf(Point(0.0,0.0), Point(0.0,1.0),Point(1.0,1.0), Point(1.0,0.0), Point(0.0,0.0)))
+        val distrito1 = Distrito("unDistrito", coordenadas1)
+        distritoServiceImpl.crear(distrito1)
+
+        val coordenadas2 = GeoJsonPolygon(mutableListOf(Point(8.0,8.0), Point(8.0,9.0),Point(9.0,9.0), Point(9.0,8.0), Point(8.0,8.0)))
+        val distrito2 = Distrito("OtroDistrito", coordenadas2)
+        distritoServiceImpl.crear(distrito2)
+
+        val ubicacionEnferma1 = ubicacionService.crearUbicacion("testUbiEnfermas", GeoJsonPoint(0.0, 0.1))
+        val ubicacionEnferma2 = ubicacionService.crearUbicacion("testUbiEnfermas2", GeoJsonPoint(1.0, 1.0))
+        val ubicacionEnferma3 = ubicacionService.crearUbicacion("testUbiEnfermas3", GeoJsonPoint(8.0, 8.0))
+        vectorService.crearVector(TipoDeVector.Persona, ubicacionEnferma1.id!!)
+        val vectorEnfermo2 = vectorService.crearVector(TipoDeVector.Persona, ubicacionEnferma2.id!!)
+        val vectorEnfermo3 = vectorService.crearVector(TipoDeVector.Persona, ubicacionEnferma3.id!!)
+
+        val patogeno = Patogeno("testEnfermas")
+        val patogenoCreado = patogenoService.crearPatogeno(patogeno)
+        val especieCreada = patogenoService.agregarEspecie(patogenoCreado.id!!,"cualquierNombre", ubicacionEnferma1.id!!)
+
+        vectorService.infectar(vectorEnfermo2, especieCreada)
+        vectorService.infectar(vectorEnfermo3, especieCreada)
+
+        val mongoUbicacionEnferma1 = ubicacionService.recuperarUbicacionMongoPorId(ubicacionEnferma1.id!!)
+        val mongoUbicacionEnferma2 = ubicacionService.recuperarUbicacionMongoPorId(ubicacionEnferma2.id!!)
+        val mongoUbicacionEnferma3 = ubicacionService.recuperarUbicacionMongoPorId(ubicacionEnferma3.id!!)
+
+        Assertions.assertEquals(distrito1.nombre, mongoUbicacionEnferma1.distrito)
+        Assertions.assertEquals(distrito1.nombre, mongoUbicacionEnferma2.distrito)
+        Assertions.assertEquals(distrito2.nombre, mongoUbicacionEnferma3.distrito)
+
+        val distritoMasEnfermo = distritoServiceImpl.distritoMasEnfermo()
+
+        Assertions.assertEquals(distrito1.nombre, distritoMasEnfermo.nombre)
     }
 
 
