@@ -1,6 +1,8 @@
 package ar.edu.unq.eperdemic.modelo
 
 import ar.edu.unq.eperdemic.modelo.exceptions.NoPuedeEstarVacioOContenerCaracteresEspeciales
+import org.springframework.data.mongodb.core.geo.GeoJsonPoint
+import java.awt.Point
 import javax.persistence.*
 @Entity
 class Ubicacion() {
@@ -25,5 +27,13 @@ class Ubicacion() {
         nuevaUbicacionNeo4J.idRelacional = this.id
 
         return nuevaUbicacionNeo4J
+    }
+
+    fun aUbicacionMongo(coordenada: GeoJsonPoint, distrito: String): UbicacionMongo {
+         return UbicacionMongo(id!!, nombre, coordenada, distrito)
+    }
+
+    fun aUbicacionMongoSinNombre(coordenada: GeoJsonPoint): UbicacionMongo{
+        return UbicacionMongo(id!!, nombre, coordenada)
     }
 }

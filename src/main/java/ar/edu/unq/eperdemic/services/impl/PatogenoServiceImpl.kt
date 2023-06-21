@@ -31,7 +31,7 @@ class PatogenoServiceImpl : PatogenoService {
     @Autowired private lateinit var vectorDAO: VectorDAO
     @Autowired private lateinit var vectorService: VectorServiceImpl
     @Autowired private lateinit var especieDAO: EspecieDAO
-
+    @Autowired private lateinit var ubicacionServiceImpl: UbicacionServiceImpl
 
     override fun crearPatogeno(patogeno: Patogeno): Patogeno {
         return  patogenoDAO.save(patogeno)
