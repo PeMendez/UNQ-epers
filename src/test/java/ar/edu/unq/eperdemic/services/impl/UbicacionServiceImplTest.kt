@@ -588,12 +588,12 @@ class UbicacionServiceImplTest {
 
     @Test
     fun unVectorSeMuevePorElCaminoMasCortoPosibleDeFormaCorrecta(){
-        val ubicacion1 = ubicacionService.crearUbicacion("ubicacion123", GeoJsonPoint(8.0, 8.0))
-        val ubicacion2 = ubicacionService.crearUbicacion("ubicacion223", GeoJsonPoint(7.0, 8.0))
-        val ubicacion3 = ubicacionService.crearUbicacion("ubicacion323", GeoJsonPoint(5.0, 8.0))
-        val ubicacion4 = ubicacionService.crearUbicacion("ubicacion423", GeoJsonPoint(3.0, 8.0))
-        val ubicacion5 = ubicacionService.crearUbicacion("ubicacion523", GeoJsonPoint(2.0, 8.0))
-        val ubicacion6 = ubicacionService.crearUbicacion("ubicacion623", GeoJsonPoint(1.0, 8.0))
+        val ubicacion1 = ubicacionService.crearUbicacion("ubicacion123", GeoJsonPoint(1.01, 1.01))
+        val ubicacion2 = ubicacionService.crearUbicacion("ubicacion223", GeoJsonPoint(1.02, 1.02))
+        val ubicacion3 = ubicacionService.crearUbicacion("ubicacion323", GeoJsonPoint(1.03, 1.03))
+        val ubicacion4 = ubicacionService.crearUbicacion("ubicacion423", GeoJsonPoint(1.04, 1.04))
+        val ubicacion5 = ubicacionService.crearUbicacion("ubicacion523", GeoJsonPoint(1.05, 1.05))
+        val ubicacion6 = ubicacionService.crearUbicacion("ubicacion623", GeoJsonPoint(1.06, 1.06))
 
         val vector = vectorService.crearVector(TipoDeVector.Animal,ubicacion1.id!!)
 
@@ -614,12 +614,12 @@ class UbicacionServiceImplTest {
 
     @Test
     fun unVectorSeMuevePorElCaminoMasCortoPosibleDeFormaCorrectaYMientrasSeMueveContagiaEnTodasLasUbicacionesPorLasQuePasa(){
-        val ubicacion1 = ubicacionService.crearUbicacion("ubicacion123", GeoJsonPoint(7.0, 8.0))
-        val ubicacion2 = ubicacionService.crearUbicacion("ubicacion223", GeoJsonPoint(5.0, 8.0))
-        val ubicacion3 = ubicacionService.crearUbicacion("ubicacion323", GeoJsonPoint(8.0, 8.0))
-        val ubicacion4 = ubicacionService.crearUbicacion("ubicacion423", GeoJsonPoint(6.0, 8.0))
-        val ubicacion5 = ubicacionService.crearUbicacion("ubicacion523", GeoJsonPoint(8.1, 8.0))
-        val ubicacion6 = ubicacionService.crearUbicacion("ubicacion623", GeoJsonPoint(9.0, 8.0))
+        val ubicacion1 = ubicacionService.crearUbicacion("ubicacion123", GeoJsonPoint(1.01, 1.01))
+        val ubicacion2 = ubicacionService.crearUbicacion("ubicacion223", GeoJsonPoint(1.02, 1.02))
+        val ubicacion3 = ubicacionService.crearUbicacion("ubicacion323", GeoJsonPoint(1.03, 1.03))
+        val ubicacion4 = ubicacionService.crearUbicacion("ubicacion423", GeoJsonPoint(1.04, 1.04))
+        val ubicacion5 = ubicacionService.crearUbicacion("ubicacion523", GeoJsonPoint(1.05, 1.05))
+        val ubicacion6 = ubicacionService.crearUbicacion("ubicacion623", GeoJsonPoint(1.06, 1.06))
 
         val crookshanks = vectorService.crearVector(TipoDeVector.Animal,ubicacion1.id!!)
         val scabbers = vectorService.crearVector(TipoDeVector.Insecto, ubicacion2.id!!)
@@ -758,7 +758,7 @@ class UbicacionServiceImplTest {
     }
 
     @Test
-    fun testDistanciaMenorA100kmMetodoFranco() {
+    fun cuandoUnaUbicacionSeEncuentraAUnaDistanciaMenorA100kmEntoncesEsAlcanzable() {
         val coordenadas1 = GeoJsonPoint(0.0, 0.0)
         val coordenadas2 = GeoJsonPoint(0.1, 0.1)
 
@@ -769,7 +769,7 @@ class UbicacionServiceImplTest {
     }
 
     @Test
-    fun testDistanciaMayorA100kmMetodoFranco() {
+    fun cuandoUnaUbicacionSeEncuentraAUnaDistanciaMayorA100kmEntoncesNoEsAlcanzable() {
         val coordenadas1 = GeoJsonPoint(0.0, 0.0)
         val coordenadas2 = GeoJsonPoint(12.2, 12.2)
 
@@ -780,33 +780,18 @@ class UbicacionServiceImplTest {
     }
 
     @Test
-    fun unaUbicacionPuedeResponderSiHayUnVectorEnfermoEnEllaTrue() {
+    fun unVectorNoSePuedeMoverAUnaUbicacionAMasDe100kmDeDistancia() {
+        val coordenadas1 = GeoJsonPoint(0.0, 0.0)
+        val coordenadas2 = GeoJsonPoint(12.2, 12.2)
 
-        val ubicacion1 = ubicacionService.crearUbicacion("CallejonDiagon", GeoJsonPoint(8.0, 8.0))
+        val ubi1 = ubicacionService.crearUbicacion("Ubicacion1", coordenadas1)
+        val vectorCreado = vectorService.crearVector(TipoDeVector.Persona, ubi1.id!!)
+        val ubi2 = ubicacionService.crearUbicacion("ubicacion2", coordenadas2)
 
-        val ron = vectorService.crearVector(TipoDeVector.Persona,ubicacion1.id!!)
-        val patogeno = Patogeno("Cruciartus")
-        val patogenoP = patogenoService.crearPatogeno(patogeno)
-        patogenoService.agregarEspecie(patogenoP.id!!, "Imperius", ubicacion1.id!!)
-
-        val ronE = vectorService.recuperarVector(ron.id!!)
-        Assertions.assertFalse(ronE.estaSano())
-
-        Assertions.assertTrue(ubicacionService.hayVectorEnfermoEnUbicacion(ubicacion1.id!!))
-
-    }
-
-    @Test
-    fun unaUbicacionPuedeResponderSiHayUnVectorEnfermoEnEllaFalse() {
-
-        val ubicacion1 = ubicacionService.crearUbicacion("CallejonDiagon", GeoJsonPoint(8.0, 8.0))
-
-        val ron = vectorService.crearVector(TipoDeVector.Persona,ubicacion1.id!!)
-
-        Assertions.assertTrue(ron.estaSano())
-
-        Assertions.assertFalse(ubicacionService.hayVectorEnfermoEnUbicacion(ubicacion1.id!!))
-
+        Assertions.assertFalse(ubicacionService.seEncuentraADistanciaAlcanzable(coordenadas1.x, coordenadas1.y, ubi2.id!!))
+        Assertions.assertThrows(UbicacionMuyLejana::class.java) {
+            ubicacionService.mover(vectorCreado.id!!, ubi2.id!!)
+        }
     }
 
     @Test
@@ -823,52 +808,27 @@ class UbicacionServiceImplTest {
     }
 
     @Test
-    fun seObtieneElDistritoMasEnfermoCorrectamente() {
-        dataService.eliminarTodo()
-        val coordenadas1 = GeoJsonPolygon(mutableListOf(Point(0.0,0.0), Point(0.0,1.0),Point(1.0,1.0), Point(1.0,0.0), Point(0.0,0.0)))
-        val distrito1 = Distrito("unDistrito", coordenadas1)
-        distritoServiceImpl.crear(distrito1)
+    fun unVectorNoPuedeMoverseMasCortoSiElCaminoMasCortoContieneAlgunaUbicacionAMasDe100km() {
+        val ubicacion1 = ubicacionService.crearUbicacion("ubicacion123", GeoJsonPoint(1.0, 1.0))
+        val ubicacion2 = ubicacionService.crearUbicacion("ubicacion223", GeoJsonPoint(5.0, 1.0))
+        val ubicacion3 = ubicacionService.crearUbicacion("ubicacion323", GeoJsonPoint(7.0, 1.0))
+        val ubicacion4 = ubicacionService.crearUbicacion("ubicacion423", GeoJsonPoint(10.0, 1.0))
+        val ubicacion5 = ubicacionService.crearUbicacion("ubicacion523", GeoJsonPoint(12.0, 1.0))
+        val ubicacion6 = ubicacionService.crearUbicacion("ubicacion623", GeoJsonPoint(15.0, 1.0))
 
-        val coordenadas2 = GeoJsonPolygon(mutableListOf(Point(8.0,8.0), Point(8.0,9.0),Point(9.0,9.0), Point(9.0,8.0), Point(8.0,8.0)))
-        val distrito2 = Distrito("OtroDistrito", coordenadas2)
-        distritoServiceImpl.crear(distrito2)
+        val vector = vectorService.crearVector(TipoDeVector.Persona,ubicacion1.id!!)
 
-        val ubicacionEnferma1 = ubicacionService.crearUbicacion("testUbiEnfermas", GeoJsonPoint(0.0, 0.1))
-        val ubicacionEnferma2 = ubicacionService.crearUbicacion("testUbiEnfermas2", GeoJsonPoint(1.0, 1.0))
-        val ubicacionEnferma3 = ubicacionService.crearUbicacion("testUbiEnfermas3", GeoJsonPoint(8.0, 8.0))
-        vectorService.crearVector(TipoDeVector.Persona, ubicacionEnferma1.id!!)
-        val vectorEnfermo2 = vectorService.crearVector(TipoDeVector.Persona, ubicacionEnferma2.id!!)
-        val vectorEnfermo3 = vectorService.crearVector(TipoDeVector.Persona, ubicacionEnferma3.id!!)
+        ubicacionService.conectar(ubicacion1.nombre,ubicacion2.nombre,"TERRESTRE")
+        ubicacionService.conectar(ubicacion2.nombre,ubicacion6.nombre,"MARITIMO")
+        ubicacionService.conectar(ubicacion2.nombre,ubicacion3.nombre,"TERRESTRE")
+        ubicacionService.conectar(ubicacion3.nombre,ubicacion4.nombre,"TERRESTRE")
+        ubicacionService.conectar(ubicacion4.nombre,ubicacion5.nombre,"TERRESTRE")
+        ubicacionService.conectar(ubicacion5.nombre,ubicacion6.nombre,"TERRESTRE")
 
-        val patogeno = Patogeno("testEnfermas")
-        val patogenoCreado = patogenoService.crearPatogeno(patogeno)
-        val especieCreada = patogenoService.agregarEspecie(patogenoCreado.id!!,"cualquierNombre", ubicacionEnferma1.id!!)
-
-        vectorService.infectar(vectorEnfermo2, especieCreada)
-        vectorService.infectar(vectorEnfermo3, especieCreada)
-
-        val mongoUbicacionEnferma1 = ubicacionService.recuperarUbicacionMongoPorId(ubicacionEnferma1.id!!)
-        val mongoUbicacionEnferma2 = ubicacionService.recuperarUbicacionMongoPorId(ubicacionEnferma2.id!!)
-        val mongoUbicacionEnferma3 = ubicacionService.recuperarUbicacionMongoPorId(ubicacionEnferma3.id!!)
-
-        Assertions.assertEquals(distrito1.nombre, mongoUbicacionEnferma1.distrito)
-        Assertions.assertEquals(distrito1.nombre, mongoUbicacionEnferma2.distrito)
-        Assertions.assertEquals(distrito2.nombre, mongoUbicacionEnferma3.distrito)
-
-        val distritoMasEnfermo = distritoServiceImpl.distritoMasEnfermo()
-
-        Assertions.assertEquals(distrito1.nombre, distritoMasEnfermo.nombre)
-    }
-
-    @Test
-    fun cuandoNoHayDistritoMasEnfermoEntoncesSeLanzaUnaExcepcion() {
-        dataService.eliminarTodo()
-
-        Assertions.assertThrows(NoHayUnDistritoMasEnfermo::class.java) {
-            distritoServiceImpl.distritoMasEnfermo()
+        Assertions.assertThrows(UbicacionMuyLejana::class.java) {
+            ubicacionService.moverMasCorto(vector.id!!, "ubicacion623")
         }
     }
-
 
     @AfterEach
     fun clearAll() {

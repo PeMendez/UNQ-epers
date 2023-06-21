@@ -132,13 +132,10 @@ class UbicacionServiceImpl: UbicacionService {
     override fun mover(vectorId: Long, ubicacionid: Long) {
         val ubicacion = ubicacionDAO.findByIdOrNull(ubicacionid)?: throw NoExisteElid("el id de la ubiacion no existe en la base de datos")
         val vector = vectorServiceImpl.recuperarVector(vectorId)
-        val ubicacionMongo = mongoUbicacionDAO.findByIdRelacional(vector.ubicacion.id!!).get()
         if(vector.ubicacion.id!! == ubicacionid){
             throw EsMismaUbicacion("No podes moverte a la misma ubicacion en la que te encontras")
         }
-        if(!seEncuentraADistanciaAlcanzable(ubicacionMongo.coordenada.x, ubicacionMongo.coordenada.y, ubicacionid)) {
-            throw UbicacionMuyLejana("La ubicacion se encuentra a más de 100km de distancia")
-        }
+        verificarDistanciaAlcanzable(ubicacionid, vector.ubicacion.id!!)
         val caminoDeConexionEntreUbicaciones = conectadosPorCamino(vector.nombreDeUbicacionActual(), ubicacion.nombre)
         if (neo4jUbicacionDAO.puedeMoversePorCamino(vector.caminosCompatibles(),caminoDeConexionEntreUbicaciones)) {
             intentarMover(vector, ubicacion)
@@ -176,26 +173,29 @@ class UbicacionServiceImpl: UbicacionService {
             throw UbicacionNoAlcanzable("El vector no puede moverse a la ubicacion $nombreDeUbicacion. Ya que el camino o bien no es compatible o no existe una conexión posible.")
         } else {
             val caminosMasCortoUbicaciones = mutableListOf<Ubicacion>()
-            caminoMasCorto.forEach { u -> caminosMasCortoUbicaciones.add(recuperar(u.idRelacional!!)) }
+            caminoMasCorto.forEach { u ->
+                caminosMasCortoUbicaciones.add(recuperar(u.idRelacional!!))
+                verificarDistanciaAlcanzable(u.idRelacional!!, vector.ubicacion.id!!)
+            }
             caminosMasCortoUbicaciones.forEach { ubicacion ->
                 intentarMover(vector, ubicacion)
             }
         }
     }
+
+    private fun verificarDistanciaAlcanzable(ubicacionIdAMover: Long, ubicacionIdActual: Long) {
+        val ubicacionMongo = mongoUbicacionDAO.findByIdRelacional(ubicacionIdActual).get()
+        if(!seEncuentraADistanciaAlcanzable(ubicacionMongo.coordenada.x, ubicacionMongo.coordenada.y, ubicacionIdAMover)) {
+            throw UbicacionMuyLejana("La ubicacion se encuentra a más de 100km de distancia")
+        }
+    }
+
     private fun caminoMasCortoEntre(caminosCompatibles:List<String>, ubicacionDelVector: String, ubicacionDestino:String):List<UbicacionNeo4J> {
         return neo4jUbicacionDAO.caminoMasCortoEntre(caminosCompatibles, ubicacionDelVector, ubicacionDestino).get().drop(1)
     }
 
     fun seEncuentraADistanciaAlcanzable(longitude: Double, latitude: Double, idRelacionalAMoverse: Long): Boolean{
         return mongoUbicacionDAO.seEncuentraADistanciaAlcanzable(longitude, latitude, idRelacionalAMoverse).isPresent
-    }
-
-    fun hayVectorEnfermoEnUbicacion(ubicacionId: Long) : Boolean{
-        return ubicacionDAO.hayVectorEnfermoEnUbicacion(ubicacionId)
-    }
-
-    fun actualizarUbicacionInfectada(ubicacionId: Long) {
-        val ubiMongo = mongoUbicacionDAO.findByIdRelacional(ubicacionId).get()
     }
 
     fun idsDeUbicacionesEnfermas(): List<Long> {

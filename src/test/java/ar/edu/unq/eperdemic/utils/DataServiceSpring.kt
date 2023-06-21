@@ -1,17 +1,18 @@
 package ar.edu.unq.eperdemic.utils
 
-import ar.edu.unq.eperdemic.modelo.Patogeno
-import ar.edu.unq.eperdemic.modelo.Random
-import ar.edu.unq.eperdemic.modelo.TipoDeVector
-import ar.edu.unq.eperdemic.modelo.Ubicacion
+import ar.edu.unq.eperdemic.modelo.*
 import ar.edu.unq.eperdemic.persistencia.dao.*
+import ar.edu.unq.eperdemic.services.impl.DistritoServiceImpl
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import ar.edu.unq.eperdemic.services.impl.PatogenoServiceImpl
 import ar.edu.unq.eperdemic.services.impl.UbicacionServiceImpl
 import ar.edu.unq.eperdemic.services.impl.VectorServiceImpl
+import org.springframework.data.geo.Point
 import org.springframework.data.mongodb.core.geo.GeoJsonPoint
+import org.springframework.data.mongodb.core.geo.GeoJsonPolygon
+
 @Service
 class DataServiceSpring : DataService {
     @Autowired
@@ -31,6 +32,8 @@ class DataServiceSpring : DataService {
     lateinit var ubicacionService: UbicacionServiceImpl
     @Autowired
     lateinit var vectorService: VectorServiceImpl
+    @Autowired
+    lateinit var distritoService: DistritoServiceImpl
 
     @Autowired
     lateinit var neo4jUbicacionDAO: Neo4jUbicacionDAO
@@ -58,7 +61,7 @@ class DataServiceSpring : DataService {
         crearVectores(listaDeUbicacionesCreadas)
 
         crearEspecies(listaPatogenosCreados, listaDeUbicacionesCreadas)
-
+        crearDistritos()
     }
 
 
@@ -119,6 +122,13 @@ class DataServiceSpring : DataService {
         patogenoService.agregarEspecie(listaDePatogenos[1].id!!, "especie10", listaDeUbicaciones[2].id!!)
         patogenoService.agregarEspecie(listaDePatogenos[1].id!!, "especie11", listaDeUbicaciones[2].id!!)
 
+    }
+
+    private fun crearDistritos() {
+        val distrito1 = Distrito("distritoDataService1", GeoJsonPolygon(mutableListOf(Point(9.0, 9.0), Point(9.01, 9.01), Point(9.02, 9.02), Point (9.0, 9.0))))
+        val distrito2 = Distrito("distritoDataService2", GeoJsonPolygon(mutableListOf(Point(10.0, 10.0), Point(10.01, 10.01), Point(10.02, 10.02), Point (10.0, 10.0))))
+        distritoService.crear(distrito1)
+        distritoService.crear(distrito2)
     }
 
 

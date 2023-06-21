@@ -30,4 +30,10 @@ class UbicacionMongo {
         this.coordenada = coordenada
     }
 
+    fun aUbicacion(): Ubicacion {
+        val ubicacion = Ubicacion(this.nombre)
+        ubicacion.id = this.idRelacional
+        return ubicacion
+    }
+
 }

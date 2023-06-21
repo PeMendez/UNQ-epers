@@ -63,7 +63,6 @@ class PatogenoServiceImpl : PatogenoService {
         val especie = patogeno.crearEspecie(nombre, ubicacion.nombre)
         especieDAO.save(especie)
         vectorService.infectar(vectorAInfectar, especie)
-        ubicacionServiceImpl.actualizarUbicacionInfectada(ubicacionId)
         return especie
     }
 

@@ -1,7 +1,7 @@
 package ar.edu.unq.eperdemic.spring.controllers
 
 import ar.edu.unq.eperdemic.modelo.exceptions.CoordenadasParaUnDistritoRepetidas
-import ar.edu.unq.eperdemic.modelo.exceptions.NoHayDistritoInfectado
+import ar.edu.unq.eperdemic.modelo.exceptions.NoHayUnDistritoMasEnfermo
 import ar.edu.unq.eperdemic.modelo.exceptions.NombreDeDistritoRepetido
 import ar.edu.unq.eperdemic.services.DistritoService
 import ar.edu.unq.eperdemic.spring.controllers.dto.DistritoDTO
@@ -25,8 +25,8 @@ class DistritoControllerREST(private val distritoService: DistritoService) {
       return DistritoDTO.desdeModelo(distritoService.distritoMasEnfermo())
   }
 
-  @ExceptionHandler(NoHayDistritoInfectado::class)
-  fun handleNotFoundException(ex: NoHayDistritoInfectado): ResponseEntity<String> {
+  @ExceptionHandler(NoHayUnDistritoMasEnfermo::class)
+  fun handleNotFoundException(ex: NoHayUnDistritoMasEnfermo): ResponseEntity<String> {
       return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.message)
   }
 
