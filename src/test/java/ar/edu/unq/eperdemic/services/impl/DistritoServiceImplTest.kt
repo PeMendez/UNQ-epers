@@ -90,9 +90,9 @@ class DistritoServiceImplTest {
         val ubicacionEnferma1 = ubicacionService.crearUbicacion("testUbiEnfermas", GeoJsonPoint(0.0, 0.1))
         val ubicacionEnferma2 = ubicacionService.crearUbicacion("testUbiEnfermas2", GeoJsonPoint(1.0, 1.0))
         val ubicacionEnferma3 = ubicacionService.crearUbicacion("testUbiEnfermas3", GeoJsonPoint(8.0, 8.0))
-        vectorService.crearVector(TipoDeVector.Persona, ubicacionEnferma1.id!!)
-        val vectorEnfermo2 = vectorService.crearVector(TipoDeVector.Persona, ubicacionEnferma2.id!!)
-        val vectorEnfermo3 = vectorService.crearVector(TipoDeVector.Persona, ubicacionEnferma3.id!!)
+        vectorService.crearVector(TipoDeVector.Persona, ubicacionEnferma1.id!!, false)
+        val vectorEnfermo2 = vectorService.crearVector(TipoDeVector.Persona, ubicacionEnferma2.id!!, false)
+        val vectorEnfermo3 = vectorService.crearVector(TipoDeVector.Persona, ubicacionEnferma3.id!!, false)
 
         val patogeno = Patogeno("testEnfermas")
         val patogenoCreado = patogenoService.crearPatogeno(patogeno)

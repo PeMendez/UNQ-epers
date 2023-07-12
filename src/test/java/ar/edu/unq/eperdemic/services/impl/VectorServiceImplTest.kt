@@ -55,21 +55,21 @@ class VectorServiceImplTest {
 
         patogeno1 = patogenoService.crearPatogeno(Patogeno("patogeno1"))
 
-        vectorCarnada = vectorServiceImpl.crearVector(TipoDeVector.Persona,ubicacion1.id!!)
+        vectorCarnada = vectorServiceImpl.crearVector(TipoDeVector.Persona,ubicacion1.id!!, false)
         especie1 = patogenoService.agregarEspecie(patogeno1.id!!,"especieRARA", ubicacion1.id!!)
         especie2 = patogenoService.agregarEspecie(patogeno1.id!!,"especieEXTRR",ubicacion1.id!!)
         especie3 = patogenoService.agregarEspecie(patogeno1.id!!,"especieFR",ubicacion1.id!!)
 
-        vectorPersona1 = vectorServiceImpl.crearVector(TipoDeVector.Persona,ubicacion2.id!!)
-        vectorPersona2 = vectorServiceImpl.crearVector(TipoDeVector.Persona,ubicacion2.id!!)
-        vectorPersona3 = vectorServiceImpl.crearVector(TipoDeVector.Persona,ubicacion2.id!!)
-        vectorPersona4 = vectorServiceImpl.crearVector(TipoDeVector.Persona,ubicacion2.id!!)
+        vectorPersona1 = vectorServiceImpl.crearVector(TipoDeVector.Persona,ubicacion2.id!!, false)
+        vectorPersona2 = vectorServiceImpl.crearVector(TipoDeVector.Persona,ubicacion2.id!!, false)
+        vectorPersona3 = vectorServiceImpl.crearVector(TipoDeVector.Persona,ubicacion2.id!!, false)
+        vectorPersona4 = vectorServiceImpl.crearVector(TipoDeVector.Persona,ubicacion2.id!!, false)
 
-        vectorAnimal1 = vectorServiceImpl.crearVector(TipoDeVector.Animal,ubicacion2.id!!)
-        vectorAnimal2 = vectorServiceImpl.crearVector(TipoDeVector.Animal,ubicacion2.id!!)
+        vectorAnimal1 = vectorServiceImpl.crearVector(TipoDeVector.Animal,ubicacion2.id!!, false)
+        vectorAnimal2 = vectorServiceImpl.crearVector(TipoDeVector.Animal,ubicacion2.id!!, false)
 
-        vectorInsecto1 = vectorServiceImpl.crearVector(TipoDeVector.Insecto,ubicacion2.id!!)
-        vectorInsecto2 = vectorServiceImpl.crearVector(TipoDeVector.Insecto,ubicacion2.id!!)
+        vectorInsecto1 = vectorServiceImpl.crearVector(TipoDeVector.Insecto,ubicacion2.id!!, false)
+        vectorInsecto2 = vectorServiceImpl.crearVector(TipoDeVector.Insecto,ubicacion2.id!!, false)
         dataServiceSpring.crearSetDeDatosIniciales()
     }
 
@@ -80,7 +80,7 @@ class VectorServiceImplTest {
 
     @Test
     fun siSeIntentanContagiarVectoresConUnVectorConIdInexistenteFalla() {
-        val vectorSinID = vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacion1.id!!)
+        val vectorSinID = vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacion1.id!!, false)
 
         vectorServiceImpl.borrarVector(vectorSinID.id!!)
 
@@ -153,10 +153,10 @@ class VectorServiceImplTest {
     @Test
     fun soloSePuedenContagiarAVectoresAnimalesConVectoresInsectoDeLoContrarioNoSeHaceNada() {
         val ubicacionCreada1 = ubicacionServiceImpl.crearUbicacion("enfermedadesTest", GeoJsonPoint(8.0, 8.0))
-        val vectorAnimalCreado1 = vectorServiceImpl.crearVector(TipoDeVector.Animal, ubicacionCreada1.id!!)
-        val vectorAnimalCreado2 = vectorServiceImpl.crearVector(TipoDeVector.Animal, ubicacionCreada1.id!!)
-        val vectorPersonaCreado = vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada1.id!!)
-        val vectorInsectoCreado = vectorServiceImpl.crearVector(TipoDeVector.Insecto, ubicacionCreada1.id!!)
+        val vectorAnimalCreado1 = vectorServiceImpl.crearVector(TipoDeVector.Animal, ubicacionCreada1.id!!, false)
+        val vectorAnimalCreado2 = vectorServiceImpl.crearVector(TipoDeVector.Animal, ubicacionCreada1.id!!, false)
+        val vectorPersonaCreado = vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada1.id!!, false)
+        val vectorInsectoCreado = vectorServiceImpl.crearVector(TipoDeVector.Insecto, ubicacionCreada1.id!!, false)
         val unaEspecie = especie1
 
         vectorServiceImpl.infectar(vectorAnimalCreado2, unaEspecie)
@@ -255,14 +255,14 @@ class VectorServiceImplTest {
     @Test
     fun noSePuedeInfectarAUnVectorInexistenteEnLaBDDConUnaEspecie() {
         val ubicacionCreada = ubicacionServiceImpl.crearUbicacion("enfermedadesTest", GeoJsonPoint(8.0, 8.0))
-        val vectorCreado1 = vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada.id!!)
+        val vectorCreado1 = vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada.id!!, false)
 
         dataServiceSpring.eliminarTodo()
 
         val patogeno1 = Patogeno("testEspecie")
         val patogenoCreado1 = patogenoService.crearPatogeno(patogeno1)
         val ubicacionCreada1 = ubicacionServiceImpl.crearUbicacion("ubicacionTestEspecie", GeoJsonPoint(8.1, 8.1))
-        vectorServiceImpl.crearVector(TipoDeVector.Animal, ubicacionCreada1.id!!)
+        vectorServiceImpl.crearVector(TipoDeVector.Animal, ubicacionCreada1.id!!, false)
         val especieCreada1 = patogenoService.agregarEspecie(patogenoCreado1.id!!, "cualquierNombre", ubicacionCreada1.id!!)
 
         assertThrows(NoExisteElid::class.java) {
@@ -277,7 +277,7 @@ class VectorServiceImplTest {
         dataServiceSpring.eliminarTodo()
 
         val ubicacionCreada = ubicacionServiceImpl.crearUbicacion("enfermedadesTest", GeoJsonPoint(8.0, 8.1))
-        val vectorCreado = vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada.id!!)
+        val vectorCreado = vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada.id!!, false)
 
         assertThrows(NoExisteElid::class.java) {
             vectorServiceImpl.infectar(vectorCreado, especieRecuperada)
@@ -314,14 +314,14 @@ class VectorServiceImplTest {
     @Test
     fun noSePuedeCrearUnVectorConUnaUbicacionInexistente() {
         assertThrows(NoExisteElid::class.java) {
-            vectorServiceImpl.crearVector(TipoDeVector.Persona, -123)
+            vectorServiceImpl.crearVector(TipoDeVector.Persona, -123, false)
         }
     }
 
     @Test
     fun seRecuperaUnVectorConTodosSusDatosCorrectamente() {
         val ubicacionCreada = ubicacionServiceImpl.crearUbicacion("testRecuperarVector", GeoJsonPoint(8.0, 8.0))
-        val vectorCreado = vectorServiceImpl.crearVector(TipoDeVector.Insecto, ubicacionCreada.id!!)
+        val vectorCreado = vectorServiceImpl.crearVector(TipoDeVector.Insecto, ubicacionCreada.id!!, false)
         val vectorRecuperado = vectorServiceImpl.recuperarVector(vectorCreado.id!!)
 
         assertEquals(vectorRecuperado.ubicacion.id!!, vectorCreado.ubicacion.id!!)
@@ -340,7 +340,7 @@ class VectorServiceImplTest {
     @Test
     fun seBorraUnVectorCorrectamenteDeLaBDD() {
         val ubicacionCreada = ubicacionServiceImpl.crearUbicacion("testBorrarVector", GeoJsonPoint(8.0, 8.0))
-        val vectorCreado = vectorServiceImpl.crearVector(TipoDeVector.Insecto, ubicacionCreada.id!!)
+        val vectorCreado = vectorServiceImpl.crearVector(TipoDeVector.Insecto, ubicacionCreada.id!!, false)
 
         vectorServiceImpl.borrarVector(vectorCreado.id!!)
 
@@ -361,8 +361,8 @@ class VectorServiceImplTest {
         dataServiceSpring.eliminarTodo()
 
         val ubicacionCreada1 = ubicacionServiceImpl.crearUbicacion("nombreCualquiera1", GeoJsonPoint(8.0, 8.0))
-        val vector1Creado = vectorServiceImpl.crearVector(TipoDeVector.Animal, ubicacionCreada1.id!!)
-        val vector2Creado = vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada1.id!!)
+        val vector1Creado = vectorServiceImpl.crearVector(TipoDeVector.Animal, ubicacionCreada1.id!!, false)
+        val vector2Creado = vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada1.id!!, false)
 
         val vectoresRecuperados = vectorServiceImpl.recuperarTodos().map { it.id }
 
@@ -383,9 +383,9 @@ class VectorServiceImplTest {
         dataServiceSpring.eliminarTodo()
         val ubicacionCreada1 = ubicacionServiceImpl.crearUbicacion("ubicacionTestEspecie", GeoJsonPoint(8.0, 8.0))
 
-        val vectorCreado1 = vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada1.id!!)
-        val vectorCreado2 = vectorServiceImpl.crearVector(TipoDeVector.Insecto, ubicacionCreada1.id!!)
-        val vectorCreado3 = vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada1.id!!)
+        val vectorCreado1 = vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada1.id!!, false)
+        val vectorCreado2 = vectorServiceImpl.crearVector(TipoDeVector.Insecto, ubicacionCreada1.id!!, false)
+        val vectorCreado3 = vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada1.id!!, false)
 
         val pageable = PageRequest.of(0, 2)
 
@@ -407,16 +407,16 @@ class VectorServiceImplTest {
         val patogeno = Patogeno("testEspecie1")
         val patogenoCreado = patogenoService.crearPatogeno(patogeno)
         val ubicacionCreada1 = ubicacionServiceImpl.crearUbicacion("ubicacionTestEspecie1", GeoJsonPoint(8.0, 8.0))
-        vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada1.id!!)
+        vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada1.id!!, false)
         val especieCreada = patogenoService.agregarEspecie(patogenoCreado.id!!, "cualquierNombre1", ubicacionCreada1.id!!)
-        val vectorInfectado = vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada1.id!!)
+        val vectorInfectado = vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada1.id!!, false)
 
         val mutacionAAgregar = Mutacion(TipoDeMutacion.SupresionBiomecanica)
         val mutacion = mutacionService.agregarMutacion(especieCreada.id!!, mutacionAAgregar)
 
         vectorServiceImpl.infectar(vectorInfectado, especieCreada)
 
-        val vectorAInfectar = vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada1.id!!)
+        val vectorAInfectar = vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada1.id!!, false)
         val vectorInfectadoRecuperado = vectorServiceImpl.recuperarVector(vectorInfectado.id!!)
 
         val vectorAInfectarLista = listOf(vectorAInfectar)
@@ -434,13 +434,13 @@ class VectorServiceImplTest {
         val patogeno = Patogeno("testEspecie1")
         val patogenoCreado = patogenoService.crearPatogeno(patogeno)
         val ubicacionCreada1 = ubicacionServiceImpl.crearUbicacion("ubicacionTestEspecie1",GeoJsonPoint(8.0, 8.0))
-        vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada1.id!!)
+        vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada1.id!!, false)
         val especieCreada = patogenoService.agregarEspecie(patogenoCreado.id!!, "cualquierNombre1", ubicacionCreada1.id!!)
-        val vectorInfectado = vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada1.id!!)
+        val vectorInfectado = vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada1.id!!, false)
 
         vectorServiceImpl.infectar(vectorInfectado, especieCreada)
 
-        val vectorAInfectar = vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada1.id!!)
+        val vectorAInfectar = vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada1.id!!, false)
         val vectorInfectadoRecuperado = vectorServiceImpl.recuperarVector(vectorInfectado.id!!)
 
         val vectorAInfectarLista = listOf(vectorAInfectar)
@@ -458,9 +458,9 @@ class VectorServiceImplTest {
         val patogeno = Patogeno("testEspecie1")
         val patogenoCreado = patogenoService.crearPatogeno(patogeno)
         val ubicacionCreada1 = ubicacionServiceImpl.crearUbicacion("ubicacionTestEspecie1", GeoJsonPoint(8.0, 8.0))
-        vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada1.id!!)
+        vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada1.id!!, false)
         val especieCreada = patogenoService.agregarEspecie(patogenoCreado.id!!, "cualquierNombre1", ubicacionCreada1.id!!)
-        val vectorInfectado = vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada1.id!!)
+        val vectorInfectado = vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada1.id!!, false)
 
         val mutacionAAgregar1 = Mutacion(TipoDeMutacion.SupresionBiomecanica)
         val mutacionAAgregar2 = Mutacion(TipoDeMutacion.SupresionBiomecanica)
@@ -470,7 +470,7 @@ class VectorServiceImplTest {
 
         vectorServiceImpl.infectar(vectorInfectado, especieRecuperada)
 
-        val vectorAInfectar = vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada1.id!!)
+        val vectorAInfectar = vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada1.id!!, false)
         val vectorInfectadoRecuperado = vectorServiceImpl.recuperarVector(vectorInfectado.id!!)
 
         val vectorAInfectarLista = listOf(vectorAInfectar)
@@ -490,7 +490,7 @@ class VectorServiceImplTest {
         val patogeno = Patogeno("testEspecie1")
         val patogenoCreado = patogenoService.crearPatogeno(patogeno)
         val ubicacionCreada1 = ubicacionServiceImpl.crearUbicacion("ubicacionTestEspecie1", GeoJsonPoint(8.0, 8.0))
-        vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada1.id!!)
+        vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada1.id!!, false)
         val especieCreadaConMutacion = patogenoService.agregarEspecie(patogenoCreado.id!!, "cualquierNombre1", ubicacionCreada1.id!!)
 
         val mutacionAAgregar1 = Mutacion(TipoDeMutacion.SupresionBiomecanica)
@@ -500,15 +500,15 @@ class VectorServiceImplTest {
         patogeno2.capacidadDeDefensa = 0
         val patogenoCreado2 = patogenoService.crearPatogeno(patogeno2)
         val ubicacionCreada2 = ubicacionServiceImpl.crearUbicacion("ubicacionTestEspecie2", GeoJsonPoint(4.0, 4.1))
-        vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada2.id!!)
+        vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada2.id!!, false)
         val especieCreadaSinMutacion = patogenoService.agregarEspecie(patogenoCreado2.id!!, "cualquierNombre2", ubicacionCreada2.id!!)
 
-        val vectorInfectado = vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada2.id!!)
+        val vectorInfectado = vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada2.id!!, false)
         vectorServiceImpl.infectar(vectorInfectado, especieCreadaConMutacion)
         val vectorRecuperado = vectorServiceImpl.recuperarVector(vectorInfectado.id!!)
         vectorServiceImpl.infectar(vectorRecuperado, especieCreadaSinMutacion)
 
-        val vectorAInfectar = vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada2.id!!)
+        val vectorAInfectar = vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada2.id!!, false)
         val vectorAInfectarLista = listOf(vectorAInfectar)
         val vectorInfectadoRecuperado = vectorServiceImpl.recuperarVector(vectorInfectado.id!!)
 
@@ -525,7 +525,7 @@ class VectorServiceImplTest {
         val patogeno = Patogeno("testEspecie1")
         val patogenoCreado = patogenoService.crearPatogeno(patogeno)
         val ubicacionCreada1 = ubicacionServiceImpl.crearUbicacion("ubicacionTestEspecie1", GeoJsonPoint(8.0, 8.0))
-        vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada1.id!!)
+        vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada1.id!!, false)
         val especieCreadaConMutacion = patogenoService.agregarEspecie(patogenoCreado.id!!, "cualquierNombre1", ubicacionCreada1.id!!)
 
         val mutacionAAgregar1 = Mutacion(TipoDeMutacion.SupresionBiomecanica)
@@ -535,15 +535,15 @@ class VectorServiceImplTest {
         patogeno2.capacidadDeDefensa = 200
         val patogenoCreado2 = patogenoService.crearPatogeno(patogeno2)
         val ubicacionCreada2 = ubicacionServiceImpl.crearUbicacion("ubicacionTestEspecie2", GeoJsonPoint(8.1, 8.0))
-        vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada2.id!!)
+        vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada2.id!!, false)
         val especieCreadaSinMutacion = patogenoService.agregarEspecie(patogenoCreado2.id!!, "cualquierNombre2", ubicacionCreada2.id!!)
 
-        val vectorInfectado = vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada2.id!!)
+        val vectorInfectado = vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada2.id!!, false)
         vectorServiceImpl.infectar(vectorInfectado, especieCreadaConMutacion)
         val vectorRecuperado = vectorServiceImpl.recuperarVector(vectorInfectado.id!!)
         vectorServiceImpl.infectar(vectorRecuperado, especieCreadaSinMutacion)
 
-        val vectorAInfectar = vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada2.id!!)
+        val vectorAInfectar = vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada2.id!!, false)
         val vectorAInfectarLista = listOf(vectorAInfectar)
         val vectorInfectadoRecuperado = vectorServiceImpl.recuperarVector(vectorInfectado.id!!)
 
@@ -560,7 +560,7 @@ class VectorServiceImplTest {
         val patogeno = Patogeno("testEspecie1")
         val patogenoCreado = patogenoService.crearPatogeno(patogeno)
         val ubicacionCreada1 = ubicacionServiceImpl.crearUbicacion("ubicacionTestEspecie1", GeoJsonPoint(8.0, 8.0))
-        vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada1.id!!)
+        vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada1.id!!, false)
         val especieCreadaConMutacion = patogenoService.agregarEspecie(patogenoCreado.id!!, "cualquierNombre1", ubicacionCreada1.id!!)
 
         val mutacionAAgregar1 = Mutacion(TipoDeMutacion.SupresionBiomecanica)
@@ -570,22 +570,22 @@ class VectorServiceImplTest {
         patogeno2.capacidadDeDefensa = 0
         val patogenoCreado2 = patogenoService.crearPatogeno(patogeno2)
         val ubicacionCreada2 = ubicacionServiceImpl.crearUbicacion("ubicacionTestEspecie2", GeoJsonPoint(8.1, 8.0))
-        vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada2.id!!)
+        vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada2.id!!, false)
         val especieCreadaDebil = patogenoService.agregarEspecie(patogenoCreado2.id!!, "cualquierNombre2", ubicacionCreada2.id!!)
 
 
-        val vectorConSupresion = vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada2.id!!)
+        val vectorConSupresion = vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada2.id!!, false)
         vectorServiceImpl.infectar(vectorConSupresion, especieCreadaConMutacion)
 
         val vectorConSupresionRecuperado = vectorServiceImpl.recuperarVector(vectorConSupresion.id!!)
-        val vectorAInfectar = vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada2.id!!)
+        val vectorAInfectar = vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada2.id!!, false)
         val vectorAInfectarLista = listOf(vectorAInfectar)
         vectorServiceImpl.contagiar(vectorConSupresionRecuperado, vectorAInfectarLista)
 
         assertNotNull(vectorConSupresionRecuperado.mutaciones.find { m -> m.id!! == mutacion1.id!! })
 
         val vectorConSupresionALista = listOf(vectorConSupresionRecuperado)
-        val vectorInfectadoConEspecieDebil = vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada2.id!!)
+        val vectorInfectadoConEspecieDebil = vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada2.id!!, false)
         vectorServiceImpl.infectar(vectorInfectadoConEspecieDebil, especieCreadaDebil)
         val vectorInfectadoConEspecieDebilRec = vectorServiceImpl.recuperarVector(vectorInfectadoConEspecieDebil.id!!)
 
@@ -601,7 +601,7 @@ class VectorServiceImplTest {
         val patogeno = Patogeno("testEspecie1")
         val patogenoCreado = patogenoService.crearPatogeno(patogeno)
         val ubicacionCreada1 = ubicacionServiceImpl.crearUbicacion("ubicacionTestEspecie1", GeoJsonPoint(8.0, 8.0))
-        vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada1.id!!)
+        vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada1.id!!, false)
         val especieCreadaConMutacion = patogenoService.agregarEspecie(patogenoCreado.id!!, "cualquierNombre1", ubicacionCreada1.id!!)
 
         val mutacionAAgregar1 = Mutacion(TipoDeMutacion.SupresionBiomecanica)
@@ -611,22 +611,22 @@ class VectorServiceImplTest {
         patogeno2.capacidadDeDefensa = 200
         val patogenoCreado2 = patogenoService.crearPatogeno(patogeno2)
         val ubicacionCreada2 = ubicacionServiceImpl.crearUbicacion("ubicacionTestEspecie2", GeoJsonPoint(3.0, 3.1))
-        vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada2.id!!)
+        vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada2.id!!, false)
         val especieCreadaFuerte = patogenoService.agregarEspecie(patogenoCreado2.id!!, "cualquierNombre2", ubicacionCreada2.id!!)
 
 
-        val vectorConSupresion = vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada2.id!!)
+        val vectorConSupresion = vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada2.id!!, false)
         vectorServiceImpl.infectar(vectorConSupresion, especieCreadaConMutacion)
 
         val vectorConSupresionRecuperado = vectorServiceImpl.recuperarVector(vectorConSupresion.id!!)
-        val vectorAInfectar = vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada2.id!!)
+        val vectorAInfectar = vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada2.id!!, false)
         val vectorAInfectarLista = listOf(vectorAInfectar)
         vectorServiceImpl.contagiar(vectorConSupresionRecuperado, vectorAInfectarLista)
 
         assertNotNull(vectorConSupresionRecuperado.mutaciones.find { m -> m.id!! == mutacion1.id!! })
 
         val vectorConSupresionALista = listOf(vectorConSupresionRecuperado)
-        val vectorInfectadoConEspecieFuerte = vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada2.id!!)
+        val vectorInfectadoConEspecieFuerte = vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada2.id!!, false)
         vectorServiceImpl.infectar(vectorInfectadoConEspecieFuerte, especieCreadaFuerte)
         val vectorInfectadoConEspecieFuerteRec = vectorServiceImpl.recuperarVector(vectorInfectadoConEspecieFuerte.id!!)
 
@@ -644,7 +644,7 @@ class VectorServiceImplTest {
         val patogeno = Patogeno("testEspecie1")
         val patogenoCreado = patogenoService.crearPatogeno(patogeno)
         val ubicacionCreada1 = ubicacionServiceImpl.crearUbicacion("ubicacionTestEspecie1", GeoJsonPoint(8.0, 8.0))
-        vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada1.id!!)
+        vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada1.id!!, false)
         val especieCreadaConMutacion = patogenoService.agregarEspecie(patogenoCreado.id!!, "cualquierNombre1", ubicacionCreada1.id!!)
 
         val mutacionAAgregar1 = Mutacion(TipoDeMutacion.BioalteracionGenetica)
@@ -653,17 +653,17 @@ class VectorServiceImplTest {
         mutacionAAgregar1.potenciaDeMutacion = null
         val mutacion1 = mutacionService.agregarMutacion(especieCreadaConMutacion.id!!, mutacionAAgregar1)
 
-        val vectorConBioalteracion = vectorServiceImpl.crearVector(TipoDeVector.Insecto, ubicacionCreada1.id!!)
+        val vectorConBioalteracion = vectorServiceImpl.crearVector(TipoDeVector.Insecto, ubicacionCreada1.id!!, false)
         vectorServiceImpl.infectar(vectorConBioalteracion, especieCreadaConMutacion)
 
         val vectorConBioalteracionRecuperado = vectorServiceImpl.recuperarVector(vectorConBioalteracion.id!!)
-        val vectorAInfectar = vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada1.id!!)
+        val vectorAInfectar = vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada1.id!!, false)
         val vectorAInfectarLista = listOf(vectorAInfectar)
         vectorServiceImpl.contagiar(vectorConBioalteracionRecuperado, vectorAInfectarLista)
 
         assertNotNull(vectorConBioalteracionRecuperado.mutaciones.find { m -> m.id!! == mutacion1.id!! })
 
-        val vectorAInfectar2 = vectorServiceImpl.crearVector(TipoDeVector.Insecto, ubicacionCreada1.id!!)
+        val vectorAInfectar2 = vectorServiceImpl.crearVector(TipoDeVector.Insecto, ubicacionCreada1.id!!, false)
         val vectorAInfectar2Lista = listOf(vectorAInfectar2)
         vectorServiceImpl.contagiar(vectorConBioalteracionRecuperado, vectorAInfectar2Lista)
 
@@ -677,7 +677,7 @@ class VectorServiceImplTest {
         val patogeno = Patogeno("testEspecie1")
         val patogenoCreado = patogenoService.crearPatogeno(patogeno)
         val ubicacionCreada1 = ubicacionServiceImpl.crearUbicacion("ubicacionTestEspecie1",GeoJsonPoint(8.0, 8.0))
-        vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada1.id!!)
+        vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada1.id!!, false)
         val especieCreadaConMutacion = patogenoService.agregarEspecie(patogenoCreado.id!!, "cualquierNombre1", ubicacionCreada1.id!!)
 
         val mutacionAAgregar1 = Mutacion()
@@ -686,17 +686,17 @@ class VectorServiceImplTest {
         mutacionAAgregar1.potenciaDeMutacion = null
         val mutacion1 = mutacionService.agregarMutacion(especieCreadaConMutacion.id!!, mutacionAAgregar1)
 
-        val vectorConBioalteracion = vectorServiceImpl.crearVector(TipoDeVector.Animal, ubicacionCreada1.id!!)
+        val vectorConBioalteracion = vectorServiceImpl.crearVector(TipoDeVector.Animal, ubicacionCreada1.id!!, false)
         vectorServiceImpl.infectar(vectorConBioalteracion, especieCreadaConMutacion)
 
         val vectorConBioalteracionRecuperado = vectorServiceImpl.recuperarVector(vectorConBioalteracion.id!!)
-        val vectorAInfectar = vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada1.id!!)
+        val vectorAInfectar = vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada1.id!!, false)
         val vectorAInfectarLista = listOf(vectorAInfectar)
         vectorServiceImpl.contagiar(vectorConBioalteracionRecuperado, vectorAInfectarLista)
 
         assertNotNull(vectorConBioalteracionRecuperado.mutaciones.find { m -> m.id!! == mutacion1.id!! })
 
-        val vectorAInfectar2 = vectorServiceImpl.crearVector(TipoDeVector.Animal, ubicacionCreada1.id!!)
+        val vectorAInfectar2 = vectorServiceImpl.crearVector(TipoDeVector.Animal, ubicacionCreada1.id!!, false)
         val vectorAInfectar2Lista = listOf(vectorAInfectar2)
         vectorServiceImpl.contagiar(vectorConBioalteracionRecuperado, vectorAInfectar2Lista)
 
@@ -710,7 +710,7 @@ class VectorServiceImplTest {
         val patogeno = Patogeno("testEspecie1")
         val patogenoCreado = patogenoService.crearPatogeno(patogeno)
         val ubicacionCreada1 = ubicacionServiceImpl.crearUbicacion("ubicacionTestEspecie1", GeoJsonPoint(8.0, 8.0))
-        vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada1.id!!)
+        vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada1.id!!, false)
         val especieCreadaConMutacion = patogenoService.agregarEspecie(patogenoCreado.id!!, "cualquierNombre1", ubicacionCreada1.id!!)
 
         val mutacionAAgregar1 = Mutacion()
@@ -719,17 +719,17 @@ class VectorServiceImplTest {
         mutacionAAgregar1.potenciaDeMutacion = null
         val mutacion1 = mutacionService.agregarMutacion(especieCreadaConMutacion.id!!, mutacionAAgregar1)
 
-        val vectorConBioalteracion = vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada1.id!!)
+        val vectorConBioalteracion = vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada1.id!!, false)
         vectorServiceImpl.infectar(vectorConBioalteracion, especieCreadaConMutacion)
 
         val vectorConBioalteracionRecuperado = vectorServiceImpl.recuperarVector(vectorConBioalteracion.id!!)
-        val vectorAInfectar = vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada1.id!!)
+        val vectorAInfectar = vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada1.id!!, false)
         val vectorAInfectarLista = listOf(vectorAInfectar)
         vectorServiceImpl.contagiar(vectorConBioalteracionRecuperado, vectorAInfectarLista)
 
         assertNotNull(vectorConBioalteracionRecuperado.mutaciones.find { m -> m.id!! == mutacion1.id!! })
 
-        val vectorAInfectar2 = vectorServiceImpl.crearVector(TipoDeVector.Animal, ubicacionCreada1.id!!)
+        val vectorAInfectar2 = vectorServiceImpl.crearVector(TipoDeVector.Animal, ubicacionCreada1.id!!, false)
         val vectorAInfectar2Lista = listOf(vectorAInfectar2)
         vectorServiceImpl.contagiar(vectorConBioalteracionRecuperado, vectorAInfectar2Lista)
 
@@ -743,7 +743,7 @@ class VectorServiceImplTest {
         val patogeno = Patogeno("testEspecie1")
         val patogenoCreado = patogenoService.crearPatogeno(patogeno)
         val ubicacionCreada1 = ubicacionServiceImpl.crearUbicacion("ubicacionTestEspecie1", GeoJsonPoint(8.0, 8.0))
-        vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada1.id!!)
+        vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada1.id!!, false)
         val especieCreadaConMutacion = patogenoService.agregarEspecie(patogenoCreado.id!!, "cualquierNombre1", ubicacionCreada1.id!!)
 
         val mutacionAAgregar1 = Mutacion()
@@ -752,17 +752,17 @@ class VectorServiceImplTest {
         mutacionAAgregar1.potenciaDeMutacion = null
         val mutacion1 = mutacionService.agregarMutacion(especieCreadaConMutacion.id!!, mutacionAAgregar1)
 
-        val vectorConBioalteracion = vectorServiceImpl.crearVector(TipoDeVector.Insecto, ubicacionCreada1.id!!)
+        val vectorConBioalteracion = vectorServiceImpl.crearVector(TipoDeVector.Insecto, ubicacionCreada1.id!!, false)
         vectorServiceImpl.infectar(vectorConBioalteracion, especieCreadaConMutacion)
 
         val vectorConBioalteracionRecuperado = vectorServiceImpl.recuperarVector(vectorConBioalteracion.id!!)
-        val vectorAInfectar = vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada1.id!!)
+        val vectorAInfectar = vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada1.id!!, false)
         val vectorAInfectarLista = listOf(vectorAInfectar)
         vectorServiceImpl.contagiar(vectorConBioalteracionRecuperado, vectorAInfectarLista)
 
         assertNotNull(vectorConBioalteracionRecuperado.mutaciones.find { m -> m.id!! == mutacion1.id!! })
 
-        val vectorAInfectar2 = vectorServiceImpl.crearVector(TipoDeVector.Insecto, ubicacionCreada1.id!!)
+        val vectorAInfectar2 = vectorServiceImpl.crearVector(TipoDeVector.Insecto, ubicacionCreada1.id!!, false)
         val vectorAInfectar2Lista = listOf(vectorAInfectar2)
         vectorServiceImpl.contagiar(vectorConBioalteracionRecuperado, vectorAInfectar2Lista)
 
@@ -776,7 +776,7 @@ class VectorServiceImplTest {
         val patogeno = Patogeno("testEspecie1")
         val patogenoCreado = patogenoService.crearPatogeno(patogeno)
         val ubicacionCreada1 = ubicacionServiceImpl.crearUbicacion("ubicacionTestEspecie1",GeoJsonPoint(8.0, 8.0))
-        vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada1.id!!)
+        vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada1.id!!, false)
         val especieCreadaConMutacion = patogenoService.agregarEspecie(patogenoCreado.id!!, "cualquierNombre1", ubicacionCreada1.id!!)
         val especieCreada2 = patogenoService.agregarEspecie(patogenoCreado.id!!, "cualquierNombre2", ubicacionCreada1.id!!)
 
@@ -786,19 +786,19 @@ class VectorServiceImplTest {
         mutacionAAgregar1.potenciaDeMutacion = null
         val mutacion1 = mutacionService.agregarMutacion(especieCreadaConMutacion.id!!, mutacionAAgregar1)
 
-        val vectorConBioalteracion = vectorServiceImpl.crearVector(TipoDeVector.Insecto, ubicacionCreada1.id!!)
+        val vectorConBioalteracion = vectorServiceImpl.crearVector(TipoDeVector.Insecto, ubicacionCreada1.id!!, false)
         vectorServiceImpl.infectar(vectorConBioalteracion, especieCreadaConMutacion)
         val vectorConBioalteracionRecuperado1 = vectorServiceImpl.recuperarVector(vectorConBioalteracion.id!!)
         vectorServiceImpl.infectar(vectorConBioalteracionRecuperado1, especieCreada2)
 
         val vectorConBioalteracionRecuperado2 = vectorServiceImpl.recuperarVector(vectorConBioalteracion.id!!)
-        val vectorAInfectar = vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada1.id!!)
+        val vectorAInfectar = vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada1.id!!, false)
         val vectorAInfectarLista = listOf(vectorAInfectar)
         vectorServiceImpl.contagiar(vectorConBioalteracionRecuperado2, vectorAInfectarLista)
 
         assertNotNull(vectorConBioalteracionRecuperado2.mutaciones.find { m -> m.id!! == mutacion1.id!! })
 
-        val vectorAInfectar2 = vectorServiceImpl.crearVector(TipoDeVector.Insecto, ubicacionCreada1.id!!)
+        val vectorAInfectar2 = vectorServiceImpl.crearVector(TipoDeVector.Insecto, ubicacionCreada1.id!!, false)
         val vectorAInfectar2Lista = listOf(vectorAInfectar2)
         vectorServiceImpl.contagiar(vectorConBioalteracionRecuperado2, vectorAInfectar2Lista)
 
@@ -815,24 +815,24 @@ class VectorServiceImplTest {
         val patogeno = Patogeno("testEspecie1")
         val patogenoCreado = patogenoService.crearPatogeno(patogeno)
         val ubicacionCreada1 = ubicacionServiceImpl.crearUbicacion("ubicacionTestEspecie1", GeoJsonPoint(8.0, 8.0))
-        vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada1.id!!)
+        vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada1.id!!, false)
         val especieCreadaConMutacion = patogenoService.agregarEspecie(patogenoCreado.id!!, "cualquierNombre1", ubicacionCreada1.id!!)
 
         val mutacionAAgregar1 = Mutacion(TipoDeMutacion.SupresionBiomecanica)
         val mutacion1 = mutacionService.agregarMutacion(especieCreadaConMutacion.id!!, mutacionAAgregar1)
 
-        val vectorConBioalteracion = vectorServiceImpl.crearVector(TipoDeVector.Insecto, ubicacionCreada1.id!!)
+        val vectorConBioalteracion = vectorServiceImpl.crearVector(TipoDeVector.Insecto, ubicacionCreada1.id!!, false)
         vectorServiceImpl.infectar(vectorConBioalteracion, especieCreadaConMutacion)
 
         val vectorConBioalteracionRecuperado = vectorServiceImpl.recuperarVector(vectorConBioalteracion.id!!)
-        val vectorAInfectar = vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada1.id!!)
+        val vectorAInfectar = vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionCreada1.id!!, false)
         val vectorAInfectarLista = listOf(vectorAInfectar)
         vectorServiceImpl.contagiar(vectorConBioalteracionRecuperado, vectorAInfectarLista)
 
         assertNotNull(vectorConBioalteracionRecuperado.mutaciones.find { m -> m.id!! == mutacion1.id!! })
         assertTrue(vectorConBioalteracionRecuperado.mutaciones.size == 1)
 
-        val vectorAInfectar2 = vectorServiceImpl.crearVector(TipoDeVector.Insecto, ubicacionCreada1.id!!)
+        val vectorAInfectar2 = vectorServiceImpl.crearVector(TipoDeVector.Insecto, ubicacionCreada1.id!!, false)
         val vectorAInfectar2Lista = listOf(vectorAInfectar2)
         vectorServiceImpl.contagiar(vectorConBioalteracionRecuperado, vectorAInfectar2Lista)
 

@@ -132,6 +132,10 @@ class UbicacionServiceImpl: UbicacionService {
     override fun mover(vectorId: Long, ubicacionid: Long) {
         val ubicacion = ubicacionDAO.findByIdOrNull(ubicacionid)?: throw NoExisteElid("el id de la ubiacion no existe en la base de datos")
         val vector = vectorServiceImpl.recuperarVector(vectorId)
+        if (vector.esMago){
+            vector.mover(ubicacion)
+            //aca crear el registro en cassandra. 
+        } else{
         if(vector.ubicacion.id!! == ubicacionid){
             throw EsMismaUbicacion("No podes moverte a la misma ubicacion en la que te encontras")
         }
@@ -141,6 +145,7 @@ class UbicacionServiceImpl: UbicacionService {
             intentarMover(vector, ubicacion)
         } else {
             throw UbicacionNoAlcanzable("El tipo de vector " + vector.tipo + " no puede moverse por el tipo de camino " + caminoDeConexionEntreUbicaciones)
+        }
         }
     }
 

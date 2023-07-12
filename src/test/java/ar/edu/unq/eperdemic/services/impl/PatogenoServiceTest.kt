@@ -42,7 +42,7 @@ class PatogenoServiceTest {
         dataService.crearSetDeDatosIniciales()
         patogenoMalDeDragon = patogenoService.crearPatogeno(Patogeno("MalDeDragon"))
         ubicacionPrivateDrive = ubicacionService.crearUbicacion("PrivateDrive", GeoJsonPoint(8.0, 8.0))
-        vectorHarryPotter = vectorService.crearVector(TipoDeVector.Persona, ubicacionPrivateDrive.id!!)
+        vectorHarryPotter = vectorService.crearVector(TipoDeVector.Persona, ubicacionPrivateDrive.id!!, false)
         ubicacionLaMadriguera = ubicacionService.crearUbicacion("ubicacionLaMadriguera", GeoJsonPoint(68.0, 76.0))
 
     }
@@ -142,7 +142,7 @@ class PatogenoServiceTest {
         dataService.eliminarTodo()
 
         val ubicacionHogsmeade = ubicacionService.crearUbicacion("ubicacionHogsmeade", GeoJsonPoint(8.0, 8.0))
-        vectorService.crearVector(TipoDeVector.Persona, ubicacionHogsmeade.id!!)
+        vectorService.crearVector(TipoDeVector.Persona, ubicacionHogsmeade.id!!, false)
 
         Assertions.assertThrows(NoExisteElid::class.java) {
             patogenoService.agregarEspecie(-10, "unNombreEspecie", ubicacionHogsmeade.id!!)
@@ -161,9 +161,9 @@ class PatogenoServiceTest {
         dataService.eliminarTodo()
         patogenoMalDeDragon = patogenoService.crearPatogeno(Patogeno("MalDeDragon"))
         ubicacionPrivateDrive = ubicacionService.crearUbicacion("PrivateDrive", GeoJsonPoint(83.0, 8.0))
-        vectorHarryPotter = vectorService.crearVector(TipoDeVector.Persona, ubicacionPrivateDrive.id!!)
+        vectorHarryPotter = vectorService.crearVector(TipoDeVector.Persona, ubicacionPrivateDrive.id!!, false)
         ubicacionLaMadriguera = ubicacionService.crearUbicacion("ubicacionLaMadriguera", GeoJsonPoint(118.0, 8.0))
-        vectorRonWeasley = vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionLaMadriguera.id!!)
+        vectorRonWeasley = vectorServiceImpl.crearVector(TipoDeVector.Persona, ubicacionLaMadriguera.id!!, false)
         val especieImperius = patogenoService.agregarEspecie(patogenoMalDeDragon.id!!, "EspecieImperius", ubicacionPrivateDrive.id!!)
 
         vectorServiceImpl.infectar(vectorRonWeasley, especieImperius)
