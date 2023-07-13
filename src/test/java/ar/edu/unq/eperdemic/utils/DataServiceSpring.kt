@@ -91,21 +91,21 @@ class DataServiceSpring : DataService {
     }
 
     private fun crearVectores(listaDeUbicaciones: List<Ubicacion>) {
-        vectorService.crearVector(TipoDeVector.Animal, listaDeUbicaciones[0].id!!, false)
-        vectorService.crearVector(TipoDeVector.Insecto, listaDeUbicaciones[1].id!!, false)
-        vectorService.crearVector(TipoDeVector.Persona, listaDeUbicaciones[2].id!!, false)
-        vectorService.crearVector(TipoDeVector.Persona, listaDeUbicaciones[2].id!!, false)
-        vectorService.crearVector(TipoDeVector.Persona, listaDeUbicaciones[2].id!!, false)
-        vectorService.crearVector(TipoDeVector.Persona, listaDeUbicaciones[6].id!!, false)
-        vectorService.crearVector(TipoDeVector.Persona, listaDeUbicaciones[7].id!!, false)
-        vectorService.crearVector(TipoDeVector.Animal, listaDeUbicaciones[1].id!!, false)
-        vectorService.crearVector(TipoDeVector.Persona, listaDeUbicaciones[0].id!!, false)
-        vectorService.crearVector(TipoDeVector.Animal, listaDeUbicaciones[0].id!!, false)
-        vectorService.crearVector(TipoDeVector.Animal, listaDeUbicaciones[0].id!!, false)
-        vectorService.crearVector(TipoDeVector.Animal, listaDeUbicaciones[0].id!!, false)
-        vectorService.crearVector(TipoDeVector.Persona, listaDeUbicaciones[0].id!!, false)
-        vectorService.crearVector(TipoDeVector.Persona, listaDeUbicaciones[0].id!!, false)
-        vectorService.crearVector(TipoDeVector.Persona, listaDeUbicaciones[6].id!!, false)
+        vectorService.crearVector(TipoDeVector.Animal, listaDeUbicaciones[0].id!!)
+        vectorService.crearVector(TipoDeVector.Insecto, listaDeUbicaciones[1].id!!)
+        vectorService.crearVector(TipoDeVector.Persona, listaDeUbicaciones[2].id!!)
+        vectorService.crearVector(TipoDeVector.Persona, listaDeUbicaciones[2].id!!)
+        vectorService.crearVector(TipoDeVector.Persona, listaDeUbicaciones[2].id!!)
+        vectorService.crearVector(TipoDeVector.Persona, listaDeUbicaciones[6].id!!)
+        vectorService.crearVector(TipoDeVector.Persona, listaDeUbicaciones[7].id!!)
+        vectorService.crearVector(TipoDeVector.Animal, listaDeUbicaciones[1].id!!)
+        vectorService.crearVector(TipoDeVector.Persona, listaDeUbicaciones[0].id!!)
+        vectorService.crearVector(TipoDeVector.Animal, listaDeUbicaciones[0].id!!)
+        vectorService.crearVector(TipoDeVector.Animal, listaDeUbicaciones[0].id!!)
+        vectorService.crearVector(TipoDeVector.Animal, listaDeUbicaciones[0].id!!)
+        vectorService.crearVector(TipoDeVector.Persona, listaDeUbicaciones[0].id!!)
+        vectorService.crearVector(TipoDeVector.Persona, listaDeUbicaciones[0].id!!)
+        vectorService.crearVector(TipoDeVector.Persona, listaDeUbicaciones[6].id!!)
 
     }
 

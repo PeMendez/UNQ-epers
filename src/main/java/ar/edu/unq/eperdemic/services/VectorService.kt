@@ -14,7 +14,7 @@ interface VectorService {
     fun enfermedades(vectorId: Long): List<Especie>
 
     /* Operaciones CRUD */
-    fun crearVector(tipo: TipoDeVector, ubicacionId: Long, esMago: Boolean): Vector
+    fun crearVector(tipo: TipoDeVector, ubicacionId: Long): Vector
     fun recuperarVector(vectorId: Long): Vector
     fun borrarVector(vectorId: Long)
     fun recuperarTodos() : List<Vector>

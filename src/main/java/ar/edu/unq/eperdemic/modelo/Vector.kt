@@ -6,7 +6,6 @@ import javax.persistence.*
 class Vector(var tipo: TipoDeVector,
              @ManyToOne
              var ubicacion: Ubicacion,
-             var esMago : Boolean,
              @ManyToMany(fetch = FetchType.EAGER)
              var especies : MutableSet<Especie> = mutableSetOf(),
              ) {

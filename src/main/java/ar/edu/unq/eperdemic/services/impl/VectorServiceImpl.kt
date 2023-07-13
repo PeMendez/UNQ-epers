@@ -48,9 +48,9 @@ class VectorServiceImpl(): VectorService {
         return vectorDAO.findEnfermedades(vectorId)
     }
 
-    override fun crearVector(tipo: TipoDeVector, ubicacionId: Long, esMago:Boolean): Vector {
+    override fun crearVector(tipo: TipoDeVector, ubicacionId: Long): Vector {
         val ubicacion = ubicacionDAO.findByIdOrNull(ubicacionId)?: throw NoExisteElid("No existe el ID de la ubicación")
-        val nuevoVector = Vector(tipo,ubicacion, esMago)
+        val nuevoVector = Vector(tipo,ubicacion)
         return vectorDAO.save(nuevoVector)
     }
 
