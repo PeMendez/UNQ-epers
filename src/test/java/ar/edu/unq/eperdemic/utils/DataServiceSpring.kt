@@ -25,6 +25,8 @@ class DataServiceSpring : DataService {
     lateinit var especieDAO: EspecieDAO
     @Autowired
     lateinit var mutacionDAO: MutacionDAO
+    @Autowired
+    lateinit var infeccionSegunPatogenoDAO: InfeccionSegunPatogenoDAO
 
     @Autowired
     lateinit var patogenoService: PatogenoServiceImpl
@@ -145,6 +147,8 @@ class DataServiceSpring : DataService {
         mongoUbicacionDAO.deleteAll()
 
         distritoDAO.deleteAll()
+
+        infeccionSegunPatogenoDAO.deleteAll()
 
     }
 
