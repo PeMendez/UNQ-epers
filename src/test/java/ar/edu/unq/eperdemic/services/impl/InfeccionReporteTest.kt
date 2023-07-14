@@ -100,7 +100,7 @@ class InfeccionReporteTest {
     }
 
     @Test
-    fun nuevo() {
+    fun alInfectarUnVectorSeGeneraUnReporteDeInfeccionSegunEspecieCorrectamente() {
         val ubicacionCreada = ubicacionService.crearUbicacion("testReporte1", GeoJsonPoint(1.0, 1.0))
         val ubicacionCreada2 = ubicacionService.crearUbicacion("testReporte22", GeoJsonPoint(2.0, 2.0))
         val vectorCreado = vectorService.crearVector(TipoDeVector.Persona, ubicacionCreada.id!!)
@@ -138,17 +138,7 @@ class InfeccionReporteTest {
         }
     }
 
-    @Test
-    fun buscarDatosDePatogenoDeManeraRelacional() {
-        val begin = System.currentTimeMillis()
-
-        //infeccionReporteService.findAll
-
-        val end = System.currentTimeMillis()
-        println("TIEMPO TRANSCURRIDO: ${end-begin}")
-    }
-
-    //@AfterEach
+    @AfterEach
     fun eliminarTodo() {
         dataService.eliminarTodo()
     }

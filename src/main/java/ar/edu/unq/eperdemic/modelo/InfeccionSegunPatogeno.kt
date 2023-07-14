@@ -17,7 +17,7 @@ class InfeccionSegunPatogeno(
     val capacidadDeBiomecanizacionPatogeno:Int,
     @Column
     val capacidadDeContagioPatogeno:Int,
-    @Column
+    @Column(forceQuote = true)
     val tipoDePatogeno:String,
     @Column
     val tipoDeVectorInfectado: TipoDeVector) {
