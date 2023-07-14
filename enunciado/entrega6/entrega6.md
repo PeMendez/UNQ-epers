@@ -12,26 +12,26 @@ El ayudante nos explica que aún no ha descubierto cómo aprovecharla en nuestro
 Rápidamente, nos muestra una de las investigaciones que ha estado llevando a cabo durante estos días. Nos explica que, si deseamos avanzar y descubrir cómo utilizar la magia en nuestro favor, debemos recopilar y analizar una colosal cantidad de información sobre las infecciones en una vanguardista supercomputadora del laboratorio llamada Cassandra, pero debemos apresurarnos, pues el tiempo apremia. Una vez más, nuevos requisitos y un último esfuerzo, solo unas líneas de código más podrían salvar a la humanidad…
 
 
-##Requerimientos
+## Requerimientos
 
 Se nos pide realizar un registro en Cassandra que contenga los datos de una infección, ya sea por contagio o infección simple. 
 Tener en cuenta que no siempre nos interesan conocer datos como la capacidad de biomecanización del patógeno perteneciente a la especie que infectó al vector, pero se nos explica que esto es importante a veces, por lo que debemos tener que dejar abierta la posibilidad de conocer los datos del patógeno sin utilizar Joins para unir el ID del pátogeno registrado, con sus datos, para esto se debe dividir el trabajo en dos tablas:
 
-##InfeccionSegunEspecie
+## InfeccionSegunEspecie
 
 En esta tabla nos interesa conservar y darle importancia a los datos de la especie que realizó el contagio (nombre, país de origen), además debemos conservar el tipo y el ID del vector infectado.
 
 
-##InfeccionSegunPatogeno
+## InfeccionSegunPatogeno
 
 En esta tabla nos interesa conservar y darle importancia a los datos del patógeno de la especie que realizó el contagio (capacidad de biomecanizacion, capacidad de contagio, tipo), además debemos conservar el tipo y el ID del vector infectado.
 
 
-##Services
+## Services
 
 Se requiere implementar los siguientes services:
 
-##InfeccionSegunPatogenoService:
+## InfeccionSegunPatogenoService:
 
 -	agregarReporteDeInfeccion(idVectorInfectado: Long, capacidadDeBiomecanizacion: Int, capacidadDeContagio: Int, tipoDePatogeno: String, tipoDeVectorInfectado: TipoDeVector): InfeccionSegunPatogeno
 -	findAll(): List<InfeccionSegunPatogeno>
