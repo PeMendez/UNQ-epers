@@ -27,6 +27,10 @@ class DataServiceSpring : DataService {
     lateinit var mutacionDAO: MutacionDAO
     @Autowired
     lateinit var infeccionSegunPatogenoDAO: InfeccionSegunPatogenoDAO
+    @Autowired
+    lateinit var infeccionSegunEspecieDAO: InfeccionSegunEspecieDAO
+    @Autowired
+    lateinit var infeccionReporteDAO: InfeccionReporteDAO
 
     @Autowired
     lateinit var patogenoService: PatogenoServiceImpl
@@ -149,6 +153,8 @@ class DataServiceSpring : DataService {
         distritoDAO.deleteAll()
 
         infeccionSegunPatogenoDAO.deleteAll()
+        infeccionSegunEspecieDAO.deleteAll()
+        infeccionReporteDAO.deleteAll()
 
     }
 

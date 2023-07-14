@@ -16,13 +16,17 @@ class InfeccionSegunPatogenoServiceImpl: InfeccionSegunPatogenoService {
     @Autowired
     private lateinit var infeccionSegunPatogenoDAO : InfeccionSegunPatogenoDAO
 
-    override fun agregarReporteDeInfeccion(capacidadDeBiomecanizacion: Int,
+    override fun agregarReporteDeInfeccion(idVectorInfectado: Long,
+                                           capacidadDeBiomecanizacion: Int,
                                            capacidadDeContagio: Int,
                                            tipoDePatogeno: String,
-                                           tipoDeVectorInfectado: TipoDeVector,
-                                           idDeVectorEnfermo: Long?): InfeccionSegunPatogeno {
-        val reporteSegunPatogeno = InfeccionSegunPatogeno(capacidadDeBiomecanizacion, capacidadDeContagio, tipoDePatogeno, tipoDeVectorInfectado, idDeVectorEnfermo)
+                                           tipoDeVectorInfectado: TipoDeVector): InfeccionSegunPatogeno {
+        val reporteSegunPatogeno = InfeccionSegunPatogeno(idVectorInfectado, capacidadDeBiomecanizacion, capacidadDeContagio, tipoDePatogeno, tipoDeVectorInfectado)
         infeccionSegunPatogenoDAO.save(reporteSegunPatogeno)
         return reporteSegunPatogeno
+    }
+
+    override fun findAllByVectorId(idVectorInfectado: Long): List<InfeccionSegunPatogeno> {
+        return infeccionSegunPatogenoDAO.findAllByVectorId(idVectorInfectado)
     }
 }

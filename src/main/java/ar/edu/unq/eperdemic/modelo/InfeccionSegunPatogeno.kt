@@ -12,15 +12,15 @@ import javax.persistence.Id
 @Table
 class InfeccionSegunPatogeno(
     @Column
+    val idVectorInfectado: Long,
+    @Column
     val capacidadDeBiomecanizacionPatogeno:Int,
     @Column
     val capacidadDeContagioPatogeno:Int,
     @Column
     val tipoDePatogeno:String,
     @Column
-    val tipoDeVectorInfectado: TipoDeVector,
-    @Column
-    val idVectorEnfermo: Long? = null) {
+    val tipoDeVectorInfectado: TipoDeVector) {
 
     @PrimaryKey
     val id: UUID = UUID.randomUUID()
