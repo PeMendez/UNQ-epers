@@ -7,6 +7,7 @@ import org.springframework.data.repository.CrudRepository
 interface InfeccionReporteDAO : CrudRepository<InfeccionReporte, Long> {
 
     @Query("""
+        SELECT i
         FROM InfeccionReporte i
         WHERE i.idVectorInfectado = :idVectorInfectado
     """)

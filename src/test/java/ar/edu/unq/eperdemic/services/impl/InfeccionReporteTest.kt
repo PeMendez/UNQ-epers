@@ -89,7 +89,7 @@ class InfeccionReporteTest {
 
         vectorService.infectar(vectorCreado, especieCreada)
 
-        val reportes = infeccionSegunPatogenoService.findAllByVectorId(vectorCreado.id!!)
+        val reportes = infeccionSegunPatogenoService.findAll()
 
         Assertions.assertNotNull(reportes.find { it.idVectorInfectado == vectorCreado.id!! })
         Assertions.assertNotNull(reportes.find { it.tipoDePatogeno == patogenoCreado.tipo })
@@ -99,7 +99,56 @@ class InfeccionReporteTest {
         Assertions.assertTrue(reportes.size == 1)
     }
 
-    @AfterEach
+    @Test
+    fun nuevo() {
+        val ubicacionCreada = ubicacionService.crearUbicacion("testReporte1", GeoJsonPoint(1.0, 1.0))
+        val ubicacionCreada2 = ubicacionService.crearUbicacion("testReporte22", GeoJsonPoint(2.0, 2.0))
+        val vectorCreado = vectorService.crearVector(TipoDeVector.Persona, ubicacionCreada.id!!)
+        vectorService.crearVector(TipoDeVector.Persona, ubicacionCreada2.id!!)
+
+        val patogeno = Patogeno("tipo1")
+        val patogenoCreado = patogenoService.crearPatogeno(patogeno)
+        val especieCreada = patogenoService.agregarEspecie(patogenoCreado.id!!, "nuevaEspecie", ubicacionCreada2.id!!)
+
+        vectorService.infectar(vectorCreado, especieCreada)
+
+        val reportes = infeccionSegunEspecieService.findAll()
+
+        Assertions.assertNotNull(reportes.find { it.idVectorInfectado == vectorCreado.id!! })
+        Assertions.assertNotNull(reportes.find { it.tipoDeVectorInfectado == vectorCreado.tipo})
+        Assertions.assertTrue(reportes.size == 1)
+    }
+
+
+    @Test
+    fun crearReportes() {
+        val ubicacionCreada2 = ubicacionService.crearUbicacion("testReporte22", GeoJsonPoint(2.0, 2.0))
+        vectorService.crearVector(TipoDeVector.Persona, ubicacionCreada2.id!!)
+        val patogeno = Patogeno("tipo1")
+        val patogenoCreado = patogenoService.crearPatogeno(patogeno)
+        val especieCreada = patogenoService.agregarEspecie(patogenoCreado.id!!, "nuevaEspecie1", ubicacionCreada2.id!!)
+        val ubicacionCreada = ubicacionService.crearUbicacion("testReporte1", GeoJsonPoint(1.0, 1.0))
+
+        var i = 0
+        while (i < 100000) {
+            val vectorCreado = vectorService.crearVector(TipoDeVector.Persona, ubicacionCreada.id!!)
+            vectorService.infectar(vectorCreado, especieCreada)
+
+            i += 1
+        }
+    }
+
+    @Test
+    fun buscarDatosDePatogenoDeManeraRelacional() {
+        val begin = System.currentTimeMillis()
+
+        //infeccionReporteService.findAll
+
+        val end = System.currentTimeMillis()
+        println("TIEMPO TRANSCURRIDO: ${end-begin}")
+    }
+
+    //@AfterEach
     fun eliminarTodo() {
         dataService.eliminarTodo()
     }

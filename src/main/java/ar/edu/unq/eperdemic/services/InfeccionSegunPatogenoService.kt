@@ -13,5 +13,5 @@ interface InfeccionSegunPatogenoService {
                                   tipoDePatogeno: String,
                                   tipoDeVectorInfectado: TipoDeVector): InfeccionSegunPatogeno
 
-    fun findAllByVectorId(idVectorInfectado: Long): List<InfeccionSegunPatogeno>
+    fun findAll(): List<InfeccionSegunPatogeno>
 }

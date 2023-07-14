@@ -26,7 +26,7 @@ class InfeccionSegunPatogenoServiceImpl: InfeccionSegunPatogenoService {
         return reporteSegunPatogeno
     }
 
-    override fun findAllByVectorId(idVectorInfectado: Long): List<InfeccionSegunPatogeno> {
-        return infeccionSegunPatogenoDAO.findAllByVectorId(idVectorInfectado)
+    override fun findAll(): List<InfeccionSegunPatogeno> {
+        return infeccionSegunPatogenoDAO.findAll()
     }
 }
