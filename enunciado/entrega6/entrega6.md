@@ -14,7 +14,7 @@ Rápidamente, nos muestra una de las investigaciones que ha estado llevando a ca
 
 ## Requerimientos
 
-Se nos pide realizar un registro en Cassandra que contenga los datos de una infección, ya sea por contagio o infección simple. 
+Se nos pide realizar un registro en Cassandra que contenga los datos de una infección. 
 Tener en cuenta que no siempre nos interesan conocer datos como la capacidad de biomecanización del patógeno perteneciente a la especie que infectó al vector, pero se nos explica que esto es importante a veces, por lo que debemos tener que dejar abierta la posibilidad de conocer los datos del patógeno sin utilizar Joins para unir el ID del pátogeno registrado, con sus datos, para esto se debe dividir el trabajo en dos tablas:
 
 ## InfeccionSegunEspecie
