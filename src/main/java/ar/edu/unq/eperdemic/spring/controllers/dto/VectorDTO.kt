@@ -16,7 +16,7 @@ class VectorDTO(
         return vector
     }
     companion object {
-        fun desdeModelo(vector: Vector) =
+        fun  desdeModelo(vector: Vector) =
             VectorDTO(
                 vectorID = vector.id!!,
                 tipoDeVector = vector.tipo,

@@ -4,9 +4,7 @@ import ar.edu.unq.eperdemic.modelo.Especie
 import ar.edu.unq.eperdemic.modelo.TipoDeVector
 import ar.edu.unq.eperdemic.modelo.Vector
 import ar.edu.unq.eperdemic.modelo.exceptions.NoExisteElid
-import ar.edu.unq.eperdemic.persistencia.dao.EspecieDAO
-import ar.edu.unq.eperdemic.persistencia.dao.UbicacionDAO
-import ar.edu.unq.eperdemic.persistencia.dao.VectorDAO
+import ar.edu.unq.eperdemic.persistencia.dao.*
 import ar.edu.unq.eperdemic.services.VectorService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
@@ -21,11 +19,17 @@ class VectorServiceImpl(): VectorService {
 
     @Autowired
     private lateinit var especieDAO: EspecieDAO
-
     @Autowired
     private lateinit var vectorDAO: VectorDAO
     @Autowired
     private lateinit var ubicacionDAO: UbicacionDAO
+    @Autowired
+    private lateinit var infeccionReporteService: InfeccionReporteServiceImpl
+    @Autowired
+    private lateinit var infeccionSegunEspecieService: InfeccionSegunEspecieServiceImpl
+    @Autowired
+    private lateinit var infeccionSegunPatogenoService: InfeccionSegunPatogenoServiceImpl
+
 
     override fun contagiar(vectorInfectado: Vector, vectores: List<Vector>) {
         vectorDAO.findByIdOrNull(vectorInfectado.id)?: throw NoExisteElid("No existe el ID del vector")
@@ -41,6 +45,10 @@ class VectorServiceImpl(): VectorService {
 
         especie.let { e ->  vector.serInfectadoCon(e)}
         vector.let { v -> vectorDAO.save(v) }
+
+        infeccionReporteService.agregarInfeccionReporte(vector.id!!, especie.id!!)
+        infeccionSegunEspecieService.agregarReporteDeInfeccion(vector.id!!, especie.nombre, especie.paisDeOrigen, vector.tipo)
+        infeccionSegunPatogenoService.agregarReporteDeInfeccion(vector.id!!, especie.patogeno.capacidadDeBiomecanizacion, especie.patogeno.capacidadDeContagio, especie.patogeno.tipo, vector.tipo)
     }
 
     override fun enfermedades(vectorId: Long): List<Especie> {

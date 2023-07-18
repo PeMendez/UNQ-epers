@@ -1,24 +1,20 @@
 package ar.edu.unq.eperdemic.utils
 
-import ar.edu.unq.eperdemic.modelo.Patogeno
-import ar.edu.unq.eperdemic.modelo.Random
-import ar.edu.unq.eperdemic.modelo.TipoDeVector
-import ar.edu.unq.eperdemic.modelo.Ubicacion
+import ar.edu.unq.eperdemic.modelo.*
 import ar.edu.unq.eperdemic.persistencia.dao.*
-import ar.edu.unq.eperdemic.services.PatogenoService
-import ar.edu.unq.eperdemic.services.UbicacionService
+import ar.edu.unq.eperdemic.services.impl.DistritoServiceImpl
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import ar.edu.unq.eperdemic.services.impl.PatogenoServiceImpl
 import ar.edu.unq.eperdemic.services.impl.UbicacionServiceImpl
 import ar.edu.unq.eperdemic.services.impl.VectorServiceImpl
-import org.springframework.data.neo4j.repository.query.Query
-
+import org.springframework.data.geo.Point
+import org.springframework.data.mongodb.core.geo.GeoJsonPoint
+import org.springframework.data.mongodb.core.geo.GeoJsonPolygon
 
 @Service
 class DataServiceSpring : DataService {
-
     @Autowired
     lateinit var ubicacionDAO: UbicacionDAO
     @Autowired
@@ -29,6 +25,12 @@ class DataServiceSpring : DataService {
     lateinit var especieDAO: EspecieDAO
     @Autowired
     lateinit var mutacionDAO: MutacionDAO
+    @Autowired
+    lateinit var infeccionSegunPatogenoDAO: InfeccionSegunPatogenoDAO
+    @Autowired
+    lateinit var infeccionSegunEspecieDAO: InfeccionSegunEspecieDAO
+    @Autowired
+    lateinit var infeccionReporteDAO: InfeccionReporteDAO
 
     @Autowired
     lateinit var patogenoService: PatogenoServiceImpl
@@ -36,9 +38,17 @@ class DataServiceSpring : DataService {
     lateinit var ubicacionService: UbicacionServiceImpl
     @Autowired
     lateinit var vectorService: VectorServiceImpl
+    @Autowired
+    lateinit var distritoService: DistritoServiceImpl
 
     @Autowired
     lateinit var neo4jUbicacionDAO: Neo4jUbicacionDAO
+
+    @Autowired
+    lateinit var mongoUbicacionDAO: MongoUbicacionDAO
+
+    @Autowired
+    lateinit var distritoDAO: DistritoDAO
 
 
     val patogeno1 = Patogeno("tipo1")
@@ -57,7 +67,7 @@ class DataServiceSpring : DataService {
         crearVectores(listaDeUbicacionesCreadas)
 
         crearEspecies(listaPatogenosCreados, listaDeUbicacionesCreadas)
-
+        crearDistritos()
     }
 
 
@@ -70,15 +80,15 @@ class DataServiceSpring : DataService {
     }
 
     private fun crearUbicaciones(): List<Ubicacion> {
-        val ubicacion1Creada = ubicacionService.crearUbicacion(ubicacion1.nombre)
-        val ubicacion2Creada = ubicacionService.crearUbicacion(ubicacion2.nombre)
-        val ubicacion3Creada = ubicacionService.crearUbicacion(ubicacion3.nombre)
-        val ubicacion4Creada = ubicacionService.crearUbicacion("ubicacionPrimera")
-        val ubicacion5Creada = ubicacionService.crearUbicacion("ubicacionSegunda")
-        val ubicacion6Creada = ubicacionService.crearUbicacion("ubicacionTercera")
-        val ubicacion7Creada = ubicacionService.crearUbicacion("ubicacionCuarta")
-        val ubicacion8Creada = ubicacionService.crearUbicacion("ubicacionQuinta")
-        val ubicacion9Creada = ubicacionService.crearUbicacion("ubicacionSexta")
+        val ubicacion1Creada = ubicacionService.crearUbicacion(ubicacion1.nombre, GeoJsonPoint(6.0, 6.3))
+        val ubicacion2Creada = ubicacionService.crearUbicacion(ubicacion2.nombre, GeoJsonPoint(2.0, 2.1))
+        val ubicacion3Creada = ubicacionService.crearUbicacion(ubicacion3.nombre, GeoJsonPoint(4.0, 4.0))
+        val ubicacion4Creada = ubicacionService.crearUbicacion("ubicacionPrimera", GeoJsonPoint(7.0, 7.0))
+        val ubicacion5Creada = ubicacionService.crearUbicacion("ubicacionSegunda", GeoJsonPoint(3.0, 3.0))
+        val ubicacion6Creada = ubicacionService.crearUbicacion("ubicacionTercera", GeoJsonPoint(5.0, 5.0))
+        val ubicacion7Creada = ubicacionService.crearUbicacion("ubicacionCuarta", GeoJsonPoint(9.0, 9.0))
+        val ubicacion8Creada = ubicacionService.crearUbicacion("ubicacionQuinta", GeoJsonPoint(1.0, 1.0))
+        val ubicacion9Creada = ubicacionService.crearUbicacion("ubicacionSexta", GeoJsonPoint(8.3, 8.2))
         return listOf(
             ubicacion1Creada, ubicacion2Creada, ubicacion3Creada,
             ubicacion4Creada, ubicacion5Creada, ubicacion6Creada,
@@ -120,6 +130,13 @@ class DataServiceSpring : DataService {
 
     }
 
+    private fun crearDistritos() {
+        val distrito1 = Distrito("distritoDataService1", GeoJsonPolygon(mutableListOf(Point(9.0, 9.0), Point(9.01, 9.01), Point(9.02, 9.02), Point (9.0, 9.0))))
+        val distrito2 = Distrito("distritoDataService2", GeoJsonPolygon(mutableListOf(Point(10.0, 10.0), Point(10.01, 10.01), Point(10.02, 10.02), Point (10.0, 10.0))))
+        distritoService.crear(distrito1)
+        distritoService.crear(distrito2)
+    }
+
 
     @Transactional
     override fun eliminarTodo() {
@@ -130,6 +147,15 @@ class DataServiceSpring : DataService {
         mutacionDAO.deleteAll()
 
         neo4jUbicacionDAO.detachDelete()
+
+        mongoUbicacionDAO.deleteAll()
+
+        distritoDAO.deleteAll()
+
+        infeccionSegunPatogenoDAO.deleteAll()
+        infeccionSegunEspecieDAO.deleteAll()
+        infeccionReporteDAO.deleteAll()
+
     }
 
 }
