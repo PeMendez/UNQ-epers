@@ -22,4 +22,20 @@ interface UbicacionDAO: PagingAndSortingRepository<Ubicacion, Long> {
     )
     fun recuperarUbicacionPorNombre(nombreDeUbicacion: String): Ubicacion
 
+    @Query(
+        """ SELECT CASE WHEN COUNT(v) > 0 THEN true ELSE false END
+            FROM Vector v
+            WHERE v.ubicacion.id = :ubicacionId
+              AND v.especies IS NOT EMPTY
+        """
+    )
+    fun hayVectorEnfermoEnUbicacion(ubicacionId: Long): Boolean
+
+    @Query(
+        """SELECT DISTINCT v.ubicacion.id
+           FROM Vector v 
+           WHERE v.especies.size > 0  
+        """
+    )
+    fun idsDeUbicacionesEnfermas(): List<Long>
 }
